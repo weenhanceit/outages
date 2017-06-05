@@ -1,0 +1,74 @@
+<h1><%= @outage["short_description"] %> </h1>
+<br/>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="2">
+        <%= @outage["long_description"] %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+          Start Time
+      </td>
+      <td>
+        <%= @outage["start_time"].strftime("%a, %d %b %Y %H:%M") %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+          End Time
+      </td>
+      <td>
+        <%= @outage["end_time"].strftime("%a, %d %b %Y %H:%M") %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+          Completed?
+      </td>
+      <td>
+        <%= @outage["completed"] %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+          Status
+      </td>
+      <td>
+        <%= @outage["status"] %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+          CIs
+      </td>
+      <td>
+        <% @outage["cis"].each do |ci| %>
+          <p>
+            <%= link_to ci["ci"]["name"], edit_or_show_ci_path(ci["id"]) %>
+          </p>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+          Notes
+      </td>
+      <td>
+        <% @outage["notes"].each do |n| %>
+          <p>
+            <%= n["note_item"]["note_date"] %>
+            by
+            <%= n["note_item"]["user"] %>
+            <br/>
+            <%= n["note_item"]["note"] %>
+          </p>
+        <% end %>
+      </td>
+    </tr>
+  <tbody>
+</table>
+<div class="content-note">
+  Notes should be presented in a scrollable box in reverse order of date
+</div>

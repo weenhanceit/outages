@@ -1,0 +1,60 @@
+td {
+  border: 1px solid;
+  padding: 5px;
+  text-align: center;
+}
+// ul {
+//   list-style-type: circle;
+// }
+.menu-item {
+  border: 1px solid #DDDDDD;
+  padding: 5px;
+  text-align: center;
+}
+
+.content-note {
+  background-color: #F3F3FF;
+  margin: 4px;
+  padding: 2px 20px 2px 20px;
+  width: 50%;
+  border: 1px dotted gray;
+}
+
+
+ /*From C3 Schools for a simple tab system */
+/* Style the tab */
+div.quicktab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+div.quicktab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+div.quicktab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+div.quicktab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}

@@ -1,0 +1,99 @@
+<ul>
+  <li>Edit alternate names/alias (TBC)</li>
+  <!-- TODO: How could we show the impact of changes to the DAG? -->
+  <li>Add/Delete Tags</li>
+  <!-- TODO: How to deal with CIs that should be the same but aren't?
+              This could be a separate page explicitly for de-duplication. -->
+</ul>
+
+<%= form_tag ci_path(1), method: :put do %>
+<%# FIXME: method: :put is a hack for prototype %>
+<p>
+  <%= label_tag "Name" %>
+  <%= text_field_tag "Name" %>
+  <%= label_tag "Watch" %>
+  <%= check_box_tag "Watch", 1, true %>
+</p>
+<p>
+  <%= label_tag "Description" %>
+  <%= text_area_tag "Description" %>
+</p>
+
+<div class="flexbox">
+  <div class="flexbox vertical">
+    <div class="m-md ">
+      <h3>Parents</h3>
+      <div class="p-sm border-sm">
+        <ul class="js-droppable list-unstyled">
+          <li class="js-draggable list-unstyled">
+            afappubu0020
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="m-md">
+      <h3>Children</h3>
+      <div class="p-sm border-sm">
+        <ul class="js-droppable list-unstyled">
+          <li class="js-draggable list-unstyled">
+            afappubu0021
+          </li>
+        </ul>
+      </div>
+      <p>
+        <%= radio_button_tag :redundancy, "", true %>
+        <%= label_tag :minimum, "Minimum number of children required to maintain service" %>
+        <%= number_field_tag "minimum", 1 %>
+      </p>
+      <p>
+        <%= radio_button_tag :redundancy, "" %>
+        <%= label_tag :maximum, "Maximum number of children that can be unavailable and still maintain service" %>
+        <%= number_field_tag "maximum", 1 %>
+      </p>
+    </div>
+  </div>
+  <div class="m-md p-sm">
+    <p>
+      << </p> <p> >>
+    </p>
+  </div>
+  <div class="m-md">
+    <h3>Available CIs</h3>
+    <div class="border-sm p-md">
+      <ul class="js-droppable list-unstyled">
+        <li class="js-draggable list-unstyled">
+          afappubu0022
+        </li>
+        <li class="js-draggable list-unstyled">
+          outappubu0101
+        </li>
+        <li class="js-draggable list-unstyled">
+          outappubu0102
+        </li>
+        <li class="js-draggable list-unstyled">
+          outappubu0103
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<p>
+  <%= submit_tag %>
+</p>
+<% end %>
+<p>
+  <%= button_to "Delete CI", ci_path(1), method: :delete %>
+</p>
+[Undoable.]
+
+<h2>Notes</h2>
+<p>
+  Note 1. Stack Overflow-style. Most recent first? Or sortable?
+</p>
+<p>
+  Note 2
+</p>
+<p>
+  Etc.
+</p>

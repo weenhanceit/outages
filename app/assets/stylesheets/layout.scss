@@ -1,0 +1,32 @@
+.flexbox {
+  display: flex;
+}
+
+.vertical {
+  flex-direction: column;
+}
+
+.m-md {
+  margin: 1rem 2.5rem;
+}
+
+.p-md {
+  padding: 1rem 2.5rem;
+}
+
+.m-sm {
+  margin: 0.5rem 1rem;
+}
+
+.p-sm {
+  padding: 0.5rem 1rem;
+}
+
+.border-sm {
+  border: 0.5px solid;
+}
+
+.list-unstyled {
+  list-style-type: none;
+  padding: 0;
+}

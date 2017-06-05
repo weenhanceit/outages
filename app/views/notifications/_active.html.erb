@@ -1,0 +1,33 @@
+<h2>Notifications</h2>
+<p>
+  You have <%#= %> a lot of un-acknowledged notifications.
+</p>
+<table>
+  <thead>
+    <tr>
+      <td>
+        Notification
+      </td>
+      <td>
+        Acknowledged
+        <%#= label_tag :acknowledged_all, "Edited By Me" %>
+        <br/>
+        <%= check_box_tag :acknowledge_all, 1, false %>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <%#= active_notifications.each |notification| do %>
+    <tr>
+
+      <td>
+        <%= link_to "Outage A", "#" %>
+        blah blah blah
+      </td>
+      <td>
+        <%= check_box_tag :acknowledged, 1, true %>
+      </td>
+    </tr>
+    <%# end %>
+  </tbody>
+</table>
