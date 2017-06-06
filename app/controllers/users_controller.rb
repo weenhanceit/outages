@@ -8,6 +8,4 @@ class UsersController < ApplicationController
     reset_session
     redirect_to "/outages"
   end
-
-
 end
