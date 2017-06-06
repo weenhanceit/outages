@@ -5,8 +5,8 @@ class CreateCis < ActiveRecord::Migration[5.1]
       t.boolean :active, null: false
       t.text :description
       t.string :name
-      t.integer maximum_unavailable_children_with_service_maintained
-      t.integer minimum_children_to_maintain_service
+      t.integer :maximum_unavailable_children_with_service_maintained
+      t.integer :minimum_children_to_maintain_service
       t.timestamps
     end
   end
