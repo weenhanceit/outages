@@ -9,48 +9,48 @@
   </head>
 
   <body>
-    <p>
-      <%= form_tag(users_path) do %>
-        <%= select_tag "selected_privilege", options_for_select([ "Domain Admin", "User Admin (Manager)", "Can Edit CIs/Outages", "Basic User (Read Only)" ], current_user.user_privilege_text),
-          {onchange: "$(this).parent('form').submit();"}
+    <div class="container">
 
-        %>
-      <% end %>
-      <%= form_tag searches_path, method: :get do %>
+      <p>
+        <%= form_tag(users_path) do %>
+        <%= select_tag "selected_privilege", options_for_select([ "Domain Admin", "User Admin (Manager)", "Can Edit CIs/Outages", "Basic User (Read Only)" ], current_user.user_privilege_text), {onchange: "$(this).parent('form').submit();"} %>
+        <% end %>
+        <%= form_tag searches_path, method: :get do %>
         <%= text_field_tag "search-criteria" %>
         <%= submit_tag "Search", :name=>nil %>
-      <% end %>
+        <% end %>
 
-    </p>
-    <p>
-      <span class="menu-item">
-        <%= link_to "Outages", outages_path %>
-      </span>
-      <span class="menu-item">
-        <%= link_to "Configuration Items", cis_path %>
-      </span>
-      <span class="menu-item">
-        <%= link_to "Preferences", edit_preference_path(1, priv: "very") %>
-      </span>
-      <span class="menu-item">
-      </span>
-      <span class="menu-item">
-        <%= link_to "Sign Out", user_path(1), method: :delete %>
-      </span>
-    </p>
-    <hr/>
-    <% flash.each do |name, msg| -%>
+      </p>
+      <p>
+        <span class="menu-item">
+          <%= link_to "Outages", outages_path %>
+        </span>
+        <span class="menu-item">
+          <%= link_to "Configuration Items", cis_path %>
+        </span>
+        <span class="menu-item">
+          <%= link_to "Preferences", edit_preference_path(1, priv: "very") %>
+        </span>
+        <span class="menu-item"></span>
+        <span class="menu-item">
+          <%= link_to "Sign Out", user_path(1), method: :delete %>
+        </span>
+      </p>
+      <hr/>
+      <% flash.each do |name, msg| -%>
       <%= content_tag :div, msg, class: name %>
       <hr/>
-    <% end -%>
+      <% end -%>
 
-    <%= yield %>
-    <hr/>
-    <p>Footer</p>
-    <p>Params</p>
-    <%= params.inspect %>
-    <p>
-      Current User: <%= current_user ? current_user.user_privilege_text : "Nil"  %>
-    </p>
+      <%= yield %>
+      <hr/>
+      <p>Footer</p>
+      <p>Params</p>
+      <%= params.inspect %>
+      <p>
+        Current User:
+        <%= current_user ? current_user.user_privilege_text : "Nil"  %>
+      </p>
+    </div>
   </body>
 </html>
