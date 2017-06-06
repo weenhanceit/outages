@@ -11,7 +11,7 @@
   <body>
     <p>
       <%= form_tag(users_path) do %>
-        <%= select_tag "selected_privilege", options_for_select([ "Domain Admin", "User Admin (Manager)", "Can Edit CIs/Outages", "Basic User (Read Only)" ], current_user.user_id),
+        <%= select_tag "selected_privilege", options_for_select([ "Domain Admin", "User Admin (Manager)", "Can Edit CIs/Outages", "Basic User (Read Only)" ], current_user.user_privilege_text),
           {onchange: "$(this).parent('form').submit();"}
 
         %>
@@ -50,7 +50,7 @@
     <p>Params</p>
     <%= params.inspect %>
     <p>
-      Current User: <%= current_user ? current_user.user_id : "Nil"  %>
+      Current User: <%= current_user ? current_user.user_privilege_text : "Nil"  %>
     </p>
   </body>
 </html>

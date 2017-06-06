@@ -1,0 +1,79 @@
+basic:
+  active: true
+  email: basic@outages.com
+  name: Basic User (Read Only)
+  notification_periods_before_outage: 1
+  notification_period_interval: days
+  notify_me_before_outage: false
+  notify_me_on_outage_changes: false
+  notify_me_on_note_changes: false
+  notify_me_on_outage_complete: false
+  notify_me_on_overdue_outage: false
+  preference_email_time: "8:00"
+  preference_individual_email_notifications: false
+  preference_notifiy_me_by_email: false
+  privilege_account: false
+  privilege_edit_cis: false
+  privilege_edit_outages: false
+  privilege_manage_users: false
+  time_zone: Samoa
+
+edit_ci_outages:
+  active: true
+  email: edit_ci_outages_user@outages.com
+  name: Can Edit CIs/Outages
+  notification_periods_before_outage: 1
+  notification_period_interval: days
+  notify_me_before_outage: false
+  notify_me_on_outage_changes: false
+  notify_me_on_note_changes: false
+  notify_me_on_outage_complete: false
+  notify_me_on_overdue_outage: false
+  preference_email_time: "8:00"
+  preference_individual_email_notifications: false
+  preference_notifiy_me_by_email: false
+  privilege_account: false
+  privilege_edit_cis: true
+  privilege_edit_outages: true
+  privilege_manage_users: false
+  time_zone: Samoa
+
+user_admin:
+  active: true
+  email: user_admin@outages.com
+  name: User Admin (Manager)
+  notification_periods_before_outage: 1
+  notification_period_interval: days
+  notify_me_before_outage: false
+  notify_me_on_outage_changes: false
+  notify_me_on_note_changes: false
+  notify_me_on_outage_complete: false
+  notify_me_on_overdue_outage: false
+  preference_email_time: "8:00"
+  preference_individual_email_notifications: false
+  preference_notifiy_me_by_email: false
+  privilege_account: false
+  privilege_edit_cis: true
+  privilege_edit_outages: true
+  privilege_manage_users: true
+  time_zone: Samoa
+
+domain_admin:
+  active: true
+  email: domain_admin@outages.com
+  name: Domain Admin
+  notification_periods_before_outage: 1
+  notification_period_interval: days
+  notify_me_before_outage: false
+  notify_me_on_outage_changes: false
+  notify_me_on_note_changes: false
+  notify_me_on_outage_complete: false
+  notify_me_on_overdue_outage: false
+  preference_email_time: "8:00"
+  preference_individual_email_notifications: false
+  preference_notifiy_me_by_email: false
+  privilege_account: true
+  privilege_edit_cis: true
+  privilege_edit_outages: true
+  privilege_manage_users: true
+  time_zone: Samoa
