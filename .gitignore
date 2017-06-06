@@ -27,3 +27,6 @@
 
 # Stop Phil from checking in temporary files.
 pip*
+
+# Don't check in the documentation. Generate it as needed.
+doc/
