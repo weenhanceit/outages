@@ -1,6 +1,6 @@
 class User
   def initialize(user_id)
-    @user_id = (user_id || 'Basic User (Read Only)')
+    @user_id = (user_id || "Basic User (Read Only)")
   end
 
   attr_reader :user_id
@@ -31,9 +31,7 @@ class User
     end
   end
 
-
   def user_priviledge
     @user_id
   end
-
 end
