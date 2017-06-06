@@ -1,7 +1,7 @@
 class SearchesController < ApplicationController
-    include TestSuite
-    def index
-        @outages = outage_list
-        @frag=params["search-criteria"]
-    end
+  include TestSuite
+  def index
+    @outages = outage_list
+    @frag = params["criteria"]
+  end
 end

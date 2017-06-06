@@ -14,7 +14,7 @@
 </p>
 <p>
   <%= @frag %> matches the long description of the <strong>Configuration Item</strong>
-      <%= link_to @outages[0]["cis"][1]["ci"]["name"], ci_path(@outages[0]["cis"][1]["id"]) %>
+      <%= link_to @outages[3]["cis"][1]["ci"]["name"], ci_path(@outages[3]["cis"][1]["id"]) %>
   </strong> that is included in the <strong>Outage</strong>
-  <%= link_to @outages[0]["short_description"], outage_path(0) %>
+  <%= link_to @outages[3]["short_description"], outage_path(3) %>
 </p>

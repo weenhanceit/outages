@@ -9,34 +9,79 @@
   </head>
 
   <body>
+    <nav class="navbar navbar-light">
+      <!-- Make the rest a container. Bigger screens will seen the menu in the container,
+          but smaller screens will see the button on the left. -->
+      <div class="container">
+
+        <%= link_to "The Outage Site", root_path, class: "navbar-brand" %>
+        <!-- The ml-auto and mr-auto classes set the left and right margins
+            to auto for justification -->
+        <ul class="navbar-nav ml-auto">
+        </ul>
+      </div>
+    </nav>
+
+    <!-- The trick seems to be, if you want colour that goes all the way across
+        the viewport, just use a div, not a container. Doh! -->
+    <div class="bg-primary">
+      <nav class="navbar navbar-toggleable-md navbar-inverse">
+        <!-- Don't put this in the container -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="container">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <%= link_to "Outages", outages_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Services", cis_path, class: "nav-link" %>
+              </li>
+            </ul>
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <!-- TODO: Turn the below into a WEIT Bootstrap Forms helper. -->
+                <%= form_with url: searches_path,
+                      method: :get,
+                      local: true,
+                      class: "form-inline my-2 my-lg-0" do |search_form| %>
+                      <!--  value: params... below keeps the search criteria in the field
+                      after submitting the search, which is good if the search bar
+                      is still on the screen after the search. -->
+                      <%= search_form.text_field :criteria,
+                            value: params[:criteria],
+                            class: "form-control mr-sm-2",
+                            placeholder: "Search" %>
+                      <!--  Set the name: "" so we don't pass the search button text as a
+                      parameter. -->
+                      <%= search_form.submit "Search",
+                            name: "",
+                            class: "btn btn-outline-success my-2 my-sm-0" %>
+                <% end %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Sign Out", user_path(1), method: :delete, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Preferences", edit_preference_path(1, priv: "very"), class: "nav-link" %>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+
     <div class="container">
 
       <p>
         <%= form_tag(users_path) do %>
         <%= select_tag "selected_privilege", options_for_select([ "Domain Admin", "User Admin (Manager)", "Can Edit CIs/Outages", "Basic User (Read Only)" ], current_user.user_privilege_text), {onchange: "$(this).parent('form').submit();"} %>
         <% end %>
-        <%= form_tag searches_path, method: :get do %>
-        <%= text_field_tag "search-criteria" %>
-        <%= submit_tag "Search", :name=>nil %>
-        <% end %>
+      </p>
 
-      </p>
-      <p>
-        <span class="menu-item">
-          <%= link_to "Outages", outages_path %>
-        </span>
-        <span class="menu-item">
-          <%= link_to "Configuration Items", cis_path %>
-        </span>
-        <span class="menu-item">
-          <%= link_to "Preferences", edit_preference_path(1, priv: "very") %>
-        </span>
-        <span class="menu-item"></span>
-        <span class="menu-item">
-          <%= link_to "Sign Out", user_path(1), method: :delete %>
-        </span>
-      </p>
-      <hr/>
       <% flash.each do |name, msg| -%>
       <%= content_tag :div, msg, class: name %>
       <hr/>
