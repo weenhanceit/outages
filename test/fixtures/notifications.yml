@@ -1,0 +1,11 @@
+basic_watching_company_a_ci_a_event_a_online:
+  event: company_a_outage_a_event_a
+  notification_type: online
+  watch: basic_watching_company_a_ci_a
+  notified: false
+
+basic_watching_company_a_ci_a_event_a_email:
+  event: company_a_outage_a_event_a
+  notification_type: email
+  watch: basic_watching_company_a_ci_a
+  notified: false
