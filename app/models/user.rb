@@ -6,7 +6,7 @@ class User < ApplicationRecord
   has_many :notes, inverse_of: :user
   has_many :watches, inverse_of: :user
 
-  validates_presence_of :active,
+  validates :active,
     :email,
     :notify_me_before_outage,
     :notify_me_on_outage_changes,
@@ -18,7 +18,8 @@ class User < ApplicationRecord
     :privilege_account,
     :privilege_edit_cis,
     :privilege_edit_outages,
-    :privilege_manage_users
+    :privilege_manage_users,
+    inclusion: { in: [true, false], message: "can't be blank" }
 
   def can_edit_outages?
     privilege_edit_outages
