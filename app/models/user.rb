@@ -6,6 +6,20 @@ class User < ApplicationRecord
   has_many :notes, inverse_of: :user
   has_many :watches, inverse_of: :user
 
+  validates_presence_of :active,
+    :email,
+    :notify_me_before_outage,
+    :notify_me_on_outage_changes,
+    :notify_me_on_note_changes,
+    :notify_me_on_outage_complete,
+    :notify_me_on_overdue_outage,
+    :preference_individual_email_notifications,
+    :preference_notifiy_me_by_email,
+    :privilege_account,
+    :privilege_edit_cis,
+    :privilege_edit_outages,
+    :privilege_manage_users
+
   def can_edit_outages?
     privilege_edit_outages
   end
