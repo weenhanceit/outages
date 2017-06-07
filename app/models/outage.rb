@@ -10,7 +10,8 @@ class Outage < ApplicationRecord
   has_many :tags, as: :taggable
   has_many :watches, as: :watched
 
-  validates_presence_of :active
-  validates_presence_of :causes_loss_of_service
-  validates_presence_of :completed
+  validates :active,
+    :causes_loss_of_service,
+    :completed,
+    inclusion: { in: [true, false], message: "can't be blank" }
 end

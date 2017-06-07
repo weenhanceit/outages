@@ -13,5 +13,5 @@ class Ci < ApplicationRecord
   has_many :tags, as: :taggable
   has_many :watches, as: :watched
 
-  validates_presence_of :active
+  validates :active, inclusion: { in: [true, false], message: "can't be blank" }
 end
