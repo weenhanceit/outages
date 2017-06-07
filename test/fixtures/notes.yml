@@ -1,0 +1,7 @@
+note_a_ci_b:
+  note: Note A on CI B
+  notable: company_a_ci_b (Ci)
+
+note_b_outage_c:
+  note: Note B on Outage C
+  notable: company_a_outage_c
