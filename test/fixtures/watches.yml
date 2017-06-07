@@ -1,0 +1,4 @@
+basic_watching_company_a_ci_a:
+  active: true
+  user: basic
+  watched: company_a_ci_a (Ci)
