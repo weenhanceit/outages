@@ -25,19 +25,35 @@ class OutagesController < ApplicationController
     if @outage.save
       redirect_to cis_path
     else
-      puts @outage.errors.full_messages
+      Rails.logger.error @outage.errors.full_messages
       render :new
     end
   end
 
   def update
+    @outage = current_user.account.outages.find_by(active: true, id: params[:id])
+    if @outage.update(outage_params)
+      redirect_to cis_path
+    else
+      Rails.logger.error @outage.errors.full_messages
+      render :edit
+    end
   end
 
   def destroy
+    @outage = current_user.account.outages.find_by(active: true, id: params[:id])
+    @outage.active = false
+    if @outage.save
+      redirect_to cis_path
+    else
+      Rails.logger.error @outage.errors.full_messages
+      render :edit
+    end
   end
 
   private
 
+  # TODO: Does Rails have a better way to handle model defaults?
   def outage_defaults
     {
       active: true,

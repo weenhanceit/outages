@@ -48,6 +48,6 @@ class OutagesTest < ApplicationSystemTestCase
       click_on "Delete"
     end
 
-    assert Outage.where(active: true, name: outage.name).empty?
+    assert Outage.where(active: true, name: outage.name, account: user.account).empty?
   end
 end
