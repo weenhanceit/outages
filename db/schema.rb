@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 20170605215241) do
     t.string "notable_type"
     t.bigint "notable_id"
     t.bigint "user_id"
-    t.text "notes"
+    t.text "note"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["notable_type", "notable_id"], name: "index_notes_on_notable_type_and_notable_id"
@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 20170605215241) do
   create_table "tags", force: :cascade do |t|
     t.string "taggable_type"
     t.bigint "taggable_id"
-    t.text "notes"
+    t.text "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["taggable_type", "taggable_id"], name: "index_tags_on_taggable_type_and_taggable_id"
