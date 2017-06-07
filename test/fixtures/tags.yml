@@ -1,7 +1,9 @@
 tag_a_ci_a:
+  account: company_a
   name: A
   taggable: company_a_ci_a (Ci)
 
 tag_b_outage_a:
+  account: company_a
   name: B
   taggable: company_a_outage_a (Outage)
