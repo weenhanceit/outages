@@ -20,6 +20,7 @@
 </ul>
 
 <%= form_for(outage, builder: WeitFormBuilder) do |f| %>
+  <%= f.hidden_field :active %>
   <%= f.text_field :name %>
   <%= f.text_field :description %>
   <%= f.check_box :completed %>
