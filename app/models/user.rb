@@ -1,4 +1,11 @@
+##
+# Represents a user.
 class User < ApplicationRecord
+  belongs_to :account
+  has_many :contributors, inverse_of: :user
+  has_many :notes, inverse_of: :user
+  has_many :watches, inverse_of: :user
+
   def can_edit_outages?
     privilege_edit_outages
   end

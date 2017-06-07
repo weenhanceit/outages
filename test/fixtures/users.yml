@@ -1,4 +1,5 @@
 basic:
+  account: company_a
   active: true
   email: basic@outages.com
   name: Basic User (Read Only)
@@ -19,6 +20,7 @@ basic:
   time_zone: Samoa
 
 edit_ci_outages:
+  account: company_a
   active: true
   email: edit_ci_outages_user@outages.com
   name: Can Edit CIs/Outages
@@ -39,6 +41,7 @@ edit_ci_outages:
   time_zone: Samoa
 
 user_admin:
+  account: company_a
   active: true
   email: user_admin@outages.com
   name: User Admin (Manager)
@@ -59,6 +62,7 @@ user_admin:
   time_zone: Samoa
 
 domain_admin:
+  account: company_a
   active: true
   email: domain_admin@outages.com
   name: Domain Admin
