@@ -9,18 +9,11 @@ class OutagesTest < ApplicationSystemTestCase
     assert_selector "h1", text: "Outages"
   end
 
-  test "visit the new outage page" do
-    sign_in_for_system_tests(users(:edit_ci_outages))
-
-    visit new_outage_url
-
-    assert_selector "h1", text: "New Outage"
-  end
-
   test "create a new outage" do
     user = sign_in_for_system_tests(users(:edit_ci_outages))
 
     visit new_outage_url
+    assert_selector "h1", text: "New Outage"
 
     assert_difference "Outage.where(active: true, account: user.account).size" do
       fill_in "Name", with: "Outage 7"

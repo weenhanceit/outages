@@ -127,9 +127,6 @@
           Completed?
         </td>
         <td>
-          Status
-        </td>
-        <td>
           Notes
         </td>
         <td>
@@ -138,50 +135,47 @@
       </tr>
     </thead>
     <tbody>
-      <% @outage_list.each_with_index do |outage, index| %>
+      <% @outages.each_with_index do |outage, index| %>
       <%# [1,2].each do |outage| %>
 
         <tr>
           <td>
-            <% if outage["cis"].size < 3 %>
-            <% outage["cis"].each do |o| %>
+            <% if outage.cis.size < 3 %>
+            <% outage.cis.each do |o| %>
             <p>
-              <%= link_to o["ci"]["name"], edit_or_show_ci_path(o["id"]) %>
+              <%= link_to o.name, edit_or_show_ci_path(o.id) %>
             </p>
             <% end %>
             <% else %>
             <p>
-              <%= link_to outage["cis"][0]["ci"]["name"], edit_or_show_ci_path(outage["cis"][0]["id"]) %>
+              <%= link_to outage.cis[0].name, edit_or_show_ci_path(outage.cis[0]) %>
             </p>
             <p>
-              <%= link_to outage["cis"][1]["ci"]["name"], edit_or_show_ci_path(outage["cis"][1]["id"]) %>
+              <%= link_to outage.cis[1].name, edit_or_show_ci_path(outage.cis[1]) %>
             </p>
             <p>
-              <%= link_to "More .. ", outage_path(index) %>
+              <%= link_to "More .. ", outage_path(outage) %>
             </p>
             <% end %>
           </td>
           <td>
-            <%= outage["start_time"].strftime("%a, %d %b %Y %H:%M") %>
+            <%= outage.start_time.strftime("%a, %d %b %Y %H:%M") %>
           </td>
           <td>
-            <%= outage["end_time"].strftime("%a, %d %b %Y %H:%M") %>
+            <%= outage.end_time.strftime("%a, %d %b %Y %H:%M") %>
           </td>
           <td>
             <% if current_user.can_edit_outages? %>
-            <%= link_to outage["short_description"], edit_outage_path(index) %>
+            <%= link_to outage.name, edit_outage_path(index) %>
             <% else %>
-            <%= link_to outage["short_description"], outage_path(index) %>
+            <%= link_to outage.name, outage_path(index) %>
             <% end %>
           </td>
           <td>
-            <%= outage["completed"] %>
+            <%= outage.completed %>
           </td>
           <td>
-            <%= outage["status"] %>
-          </td>
-          <td>
-            <% if outage["notes"].size > 0 %>
+            <% if outage.notes.size > 0 %>
               <%= link_to "Yes", outage_path(index) %>
             <% else %>
               no
