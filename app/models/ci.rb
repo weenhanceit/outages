@@ -2,7 +2,7 @@
 # A configuration item, which can be hardware, software, service, etc.
 class Ci < ApplicationRecord
   belongs_to :account
-  # Putting `inverse_of: ...` on the next two lines causes the association
+  # Putting `inverse_of: ...` on the next four lines causes the association
   # to give incorrect answers.
   has_many :parent_links, foreign_key: :child_id, class_name: "CisCi"
   has_many :parents, through: :parent_links, class_name: "Ci"
