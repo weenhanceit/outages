@@ -1,0 +1,7 @@
+company_a_ci_a_parent_of_company_a_ci_b:
+  parent: company_a_ci_a
+  child: company_a_ci_b
+
+company_a_ci_b_parent_of_company_a_ci_c:
+  parent: company_a_ci_b
+  child: company_a_ci_c
