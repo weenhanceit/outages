@@ -1,0 +1,11 @@
+company_a_outage_a_ci_a:
+  ci: company_a_ci_a
+  outage: company_a_outage_a
+
+company_a_outage_b_ci_a:
+  ci: company_a_ci_a
+  outage: company_a_outage_b
+
+company_a_outage_c_ci_b:
+  ci: company_a_ci_b
+  outage: company_a_outage_c
