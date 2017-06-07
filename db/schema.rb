@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(version: 20170605215241) do
   create_table "events", force: :cascade do |t|
     t.bigint "outage_id"
     t.text "text"
-    t.integer "type", default: 0
+    t.integer "event_type", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["outage_id"], name: "index_events_on_outage_id"
@@ -83,7 +83,7 @@ ActiveRecord::Schema.define(version: 20170605215241) do
   create_table "notifications", force: :cascade do |t|
     t.bigint "event_id"
     t.bigint "watch_id"
-    t.integer "type", default: 0
+    t.integer "notification_type", default: 0
     t.boolean "notified", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
