@@ -1,0 +1,59 @@
+company_a_outage_a:
+  account: company_a
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company A Outage A
+  end_time: <%= Time.find_zone('Samoa').parse('2017-07-30T12:00:00') %>
+  name: Outage A
+  start_time: <%= Time.find_zone('Samoa').parse('2017-07-30T11:00:00') %>
+
+company_a_outage_b:
+  account: company_a
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company A Outage B
+  end_time: <%= Time.find_zone('Samoa').parse('2017-07-31T12:00:00') %>
+  name: Outage B
+  start_time: <%= Time.find_zone('Samoa').parse('2017-07-31T11:00:00') %>
+
+company_a_outage_c:
+  account: company_a
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company A Outage C
+  end_time: <%= Time.find_zone('Samoa').parse('2017-07-30T15:00:00') %>
+  name: Outage C
+  start_time: <%= Time.find_zone('Samoa').parse('2017-07-30T14:00:00') %>
+
+company_b_outage_a:
+  account: company_b
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company B Outage A
+  end_time: <%= Time.find_zone('Samoa').parse('2017-07-30T12:00:00') %>
+  name: Outage A
+  start_time: <%= Time.find_zone('Samoa').parse('2017-07-30T11:00:00') %>
+
+company_b_outage_b:
+  account: company_b
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company B Outage B
+  end_time: <%= Time.find_zone('Samoa').parse('2017-07-31T12:00:00') %>
+  name: Outage B
+  start_time: <%= Time.find_zone('Samoa').parse('2017-07-31T11:00:00') %>
+
+company_b_outage_c:
+  account: company_b
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company B Outage C
+  end_time: <%= Time.find_zone('Samoa').parse('2017-07-30T15:00:00') %>
+  name: Outage C
+  start_time: <%= Time.find_zone('Samoa').parse('2017-07-30T14:00:00') %>
