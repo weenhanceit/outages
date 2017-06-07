@@ -36,6 +36,7 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
 end
 gem 'popper_js'
+gem 'bootstrap_form', git: "https://github.com/bootstrap-ruby/rails-bootstrap-forms.git", branch: "bootstrap-v4"
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
