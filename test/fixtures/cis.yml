@@ -1,0 +1,23 @@
+company_a_ci_a:
+  account: company_a
+  active: true
+  description: Server A
+  name: Server A
+  maximum_unavailable_children_with_service_maintained:
+  minimum_children_to_maintain_service:
+
+company_a_ci_b:
+  account: company_a
+  active: true
+  description: Server B
+  name: Server B
+  maximum_unavailable_children_with_service_maintained:
+  minimum_children_to_maintain_service:
+
+company_a_ci_c:
+  account: company_a
+  active: true
+  description: Server C
+  name: Server C
+  maximum_unavailable_children_with_service_maintained:
+  minimum_children_to_maintain_service:
