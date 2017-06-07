@@ -12,4 +12,6 @@ class Ci < ApplicationRecord
   has_many :notes, as: :notable
   has_many :tags, as: :taggable
   has_many :watches, as: :watched
+
+  validates_presence_of :active
 end
