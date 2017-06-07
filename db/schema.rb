@@ -108,11 +108,13 @@ ActiveRecord::Schema.define(version: 20170605215241) do
   end
 
   create_table "tags", force: :cascade do |t|
+    t.bigint "account_id"
     t.string "taggable_type"
     t.bigint "taggable_id"
     t.text "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_tags_on_account_id"
     t.index ["taggable_type", "taggable_id"], name: "index_tags_on_taggable_type_and_taggable_id"
   end
 
