@@ -6,7 +6,7 @@ class OutagesController < ApplicationController
 
   def show
     # puts "IN SHOW"
-    @outage = current_user.account.outages.find_by(id: params[:id])
+    load_outage
   end
 
   def new
@@ -16,12 +16,13 @@ class OutagesController < ApplicationController
 
   def edit
     # puts "IN EDI"
-    @outage = current_user.account.outages.find_by(id: params[:id])
+    load_outage
   end
 
   def create
     @outage = Outage.new(outage_params)
     @outage.account = current_user.account
+    update_watches
     if @outage.save
       redirect_to outages_path
     else
@@ -31,7 +32,8 @@ class OutagesController < ApplicationController
   end
 
   def update
-    @outage = current_user.account.outages.find_by(id: params[:id])
+    load_outage
+    update_watches
     if @outage.update(outage_params)
       redirect_to outages_path
     else
@@ -41,7 +43,7 @@ class OutagesController < ApplicationController
   end
 
   def destroy
-    @outage = current_user.account.outages.find_by(id: params[:id])
+    load_outage
     @outage.active = false
     if @outage.save
       redirect_to outages_path
@@ -52,6 +54,14 @@ class OutagesController < ApplicationController
   end
 
   private
+
+  def load_outage
+    @outage = current_user.
+                account.
+                outages.
+                includes(:watches).
+                find(params[:id])
+  end
 
   # TODO: Does Rails have a better way to handle model defaults?
   def outage_defaults
@@ -72,5 +82,30 @@ class OutagesController < ApplicationController
       :end_time,
       :name,
       :start_time)
+  end
+
+  def update_watches
+    # puts "update_watches wants to #{params[:outage][:watched] == '1' ? 'Add' : 'Delete'} a watch."
+    # puts "update_watches watches.size before: #{@outage.watches.size}"
+    # puts "OutageController params: #{params.inspect}"
+    #
+    # puts "current_user.id: #{current_user.id}"
+    # puts "Watch.where(user_id: current_user.id).last.inspect: #{Watch.where(user_id: current_user.id).last.inspect}"
+    #
+    watch = @outage.watches.where(user_id: current_user.id).first
+
+    # puts "What the hell is watch? #{watch.inspect}"
+    #
+    if params[:outage][:watched] == "0"
+      # puts "Remove watch" if watch
+      @outage.watches.destroy(watch) if watch
+    elsif !watch
+      # The usual Rails dance: set both sides of the association so the
+      # autosave will work.
+      watch = @outage.watches.build(user_id: current_user.id)
+      watch.watched = @outage
+      # puts "Set watch, watches: #{@outage.watches.inspect}"
+    end
+    # puts "update_watches watches.size after: #{@outage.watches.size}"
   end
 end

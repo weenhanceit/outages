@@ -8,7 +8,7 @@ class Outage < ApplicationRecord
   has_many :events, inverse_of: :outage
   has_many :notes, as: :notable
   has_many :tags, as: :taggable
-  has_many :watches, as: :watched
+  has_many :watches, as: :watched, autosave: true
 
   validates :active,
     :causes_loss_of_service,
@@ -16,4 +16,8 @@ class Outage < ApplicationRecord
     inclusion: { in: [true, false], message: "can't be blank" }
 
   default_scope { where(active: true) }
+
+  def watched
+    watches.present?
+  end
 end

@@ -16,7 +16,7 @@ class OutagesTest < ApplicationSystemTestCase
     assert_selector "h1", text: "New Outage"
 
     assert_difference "Outage.where(account: user.account).size" do
-      assert_difference "Watch.count" do
+      assert_no_difference "Watch.count" do
         fill_in "Name", with: "Outage 7"
         fill_in "Description", with: "This is the outage in the seventh ring of your know where."
         click_on "Save"
@@ -36,7 +36,7 @@ class OutagesTest < ApplicationSystemTestCase
       assert_difference "Watch.count" do
         fill_in "Name", with: "Outage 7"
         fill_in "Description", with: "This is the outage in the seventh ring of your know where."
-        click_on "Watch"
+        check "Watched"
         click_on "Save"
       end
     end
@@ -63,15 +63,14 @@ class OutagesTest < ApplicationSystemTestCase
 
     outage = outages(:company_a_outage_a)
     visit edit_outage_url(outage)
+    assert_no_checked_field "Watched"
 
     assert_no_difference "Outage.where(account: user.account).size" do
       assert_difference "Watch.count" do
-        click_on "Watch"
+        check "Watched"
         click_on "Save"
       end
     end
-
-    assert_not Outage.where(name: "Not Outage A").empty?
   end
 
   test "remove a watch on edit page" do
@@ -79,15 +78,17 @@ class OutagesTest < ApplicationSystemTestCase
 
     outage = outages(:company_a_outage_watched_by_edit)
     visit edit_outage_url(outage)
+    # TODO: We might have said this should be checked also in the case
+    # where watching was via the CI. If so, we need a test case or more
+    # go ensure that all works correctly.
+    assert_checked_field "Watched"
 
     assert_no_difference "Outage.where(account: user.account).size" do
       assert_difference "Watch.count", -1 do
-        click_on "Watch"
+        uncheck "Watched"
         click_on "Save"
       end
     end
-
-    assert_not Outage.where(name: "Not Outage A").empty?
   end
 
   test "delete an outage" do
