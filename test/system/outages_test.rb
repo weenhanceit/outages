@@ -103,4 +103,36 @@ class OutagesTest < ApplicationSystemTestCase
 
     assert Outage.where(name: outage.name, account: user.account).empty?
   end
+
+  test "assign a CI" do
+    user = sign_in_for_system_tests(users(:edit_ci_outages))
+
+    outage = outages(:company_a_outage_c)
+    visit edit_outage_url(outage)
+
+    click_list_item "Server C"
+    click_button "<"
+    assert_difference "CisOutage.count" do
+      click_on "Save"
+    end
+  end
+
+  test "remove a CI" do
+    user = sign_in_for_system_tests(users(:edit_ci_outages))
+
+    outage = outages(:company_a_outage_c)
+    visit edit_outage_url(outage)
+
+    click_list_item "Server B"
+    click_button ">"
+    assert_difference "CisOutage.count", -1 do
+      click_on "Save"
+    end
+  end
+
+  private
+
+  def click_list_item(text)
+    find("li", text: text).click
+  end
 end
