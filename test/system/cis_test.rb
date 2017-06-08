@@ -6,21 +6,22 @@ class CisTest < ApplicationSystemTestCase
 
     visit cis_url
 
-    assert_selector "h1", text: "Configuration Items"
+    assert_selector "h1", text: "Services"
   end
 
-  test "visit the new outage page" do
-    sign_in_for_system_tests(users(:edit_ci_outages))
-
-    visit new_ci_url
-
-    assert_selector "h1", text: "New CI"
-  end
+  # test "visit the new outage page" do
+  #   sign_in_for_system_tests(users(:edit_ci_outages))
+  #
+  #   visit new_ci_url
+  #
+  #   assert_selector "h1", text: "New CI"
+  # end
 
   test "create a new CI" do
     user = sign_in_for_system_tests(users(:edit_ci_outages))
 
     visit new_ci_url
+    assert_selector "h1", text: "New Service"
 
     assert_difference "Ci.where(active: true, account: user.account).size" do
       fill_in "Name", with: "Server 7"

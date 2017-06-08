@@ -1,5 +1,50 @@
-<h1>Configuration Items</h1>
-<p>Spreadsheet-like/grid view of configuration items.</p>
+<%= render partial: "notifications/active"  %>
+<h1>Services</h1>
+<p>Spreadsheet-like/grid view of Service items.</p>
+
+
+<table>
+  <thead>
+    <tr>
+      <td>
+        Name
+      </td>
+      <td>
+        Description
+      </td>
+      <td>
+        Watch?
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cis.each do |ci| %>
+      <tr>
+        <td>
+          <%= link_to ci.name, edit_or_show_ci_path(ci.id) %>
+          <!-- TODO: Where the above goes to may depend on permissions. -->
+        </td>
+        <td>
+            <%= ci.description %>
+        </td>
+        <td>
+          <p>
+            <%= check_box_tag "Watch", 1, true %>
+            <!-- All watches have same properties, which come from user preferences -->
+          </p>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br />
+<p>
+  <% if current_user.can_edit_cis? %>
+    <%= link_to "Add Service", new_ci_path, class: "btn btn-primary" %>
+  <% end %>
+</p>
+<hr>
+<h4>Notes, Issues, Questions, Futures</h4>
 <ul>
   <li>Filters: radio buttons for all CIs vs. only CIs that I'm watching</li>
   <li>Filters: check boxes for created by me, edited by me</li>
@@ -9,79 +54,3 @@
   <li>Add/Edit notes</li>
   <li>Add/Edit/Delete tags</li>
 </ul>
-
-<%= render partial: "notifications/active"  %>
-
-<table>
-  <thead>
-    <tr>
-      <td>
-        Short Description
-      </td>
-      <td>
-        Long Description
-      </td>
-      <td>
-        Watch?
-      </td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <%= link_to "afappubu0020", edit_or_show_ci_path(1) %>
-        <!-- TODO: Where the above goes to may depend on permissions. -->
-      </td>
-      <td>
-        <p>
-          Ubuntu 16.04 server for Autism Funding application.
-        </p>
-      </td>
-      <td>
-        <p>
-          <%= check_box_tag "Watch", 1, true %>
-          <!-- All watches have same properties, which come from user preferences -->
-        </p>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= link_to "afappubu0021", edit_or_show_ci_path(1) %>
-        <!-- TODO: Where the above goes to may depend on permissions. -->
-      </td>
-      <td>
-        <p>
-          Ubuntu 16.04 server for Autism Funding application.
-        </p>
-      </td>
-      <td>
-        <p>
-          <%= check_box_tag "Watch", 1, true %>
-          <!-- All watches have same properties, which come from user preferences -->
-        </p>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= link_to "afappubu0022", edit_or_show_ci_path(1) %>
-        <!-- TODO: Where the above goes to may depend on permissions. -->
-      </td>
-      <td>
-        <p>
-          Ubuntu 16.04 server for Autism Funding application.
-        </p>
-      </td>
-      <td>
-        <p>
-          <%= check_box_tag "Watch", 1, true %>
-          <!-- All watches have same properties, which come from user preferences -->
-        </p>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<p>
-  <% if current_user.can_edit_cis? %>
-    <%= link_to "Add CI", new_ci_path, class: "btn" %>
-  <% end %>
-</p>
