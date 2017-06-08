@@ -11,10 +11,9 @@ class ApplicationController < ActionController::Base
     #    return unless session[:user_id]
     @current_user ||=
       User.find_by(name: session[:user_id] || "Basic User (Read Only)" )
-  end
-
-  def current_user=(user)
-    session[:user_id] = (@current_user = user).name
+    session[:user_id] = @current_user.name
+    # puts "Get current_user: #{@current_user.name} session: #{session[:user_id]}"
+    @current_user
   end
 
   helper_method :current_user
