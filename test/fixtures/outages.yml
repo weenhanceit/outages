@@ -38,6 +38,16 @@ company_a_outage_inactive:
   name: Outage Inactive
   start_time: <%= Time.find_zone('Samoa').parse('2017-07-30T14:00:00') %>
 
+company_a_outage_watched_by_edit:
+  account: company_a
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company A outage watched by edit
+  end_time: <%= Time.find_zone('Samoa').parse('2017-08-30T15:00:00') %>
+  name: Outage Watched by Edit
+  start_time: <%= Time.find_zone('Samoa').parse('2017-08-30T14:00:00') %>
+
 company_b_outage_a:
   account: company_b
   active: true
