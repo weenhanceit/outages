@@ -14,4 +14,6 @@ class Outage < ApplicationRecord
     :causes_loss_of_service,
     :completed,
     inclusion: { in: [true, false], message: "can't be blank" }
+
+    default_scope { where(active: true) }
 end

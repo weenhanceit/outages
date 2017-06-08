@@ -28,6 +28,16 @@ company_a_outage_c:
   name: Outage C
   start_time: <%= Time.find_zone('Samoa').parse('2017-07-30T14:00:00') %>
 
+company_a_outage_inactive:
+  account: company_a
+  active: false
+  causes_loss_of_service: true
+  completed: false
+  description: Company A Outage Inactive
+  end_time: <%= Time.find_zone('Samoa').parse('2017-07-30T15:00:00') %>
+  name: Outage Inactive
+  start_time: <%= Time.find_zone('Samoa').parse('2017-07-30T14:00:00') %>
+
 company_b_outage_a:
   account: company_b
   active: true
@@ -56,4 +66,14 @@ company_b_outage_c:
   description: Company B Outage C
   end_time: <%= Time.find_zone('Samoa').parse('2017-07-30T15:00:00') %>
   name: Outage C
+  start_time: <%= Time.find_zone('Samoa').parse('2017-07-30T14:00:00') %>
+
+company_b_outage_inactive:
+  account: company_b
+  active: false
+  causes_loss_of_service: true
+  completed: false
+  description: Company B Outage Inactive
+  end_time: <%= Time.find_zone('Samoa').parse('2017-07-30T15:00:00') %>
+  name: Outage Inactive
   start_time: <%= Time.find_zone('Samoa').parse('2017-07-30T14:00:00') %>
