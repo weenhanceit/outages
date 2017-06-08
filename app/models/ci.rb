@@ -14,4 +14,6 @@ class Ci < ApplicationRecord
   has_many :watches, as: :watched
 
   validates :active, inclusion: { in: [true, false], message: "can't be blank" }
+
+  default_scope { where(active: true) }
 end

@@ -15,5 +15,5 @@ class Outage < ApplicationRecord
     :completed,
     inclusion: { in: [true, false], message: "can't be blank" }
 
-    default_scope { where(active: true) }
+  default_scope { where(active: true) }
 end

@@ -7,25 +7,25 @@ class CisController < ApplicationController
     if @ci.save
        redirect_to cis_path
     else
-       Rails.logger.error @ci.errors.full_messages
+       logger.warn @ci.errors.full_messages
        render :new
      end
   end
 
   def destroy
-    @ci = current_user.account.cis.find_by(active: true, id: params[:id])
+    @ci = current_user.account.cis.find_by(id: params[:id])
     @ci.active = false
     if @ci.save
       redirect_to cis_path
     else
-      Rails.logger.error @ci.errors.full_messages
+      logger.warn @ci.errors.full_messages
       render :edit
     end
   end
 
   def edit
     # puts "IN EDI"
-    @ci = current_user.account.cis.find_by(active: true, id: params[:id])
+    @ci = current_user.account.cis.find_by(id: params[:id])
   end
 
   def index
@@ -41,7 +41,7 @@ class CisController < ApplicationController
   end
 
   def update
-    @ci = current_user.account.cis.find_by(active: true, id: params[:id])
+    @ci = current_user.account.cis.find_by(id: params[:id])
     #  TODO This was a test that I was trying to create a save error.  But the
     # ci was saved with a null account id
     # @ci.account_id = nil
@@ -50,7 +50,7 @@ class CisController < ApplicationController
      if @ci.update(ci_params)
        redirect_to cis_path
      else
-       Rails.logger.error @ci.errors.full_messages
+       logger.warn @ci.errors.full_messages
        render :edit
      end
   end
