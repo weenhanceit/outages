@@ -35,4 +35,10 @@ class OutageTest < ActiveSupport::TestCase
     assert outage.save
     assert outage.active
   end
+
+  test "find respects default scope" do
+    assert_raises ActiveRecord::RecordNotFound do
+      Outage.find(outages(:company_a_outage_inactive).id)
+    end
+  end
 end

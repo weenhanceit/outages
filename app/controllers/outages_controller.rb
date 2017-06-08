@@ -6,7 +6,7 @@ class OutagesController < ApplicationController
 
   def show
     # puts "IN SHOW"
-    @outage = current_user.account.outages.find_by(active: true, id: params[:id])
+    @outage = current_user.account.outages.find_by(id: params[:id])
   end
 
   def new
@@ -16,37 +16,37 @@ class OutagesController < ApplicationController
 
   def edit
     # puts "IN EDI"
-    @outage = current_user.account.outages.find_by(active: true, id: params[:id])
+    @outage = current_user.account.outages.find_by(id: params[:id])
   end
 
   def create
     @outage = Outage.new(outage_params)
     @outage.account = current_user.account
     if @outage.save
-      redirect_to cis_path
+      redirect_to outages_path
     else
-      Rails.logger.error @outage.errors.full_messages
+      logger.warn @outage.errors.full_messages
       render :new
     end
   end
 
   def update
-    @outage = current_user.account.outages.find_by(active: true, id: params[:id])
+    @outage = current_user.account.outages.find_by(id: params[:id])
     if @outage.update(outage_params)
-      redirect_to cis_path
+      redirect_to outages_path
     else
-      Rails.logger.error @outage.errors.full_messages
+      logger.warn @outage.errors.full_messages
       render :edit
     end
   end
 
   def destroy
-    @outage = current_user.account.outages.find_by(active: true, id: params[:id])
+    @outage = current_user.account.outages.find_by(id: params[:id])
     @outage.active = false
     if @outage.save
-      redirect_to cis_path
+      redirect_to outages_path
     else
-      Rails.logger.error @outage.errors.full_messages
+      logger.warn @outage.errors.full_messages
       render :edit
     end
   end

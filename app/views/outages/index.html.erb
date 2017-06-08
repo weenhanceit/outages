@@ -159,10 +159,10 @@
             <% end %>
           </td>
           <td>
-            <%= outage.start_time.strftime("%a, %d %b %Y %H:%M") %>
+            <%= outage.start_time.strftime("%a, %d %b %Y %H:%M") if outage.start_time %>
           </td>
           <td>
-            <%= outage.end_time.strftime("%a, %d %b %Y %H:%M") %>
+            <%= outage.end_time.strftime("%a, %d %b %Y %H:%M") if outage.end_time %>
           </td>
           <td>
             <% if current_user.can_edit_outages? %>
