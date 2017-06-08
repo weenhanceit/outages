@@ -21,6 +21,8 @@ class User < ApplicationRecord
     :privilege_manage_users,
     inclusion: { in: [true, false], message: "can't be blank" }
 
+  default_scope { where(active: true) }
+
   def can_edit_outages?
     privilege_edit_outages
   end

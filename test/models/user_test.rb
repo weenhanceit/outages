@@ -6,7 +6,7 @@ class UserTest < ActiveSupport::TestCase
     assert_not user.valid?, "Valid when it should be invalid."
     assert_equal [
       "Account must exist",
-      "Active can't be blank",
+      # "Active can't be blank", Default scope means this can't happen
       "Email can't be blank",
       "Notify me before outage can't be blank",
       "Notify me on outage changes can't be blank",
