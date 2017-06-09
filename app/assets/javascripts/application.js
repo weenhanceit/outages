@@ -19,3 +19,8 @@
 //= require tether
 //= require popper
 //= require bootstrap-sprockets
+
+// For select and drag and drop with jQueryUI
+//= require jquery-ui/widgets/selectable
+//= require jquery-ui/widgets/sortable
+// End jQueryUI
