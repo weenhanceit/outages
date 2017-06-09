@@ -111,7 +111,20 @@ class OutagesTest < ApplicationSystemTestCase
     visit edit_outage_url(outage)
 
     click_list_item "Server C"
-    click_button "<"
+    click_on "<"
+    assert_difference "CisOutage.count" do
+      click_on "Save"
+    end
+  end
+
+  test "assign a CI in a new outage" do
+    user = sign_in_for_system_tests(users(:edit_ci_outages))
+
+    outage = outages(:company_a_outage_c)
+    visit new_outage_url
+
+    click_list_item "Server C"
+    click_on "<"
     assert_difference "CisOutage.count" do
       click_on "Save"
     end
@@ -124,7 +137,7 @@ class OutagesTest < ApplicationSystemTestCase
     visit edit_outage_url(outage)
 
     click_list_item "Server B"
-    click_button ">"
+    click_on ">"
     assert_difference "CisOutage.count", -1 do
       click_on "Save"
     end

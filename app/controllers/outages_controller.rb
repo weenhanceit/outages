@@ -12,14 +12,17 @@ class OutagesController < ApplicationController
   def new
     # puts "IN NEW"
     @outage = Outage.new(outage_defaults)
+    @available_cis = all_cis
   end
 
   def edit
-    # puts "IN EDI"
+    # puts "IN EDIT"
     load_outage
+    @available_cis = all_cis - @outage.cis
   end
 
   def create
+    # puts "IN CREATE"
     @outage = Outage.new(outage_params)
     @outage.account = current_user.account
     update_watches
@@ -32,6 +35,7 @@ class OutagesController < ApplicationController
   end
 
   def update
+    # puts "IN UPDATE"
     load_outage
     update_watches
     if @outage.update(outage_params)
@@ -43,6 +47,7 @@ class OutagesController < ApplicationController
   end
 
   def destroy
+    # puts "IN DESTROY"
     load_outage
     @outage.active = false
     if @outage.save
@@ -55,12 +60,18 @@ class OutagesController < ApplicationController
 
   private
 
+  def all_cis
+    Ci.where(account: current_user.account)
+  end
+
   def load_outage
     @outage = current_user.
                 account.
                 outages.
-                includes(:watches).
+                includes(:watches, :cis_outages, :cis).
                 find(params[:id])
+
+    # puts "Outage loaded: watches.size: #{@outage.watches.size} cis.size: #{@outage.cis.size} cis_outages.size: #{@outage.cis_outages.size}"
   end
 
   # TODO: Does Rails have a better way to handle model defaults?
