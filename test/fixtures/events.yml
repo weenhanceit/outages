@@ -1,4 +1,5 @@
 company_a_outage_a_event_a:
+  handled: false
   outage: company_a_outage_a
   event_type: outage
   text: A random change

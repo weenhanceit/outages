@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 20170605215241) do
   end
 
   create_table "events", force: :cascade do |t|
+    t.boolean "handled", null: false
     t.bigint "outage_id"
     t.text "text"
     t.integer "event_type", default: 0
