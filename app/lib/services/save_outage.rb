@@ -11,7 +11,7 @@ module Services
     def self.call(outage)
       if outage.new_record?
         return false unless outage.save
-        outage.events.create(event_type: "outage", text: "New outage")
+        outage.events.create(event_type: "outage", text: "New outage", handled: false)
       elsif outage.changed?
         false
       else

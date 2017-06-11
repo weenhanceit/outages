@@ -1,3 +1,5 @@
+require "test_helper"
+
 class SaveOutageTest < ActiveSupport::TestCase
   test "save a new valid outage" do
     outage = Outage.new(account: accounts(:company_a),

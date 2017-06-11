@@ -9,8 +9,8 @@ class UserTest < ActiveSupport::TestCase
       # "Active can't be blank", Default scope means this can't happen
       "Email can't be blank",
       "Notify me before outage can't be blank",
-      "Notify me on outage changes can't be blank",
       "Notify me on note changes can't be blank",
+      "Notify me on outage changes can't be blank",
       "Notify me on outage complete can't be blank",
       "Notify me on overdue outage can't be blank",
       "Preference individual email notifications can't be blank",
@@ -19,6 +19,6 @@ class UserTest < ActiveSupport::TestCase
       "Privilege edit cis can't be blank",
       "Privilege edit outages can't be blank",
       "Privilege manage users can't be blank"
-    ], user.errors.full_messages
+    ], user.errors.full_messages.sort
   end
 end
