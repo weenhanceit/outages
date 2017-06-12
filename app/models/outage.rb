@@ -3,6 +3,7 @@
 class Outage < ApplicationRecord
   belongs_to :account
   has_many :cis_outages, inverse_of: :outage
+  accepts_nested_attributes_for :cis_outages
   has_many :cis, through: :cis_outages
   accepts_nested_attributes_for :cis
   has_many :contributors, inverse_of: :outage

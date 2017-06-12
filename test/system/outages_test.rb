@@ -143,6 +143,21 @@ class OutagesTest < ApplicationSystemTestCase
     end
   end
 
+  test "remove a CI and then assign it" do
+    user = sign_in_for_system_tests(users(:edit_ci_outages))
+
+    outage = outages(:company_a_outage_c)
+    visit edit_outage_url(outage)
+
+    click_list_item "Server B"
+    click_on ">"
+    click_list_item "Server B"
+    click_on "<"
+    assert_no_difference "CisOutage.count" do
+      click_on "Save"
+    end
+  end
+
   private
 
   def click_list_item(text)

@@ -30,35 +30,33 @@
   <%= f.check_box :watched %>
   <div class="">
     <h3>Affected Services</h3>
-    <div class="">
-      <ul id="js-assigned" class="list-unstyled js-connected js-selectable">
-        <%= f.fields_for :cis do |ci| %>
-          <li class="ui-widget-content">
-            <%#= ci.class %>
-            <%#= ci.object.class %>
-            <%= ci.object.name %>
-            <%= ci.hidden_field :id %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
+    <ul id="js-assigned" class="list-unstyled js-connected js-selectable">
+      <%= f.fields_for :cis_outages do |ci| %>
+        <li class="ui-widget-content">
+          <%#= ci.class %>
+          <%#= ci.object.class %>
+          <%= ci.object.name %>
+          <%= ci.hidden_field :id %>
+          <%= ci.hidden_field :ci_id %>
+          <%= ci.hidden_field :outage_id %>
+        </li>
+      <% end %>
+    </ul>
   </div>
   <%= button_tag "<", class: "btn js-assign" %>
   <%= button_tag ">", class: "btn js-remove" %>
   <div class="">
     <h3>Available Services</h3>
-    <div class="">
-      <ul id="js-available" class="list-unstyled js-connected js-selectable">
-        <% @available_cis.each do |ci| %>
-          <%= fields_for ci do |ci_f| %>
-            <li class="ui-widget-content">
-              <%= ci.name %>
-              <%= ci_f.hidden_field :id %>
-            </li>
-          <% end %>
+    <ul id="js-available" class="list-unstyled js-connected js-selectable">
+      <% @available_cis.each do |ci| %>
+        <%= fields_for ci do |ci_f| %>
+          <li class="ui-widget-content">
+            <%= ci.name %>
+            <%= ci_f.hidden_field :id %> <!-- make this ci_id -->
+          </li>
         <% end %>
-      </ul>
-    </div>
+      <% end %>
+    </ul>
   </div>
   <%= f.submit "Save" %>
 <% end %>
