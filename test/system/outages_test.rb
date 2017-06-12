@@ -141,6 +141,7 @@ class OutagesTest < ApplicationSystemTestCase
     assert_difference "CisOutage.count", -1 do
       click_on "Save"
     end
+    assert_text "Server B"
   end
 
   test "remove a CI and then assign it" do
