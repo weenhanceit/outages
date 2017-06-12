@@ -158,6 +158,30 @@ class OutagesTest < ApplicationSystemTestCase
     end
   end
 
+  test "remove two CIs at once" do
+    skip "Need to learn how to shift-click in Capybara"
+    user = sign_in_for_system_tests(users(:edit_ci_outages))
+
+    outage = outages(:company_a_outage_c)
+    visit edit_outage_url(outage)
+
+    click_list_item "Server B"
+    click_list_item "Server C"
+    click_on "<"
+    assert_difference "CisOutage.count", 2 do
+      click_on "Save"
+    end
+
+    visit edit_outage_url(outage)
+
+    click_list_item "Server B"
+    click_list_item "Server C"
+    click_on ">"
+    assert_difference "CisOutage.count", -2 do
+      click_on "Save"
+    end
+  end
+
   private
 
   def click_list_item(text)
