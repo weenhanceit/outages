@@ -9,11 +9,19 @@ module Services
     # Returns nil or false if the outage save failed (typically because the data
     # was invalid).
     def self.call(outage)
+      unless outage.is_a?(Outage)
+        raise ArgumentError, "Services::SaveOutage.call: Expected Outage, got #{outage.class}"
+      end
       if outage.new_record?
         return false unless outage.save
-        outage.events.create(event_type: "outage", text: "New outage", handled: false)
+        outage.events.create(event_type: "outage",
+         text: "New outage",
+         handled: false)
       elsif outage.changed?
-        false
+        return false unless outage.save
+        outage.events.create(event_type: "outage",
+         text: "Outage Changed",
+         handled: false)
       else
         true
       end

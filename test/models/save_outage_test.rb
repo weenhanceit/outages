@@ -13,7 +13,7 @@ class SaveOutageTest < ActiveSupport::TestCase
                         start_time: Time
                           .find_zone("Samoa")
                           .parse("2017-08-30T14:00:00"))
-    assert_difference "Event.count" do
+    assert_difference ["Event.count","Outage.count"] do
       event = Services::SaveOutage.call(outage)
       assert event.is_a?(Event), "Save outage #{outage.inspect} failed."
 
@@ -24,23 +24,44 @@ class SaveOutageTest < ActiveSupport::TestCase
   end
 
   test "save a new invalid outage" do
-    flunk
+    outage = Outage.new
+    assert_no_difference ["Event.count","Outage.count"] do
+      result = Services::SaveOutage.call(outage)
+      assert_not result
+    end
+
   end
 
   test "save an existing but now invalid outage" do
-    flunk
+    outage = outages(:company_a_outage_watched_by_edit)
+    outage.active = nil
+    assert_no_difference ["Event.count","Outage.count"] do
+      result = Services::SaveOutage.call(outage)
+      assert_not result
+    end
   end
 
   test "save an existing unchanged outage" do
     outage = outages(:company_a_outage_watched_by_edit)
-    assert_no_difference "Event.count" do
-      result = Services::SaveOutage.call(outage),
-               "Save outage #{outage.inspect} failed."
+    assert_no_difference ["Event.count","Outage.count"] do
+      result = Services::SaveOutage.call(outage)
       assert true == result
     end
   end
 
   test "change start time of existing outage" do
-    flunk
+    outage = outages(:company_a_outage_watched_by_edit)
+    outage.start_time = outage.start_time + 14.minute
+    assert_difference "Event.count" do
+      event = Services::SaveOutage.call(outage)
+      assert event.is_a?(Event), "Save outage #{outage.inspect} failed."
+      assert_equal "outage", event.event_type
+      assert_equal "Outage Changed", event.text
+      assert_equal outage, event.outage
+    end
+    # check the changes were reflected in the database
+    outage_saved = Outage.find(outage.id)
+    assert outage_saved.is_a?(Outage), "Could not find saved outage"
+    assert_equal  outage.start_time, outage_saved.start_time, "Start time unchanged"
   end
 end
