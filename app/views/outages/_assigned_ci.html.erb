@@ -1,0 +1,11 @@
+<li class="ui-widget-content"
+    data-name="<%= assigned_ci.name -%>"
+    data-id="<%= assigned_ci.id -%>">
+  <%#= ci.class %>
+  <%#= ci.object.class %>
+  <%= assigned_ci.name %>
+  <%= f.hidden_field :id %>
+  <%= f.hidden_field :ci_id %>
+  <%= f.hidden_field :outage_id %>
+  <%= f.hidden_field :_destroy %>
+</li>

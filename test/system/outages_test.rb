@@ -141,6 +141,7 @@ class OutagesTest < ApplicationSystemTestCase
     assert_difference "CisOutage.count", -1 do
       click_on "Save"
     end
+    visit edit_outage_url(outage)
     assert_text "Server B"
   end
 

@@ -3,16 +3,43 @@
 
 // jQueryUI implementation for assigning CIs on the outage#edit page
 $(document).on('turbolinks:load', function() {
+  // TODO: figure out where to put these functions so they don't get
+  // loaded all the time, but won't frustrate us when testing.
+  // Inspired by http://railscasts.com/episodes/196-nested-model-form-revised
+  $.fn.extend({
+    destroy_element_for_rails: function () {
+      console.log('Destroying this: ' + $(this).html());
+      console.log('Destroy field is: ' + $('input[id$="_destroy"]', this).html());
+      $('input[id$="_destroy"]', this).val('1');
+      $(this).hide();
+    },
+    move_to_available: function () {
+      available_element = '<li class="ui-widget-content" data-name="' +
+                            $(this).data('name') +
+                            '" data-id="' +
+                            $(this).data('id') +
+                            '">' +
+                            $(this).data('name') +
+                            '</li>';
+      $('#js-available').append(available_element);
+    }
+  });
+
   // Modelled on: http://jqueryui.com/selectable/
   $(".js-selectable").selectable();
   // LCR on top of selectable
+  // FIXME: The selectors have to look in their own list because
+  // both lists can have selections.
   $('.js-assign').click(function() {
     event.preventDefault();
     $('.ui-selected').appendTo('#js-assigned');
   });
   $('.js-remove').click(function() {
     event.preventDefault();
-    $('.ui-selected').appendTo('#js-available');
+    elements = $('.ui-selected');
+    // elements.clone().appendTo('#js-available');
+    elements.move_to_available();
+    elements.destroy_element_for_rails();
   });
 
   // Modelled on: http://jqueryui.com/sortable/#connect-lists

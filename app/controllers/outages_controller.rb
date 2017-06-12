@@ -11,7 +11,7 @@ class OutagesController < ApplicationController
 
   def new
     # puts "IN NEW"
-    @outage = Outage.new(outage_defaults)
+    @outage = Outage.new(outage_defaults.merge(account: current_account))
     @available_cis = all_cis
   end
 
@@ -38,8 +38,8 @@ class OutagesController < ApplicationController
     # puts "IN UPDATE"
     load_outage
     update_watches
-    puts "params.require(:outage): #{params.require(:outage).inspect}"
-    puts "outage_params: #{outage_params.inspect}"
+    # puts "params.require(:outage): #{params.require(:outage).inspect}"
+    # puts "outage_params: #{outage_params.inspect}"
     if @outage.update(outage_params)
       redirect_to outages_path
     else
@@ -95,7 +95,7 @@ class OutagesController < ApplicationController
       :end_time,
       :name,
       :start_time,
-      cis_outages_attributes: [:id, :ci_id, :outage_id])
+      cis_outages_attributes: [:id, :ci_id, :outage_id, :_destroy])
   end
 
   def update_watches
