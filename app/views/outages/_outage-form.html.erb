@@ -41,14 +41,7 @@
   <div class="">
     <h3>Available Services</h3>
     <ul id="js-available" class="list-unstyled js-connected js-selectable">
-      <%# @available_cis.each do |ci| %>
-        <%= f.fields_for :available_cis do |cis| %>
-          <%# puts "FROM VIEW: cis: #{cis.inspect}" %>
-          <li class="ui-widget-content">
-            <%= render partial: "available_ci", collection: @available_cis, locals: { f: cis } %>
-          </li>
-        <% end %>
-      <%# end %>
+      <%= render partial: "available_ci", collection: @available_cis %>
     </ul>
   </div>
   <%= f.submit "Save" %>

@@ -8,16 +8,22 @@ $(document).on('turbolinks:load', function() {
   // Inspired by http://railscasts.com/episodes/196-nested-model-form-revised
   $.fn.extend({
     destroy_element_for_rails: function () {
-      console.log('Destroying this: ' + $(this).html());
-      console.log('Destroy field is: ' + $('input[id$="_destroy"]', this).html());
+      // console.log('Destroying this: ' + $(this).html());
       $('input[id$="_destroy"]', this).val('1');
       $(this).hide();
+    },
+    move_to_assigned: function() {
+      // If the ci_id is in the assigned list, but the delete field is "1",
+      // just un-delete it.
+      // Otherwise, create a new row.
+      existing = $('#js-assigned li[id$=' + $(this).data('ci-id') + ']');
+      console.log('EXISTING: ' + existing);
     },
     move_to_available: function () {
       available_element = '<li class="ui-widget-content" data-name="' +
                             $(this).data('name') +
                             '" data-id="' +
-                            $(this).data('id') +
+                            $(this).data('ci_id') +
                             '">' +
                             $(this).data('name') +
                             '</li>';
