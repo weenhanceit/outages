@@ -9,6 +9,7 @@ $(document).on('turbolinks:load', function() {
   $.fn.extend({
     destroy_element_for_rails: function () {
       // console.log('Destroying this: ' + $(this).html());
+      // console.log('destroy SIZE: ' + this.length);
       $('input[id$="_destroy"]', this).val('1');
     },
     move_to_assigned: function() {
@@ -16,11 +17,7 @@ $(document).on('turbolinks:load', function() {
       //   $(this)[0].outerHTML +
       //   ' to end of ' +
       //   $('#js-assigned')[0].outerHTML);
-      // If the ci_id is in the assigned list, but the delete field is "1",
-      // just un-delete it.
-      // Otherwise, create a new row.
-      // For now, just do broken stuff.
-      // FIXME: This is wrong
+      // console.log('assign SIZE: ' + this.length);
       $(this).appendTo('#js-assigned');
       // existing = $('#js-assigned li[id$=' + $(this).data('ci-id') + ']');
       // console.log('EXISTING: ' + existing[0].outerHTML);
@@ -34,10 +31,12 @@ $(document).on('turbolinks:load', function() {
       //                       $(this).data('name') +
       //                       '</li>';
       // $('#js-available').append(available_element);
+      // console.log('unassign SIZE: ' + this.length);
       $('#js-available').append($(this));
     },
     undestroy_element_for_rails: function () {
       // console.log('Undestroying this: ' + $(this).html());
+      // console.log('undestroy SIZE: ' + this.length);
       $('input[id$="_destroy"]', this).val('0');
     }
   });
@@ -47,15 +46,17 @@ $(document).on('turbolinks:load', function() {
   // LCR on top of selectable
   // FIXME: The selectors have to look in their own list because
   // both lists can have selections.
-  $('.js-assign').click(function() {
+  $('.js-assign').click(function(event) {
     event.preventDefault();
     elements = $('.ui-selected');
+    // console.log('ELEMENTS: ' + elements.length);
     elements.move_to_assigned();
     elements.undestroy_element_for_rails();
   });
-  $('.js-remove').click(function() {
+  $('.js-remove').click(function(event) {
     event.preventDefault();
     elements = $('.ui-selected');
+    // console.log('ELEMENTS: ' + elements.length);
     // elements.clone().appendTo('#js-available');
     elements.move_to_available();
     elements.destroy_element_for_rails();

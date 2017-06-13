@@ -167,25 +167,26 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
   end
 
   test "remove two CIs at once" do
-    skip "Need to learn how to shift-click in Capybara"
+    skip "I can't figure out how to get this test to select more than one"
     user = sign_in_for_system_tests(users(:edit_ci_outages))
 
     outage = outages(:company_a_outage_c)
     visit edit_outage_url(outage)
 
-    click_list_item "Server B"
-    click_list_item "Server C"
+    click_list_item "Server A"
+    shift_click_list_item "Server C"
+    click_on "<"
+    within('#js-assigned') { assert_text "Server A" }
     within('#js-assigned') { assert_text "Server B" }
     within('#js-assigned') { assert_text "Server C" }
-    click_on "<"
     assert_difference "CisOutage.count", 2 do
       click_on "Save"
     end
 
     visit edit_outage_url(outage)
 
-    click_list_item "Server A"
-    click_list_item "Server C"
+    click_list_item "Server B"
+    shift_click_list_item "Server C"
     click_on ">"
     within('#js-available') { assert_text "Server B" }
     within('#js-available') { assert_text "Server C" }
@@ -198,5 +199,14 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
 
   def click_list_item(text)
     find("li", text: text).click
+  end
+
+  def shift_click_list_item(text)
+    selector = "$('li:contains(\"#{text}\")')"
+    # puts "selector: #{selector}"
+    execute_script("var ctrlClick = jQuery.Event('mousedown');" \
+      "ctrlClick.ctrlKey = true;" \
+      "var target = #{selector};" \
+      "target.click(ctrlClick);")
   end
 end
