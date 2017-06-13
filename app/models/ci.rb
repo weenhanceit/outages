@@ -26,12 +26,20 @@ class Ci < ApplicationRecord
   # This will blow up if you don't pass an account, and the outage doesn't
   # have an account assigned yet.
   def available_for_parents(account = self.account)
-    Ci.all
+    all_cis_but_me - parents - descendants
   end
 
   ##
   # Process the attributes.
   # TODO: Describe this whole technique somewhere.
   def available_for_parents_attributes=(attributes)
+  end
+
+  def descendants
+    children + children.map(&:descendants).flatten
+  end
+
+  def all_cis_but_me
+    Ci.where(account: account).where.not(id: id)
   end
 end
