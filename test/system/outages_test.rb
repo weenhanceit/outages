@@ -1,6 +1,6 @@
 require "application_system_test_case"
 
-class OutagesTest < ApplicationSystemTestCase
+class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
   test "visiting the index" do
     sign_in_for_system_tests(users(:basic))
 
@@ -18,7 +18,8 @@ class OutagesTest < ApplicationSystemTestCase
     assert_difference "Outage.where(account: user.account).size" do
       assert_no_difference "Watch.count" do
         fill_in "Name", with: "Outage 7"
-        fill_in "Description", with: "This is the outage in the seventh ring of your know where."
+        fill_in "Description",
+          with: "This is the outage in the seventh ring of your know where."
         click_on "Save"
       end
     end
@@ -35,7 +36,8 @@ class OutagesTest < ApplicationSystemTestCase
     assert_difference "Outage.where(account: user.account).size" do
       assert_difference "Watch.count" do
         fill_in "Name", with: "Outage 7"
-        fill_in "Description", with: "This is the outage in the seventh ring of your know where."
+        fill_in "Description",
+          with: "This is the outage in the seventh ring of your know where."
         check "Watched"
         click_on "Save"
       end
@@ -115,12 +117,13 @@ class OutagesTest < ApplicationSystemTestCase
     assert_difference "CisOutage.count" do
       click_on "Save"
     end
+    visit edit_outage_url(outage)
+    within('#js-assigned') { assert_text "Server B" }
   end
 
   test "assign a CI in a new outage" do
     user = sign_in_for_system_tests(users(:edit_ci_outages))
 
-    outage = outages(:company_a_outage_c)
     visit new_outage_url
 
     click_list_item "Server C"
@@ -138,11 +141,12 @@ class OutagesTest < ApplicationSystemTestCase
 
     click_list_item "Server B"
     click_on ">"
+    within('#js-available') { assert_text "Server B" }
     assert_difference "CisOutage.count", -1 do
       click_on "Save"
     end
     visit edit_outage_url(outage)
-    assert_text "Server B"
+    within('#js-available') { assert_text "Server B" }
   end
 
   test "remove a CI and then assign it" do
@@ -153,8 +157,10 @@ class OutagesTest < ApplicationSystemTestCase
 
     click_list_item "Server B"
     click_on ">"
+    within('#js-available') { assert_text "Server B" }
     click_list_item "Server B"
     click_on "<"
+    within('#js-assigned') { assert_text "Server B" }
     assert_no_difference "CisOutage.count" do
       click_on "Save"
     end
@@ -169,6 +175,8 @@ class OutagesTest < ApplicationSystemTestCase
 
     click_list_item "Server B"
     click_list_item "Server C"
+    within('#js-assigned') { assert_text "Server B" }
+    within('#js-assigned') { assert_text "Server C" }
     click_on "<"
     assert_difference "CisOutage.count", 2 do
       click_on "Save"
@@ -176,9 +184,11 @@ class OutagesTest < ApplicationSystemTestCase
 
     visit edit_outage_url(outage)
 
-    click_list_item "Server B"
+    click_list_item "Server A"
     click_list_item "Server C"
     click_on ">"
+    within('#js-available') { assert_text "Server B" }
+    within('#js-available') { assert_text "Server C" }
     assert_difference "CisOutage.count", -2 do
       click_on "Save"
     end
