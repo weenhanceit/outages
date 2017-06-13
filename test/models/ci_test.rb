@@ -34,11 +34,33 @@ class CiTest < ActiveSupport::TestCase
     assert @ci.available_for_parents.to_a.include?(@unrelated)
   end
 
+  test "available_for_children doesn't include grandparent" do
+    assert_not @ci.available_for_children.to_a.include?(@grandparent)
+  end
+
+  test "available_for_children doesn't include parent" do
+    assert_not @ci.available_for_children.to_a.include?(@parent)
+  end
+
+  test "available_for_children doesn't include child" do
+    assert_not @ci.available_for_children.to_a.include?(@child)
+  end
+
+  test "available_for_children includes grandchild" do
+    assert @ci.available_for_children.to_a.include?(@grandchild)
+  end
+
+  test "available_for_children doesn't include self" do
+    assert_not @ci.available_for_children.to_a.include?(@ci)
+  end
+
+  test "available_for_children includes unrelated" do
+    assert @ci.available_for_children.to_a.include?(@unrelated)
+  end
+
   def setup
     @account = Account.new(name: "No CIs")
     @ci = Ci.create(account: @account, name: "Me")
-    # Just to keep us honest, put in a CI for another account
-    Ci.create(account: accounts(:company_a), name: "Other company")
     @unrelated = Ci.create(account: @account, name: "Unrelated")
     @parent = @ci.parents.create(account: @account, name: "Parent")
     @grandparent =

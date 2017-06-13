@@ -20,6 +20,28 @@ class Ci < ApplicationRecord
   default_scope { where(active: true) }
 
   ##
+  # All the ancestor Cis of a CI
+  def ancestors
+    parents + parents.map(&:parents).flatten
+  end
+
+  ##
+  # Return the CIs that could be parents of this CI.
+  # That means they're not already parents, and they're not children.
+  # If they were children, this would not be a DAG.
+  # This will blow up if you don't pass an account, and the outage doesn't
+  # have an account assigned yet.
+  def available_for_children(account = self.account)
+    all_cis_but_me - children - ancestors
+  end
+
+  ##
+  # Process the attributes.
+  # TODO: Describe this whole technique somewhere.
+  def available_for_children_attributes=(attributes)
+  end
+
+  ##
   # Return the CIs that could be parents of this CI.
   # That means they're not already parents, and they're not children.
   # If they were children, this would not be a DAG.
@@ -35,6 +57,8 @@ class Ci < ApplicationRecord
   def available_for_parents_attributes=(attributes)
   end
 
+  ##
+  # All the descendant CIs of a CI
   def descendants
     children + children.map(&:descendants).flatten
   end
