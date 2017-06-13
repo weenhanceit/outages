@@ -1,10 +1,15 @@
 <div class="row">
   <div class="col-sm-12">
-    <h3>Parents</h3>
+    <h3>Dependents</h3>
+    <p>
+      Dependent services depend on this service.
+      If a dependent service is unavailable,
+      this service is unavailable, too.
+    </p>
   </div>
   <div class="card col-sm-5">
     <div class="card-block">
-      <h4 class="card-title">Parents</h3>
+      <h4 class="card-title">Dependent Services</h3>
       <ul id="js-assigned" class="list-unstyled js-connected js-selectable card-text">
         <%= f.fields_for :parent_links do |ci| %>
           <%= render partial: "parent", object: ci.object, locals: { f: ci } %>

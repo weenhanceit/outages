@@ -1,5 +1,5 @@
 <%= bootstrap_form_for(ci, builder: WeitFormBuilder) do |f| %>
-<%= f.hidden_field :active %>
+  <%= f.hidden_field :active %>
   <div class="row">
     <%= f.text_field :name %>
     <%= f.number_field :maximum_unavailable_children_with_service_maintained %>
