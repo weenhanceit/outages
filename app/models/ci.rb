@@ -64,6 +64,8 @@ class Ci < ApplicationRecord
   end
 
   def all_cis_but_me
-    Ci.where(account: account).where.not(id: id)
+    all = Ci.where(account: account)
+    all = all.where.not(id: id) if id
+    all
   end
 end

@@ -10,6 +10,12 @@ class CiTest < ActiveSupport::TestCase
     ], ci.errors.full_messages
   end
 
+  test "available_for_parents on new includes all" do
+    ci = Ci.new(account: @account)
+    assert_equal ci.available_for_parents.to_a.sort,
+      [@grandparent, @parent, @ci, @child, @grandchild, @unrelated].sort
+  end
+
   test "available_for_parents includes grandparent" do
     assert @ci.available_for_parents.to_a.include?(@grandparent)
   end
@@ -32,6 +38,12 @@ class CiTest < ActiveSupport::TestCase
 
   test "available_for_parents includes unrelated" do
     assert @ci.available_for_parents.to_a.include?(@unrelated)
+  end
+
+  test "available_for_children on new includes all" do
+    ci = Ci.new(account: @account)
+    assert_equal ci.available_for_children.to_a.sort,
+    [@grandparent, @parent, @ci, @child, @grandchild, @unrelated].sort
   end
 
   test "available_for_children doesn't include grandparent" do

@@ -197,10 +197,6 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
 
   private
 
-  def click_list_item(text)
-    find("li", text: text).click
-  end
-
   def shift_click_list_item(text)
     selector = "$('li:contains(\"#{text}\")')"
     # puts "selector: #{selector}"
