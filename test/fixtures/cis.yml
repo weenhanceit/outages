@@ -21,3 +21,23 @@ company_a_ci_c:
   name: Server C
   maximum_unavailable_children_with_service_maintained:
   minimum_children_to_maintain_service:
+
+company_a_ci_d:
+  account: company_a
+  active: true
+  description: Load Balancer D
+  name: Load Balancer D
+
+company_a_ci_e:
+  account: company_a
+  active: true
+  description: Router E
+  name: Router E
+
+company_a_ci_f:
+  account: company_a
+  active: true
+  description: Server F
+  name: Server F
+  maximum_unavailable_children_with_service_maintained:
+  minimum_children_to_maintain_service:
