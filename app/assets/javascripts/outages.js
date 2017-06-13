@@ -10,24 +10,35 @@ $(document).on('turbolinks:load', function() {
     destroy_element_for_rails: function () {
       // console.log('Destroying this: ' + $(this).html());
       $('input[id$="_destroy"]', this).val('1');
-      $(this).hide();
     },
     move_to_assigned: function() {
+      // console.log('MOVE: ' +
+      //   $(this)[0].outerHTML +
+      //   ' to end of ' +
+      //   $('#js-assigned')[0].outerHTML);
       // If the ci_id is in the assigned list, but the delete field is "1",
       // just un-delete it.
       // Otherwise, create a new row.
-      existing = $('#js-assigned li[id$=' + $(this).data('ci-id') + ']');
-      console.log('EXISTING: ' + existing);
+      // For now, just do broken stuff.
+      // FIXME: This is wrong
+      $(this).appendTo('#js-assigned');
+      // existing = $('#js-assigned li[id$=' + $(this).data('ci-id') + ']');
+      // console.log('EXISTING: ' + existing[0].outerHTML);
     },
     move_to_available: function () {
-      available_element = '<li class="ui-widget-content" data-name="' +
-                            $(this).data('name') +
-                            '" data-id="' +
-                            $(this).data('ci_id') +
-                            '">' +
-                            $(this).data('name') +
-                            '</li>';
-      $('#js-available').append(available_element);
+      // available_element = '<li class="ui-widget-content" data-name="' +
+      //                       $(this).data('name') +
+      //                       '" data-id="' +
+      //                       $(this).data('ci_id') +
+      //                       '">' +
+      //                       $(this).data('name') +
+      //                       '</li>';
+      // $('#js-available').append(available_element);
+      $('#js-available').append($(this));
+    },
+    undestroy_element_for_rails: function () {
+      // console.log('Undestroying this: ' + $(this).html());
+      $('input[id$="_destroy"]', this).val('0');
     }
   });
 
@@ -38,7 +49,9 @@ $(document).on('turbolinks:load', function() {
   // both lists can have selections.
   $('.js-assign').click(function() {
     event.preventDefault();
-    $('.ui-selected').appendTo('#js-assigned');
+    elements = $('.ui-selected');
+    elements.move_to_assigned();
+    elements.undestroy_element_for_rails();
   });
   $('.js-remove').click(function() {
     event.preventDefault();

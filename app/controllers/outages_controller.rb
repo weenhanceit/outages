@@ -95,7 +95,8 @@ class OutagesController < ApplicationController
       :end_time,
       :name,
       :start_time,
-      cis_outages_attributes: [:id, :ci_id, :outage_id, :_destroy])
+      cis_outages_attributes: [:id, :ci_id, :outage_id, :_destroy],
+      available_cis_attributes: [:ci_id, :_destroy])
   end
 
   def update_watches

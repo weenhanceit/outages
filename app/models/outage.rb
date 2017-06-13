@@ -32,9 +32,12 @@ class Outage < ApplicationRecord
   ##
   # This is needed to make the form helpers treat the available_cis as
   # an association.
-  # TODO: Remove this.
-  # def available_cis_attributes=(attributes)
-  # end
+  def available_cis_attributes=(attributes)
+    # puts "available_cis_attributes: #{attributes.inspect}"
+    # puts "OUTAGE: #{inspect}"
+    update_attributes(cis_outages_attributes: attributes)
+    # puts "OUTAGE: #{inspect}"
+  end
 
   def watched
     watches.present?

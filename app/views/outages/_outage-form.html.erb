@@ -41,7 +41,9 @@
   <div class="">
     <h3>Available Services</h3>
     <ul id="js-available" class="list-unstyled js-connected js-selectable">
-      <%= render partial: "available_ci", collection: @available_cis %>
+      <%= f.fields_for :available_cis do |ci| %>
+        <%= render partial: "available_ci", object: ci.object, locals: { f: ci } %>
+      <% end %>
     </ul>
   </div>
   <%= f.submit "Save" %>
