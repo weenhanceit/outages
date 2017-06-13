@@ -30,14 +30,9 @@
   <%= f.check_box :watched %>
   <div class="">
     <h3>Affected Services</h3>
-    <ul class="js-droppable list-unstyled">
-      <%= f.fields_for :cis do |ci| %>
-        <li class="js-draggable js-selectable">
-          <%#= ci.class %>
-          <%#= ci.object.class %>
-          <%= ci.object.name %>
-          <%= ci.hidden_field :id %>
-        </li>
+    <ul id="js-assigned" class="list-unstyled js-connected js-selectable">
+      <%= f.fields_for :cis_outages do |ci| %>
+        <%= render partial: "assigned_ci", object: ci.object, locals: { f: ci } %>
       <% end %>
     </ul>
   </div>
@@ -45,14 +40,9 @@
   <%= button_tag ">", class: "btn js-remove" %>
   <div class="">
     <h3>Available Services</h3>
-    <ul class="js-droppable list-unstyled">
-      <% @available_cis.each do |ci| %>
-        <%= fields_for ci do |ci_f| %>
-          <li class="js-draggable js-selectable">
-            <%= ci.name %>
-            <%= ci_f.hidden_field :id %>
-          </li>
-        <% end %>
+    <ul id="js-available" class="list-unstyled js-connected js-selectable">
+      <%= f.fields_for :available_cis do |ci| %>
+        <%= render partial: "available_ci", object: ci.object, locals: { f: ci } %>
       <% end %>
     </ul>
   </div>
