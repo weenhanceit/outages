@@ -23,7 +23,6 @@ class Outage < ApplicationRecord
   # Return the available but not assigned CIs for the outage.
   # This will blow up if you don't pass an account, and the outage doesn't
   # have an account assigned yet.
-  # TODO: Remove this.
   def available_cis(account = self.account)
     # puts "AVAILABLE: #{(Ci.where(account: account) - cis).inspect}"
     Ci.where(account: account) - cis

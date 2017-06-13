@@ -1,0 +1,10 @@
+<% puts "PARENT IS NIL!" if parent.nil? %>
+<li class="ui-widget-content"
+    data-name="<%= parent.parent_name -%>"
+    data-ci-id="<%= parent.parent_id -%>">
+  <%= parent.parent_name %>
+  <%= f.hidden_field :id %>
+  <%= f.hidden_field :parent_id %>
+  <%= f.hidden_field :child_id %>
+  <%= f.hidden_field :_destroy %>
+</li>

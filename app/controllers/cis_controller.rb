@@ -5,11 +5,11 @@ class CisController < ApplicationController
     @ci = Ci.new(ci_params)
     @ci.account = current_user.account
     if @ci.save
-       redirect_to cis_path
+      redirect_to cis_path
     else
-       logger.warn @ci.errors.full_messages
-       render :new
-     end
+      logger.warn @ci.errors.full_messages
+      render :new
+    end
   end
 
   def destroy
@@ -47,21 +47,21 @@ class CisController < ApplicationController
     # @ci.account_id = nil
     # phil = "Name: #{@ci.name} Valid: #{@ci.valid?} AccountID: #{@ci.account_id}"
     # render plain: phil
-     if @ci.update(ci_params)
-       redirect_to cis_path
-     else
-       logger.warn @ci.errors.full_messages
-       render :edit
-     end
+    if @ci.update(ci_params)
+      redirect_to cis_path
+    else
+      logger.warn @ci.errors.full_messages
+      render :edit
+    end
   end
-
 end
 
 private
+
 # TODO: Does Rails have a better way to handle model defaults?
 def ci_defaults
   {
-    active: true,
+    active: true
   }
 end
 
