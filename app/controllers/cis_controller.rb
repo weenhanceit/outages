@@ -61,7 +61,8 @@ private
 # TODO: Does Rails have a better way to handle model defaults?
 def ci_defaults
   {
-    active: true
+    active: true,
+    account: current_account
   }
 end
 
@@ -72,5 +73,7 @@ def ci_params
     :description,
     :name,
     :maximum_unavailable_children_with_service_maintained,
-    :minimum_children_to_maintain_service)
+    :minimum_children_to_maintain_service,
+    parent_links_attributes: [:child_id, :id, :parent_id, :_destroy],
+    available_for_parents_attributes: [:parent_id, :_destroy])
 end

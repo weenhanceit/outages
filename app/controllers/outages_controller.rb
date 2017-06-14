@@ -12,12 +12,14 @@ class OutagesController < ApplicationController
   def new
     # puts "IN NEW"
     @outage = Outage.new(outage_defaults.merge(account: current_account))
+    # TODO: Remove the next line. Test it, of course.
     @available_cis = all_cis
   end
 
   def edit
     # puts "IN EDIT"
     load_outage
+    # TODO: Remove the next line. Test it, of course.
     @available_cis = all_cis - @outage.cis
   end
 

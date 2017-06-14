@@ -3,8 +3,8 @@
     <h3>Dependents</h3>
     <p>
       Dependent services depend on this service.
-      If a dependent service is unavailable,
-      this service is unavailable, too.
+      If this service is unavailable,
+      dependent services are unavailable, too.
     </p>
   </div>
   <div class="card col-sm-5">
@@ -25,7 +25,7 @@
     <div class="card-block">
       <h4 class="card-title">Available Services</h3>
       <ul id="js-available" class="list-unstyled js-connected js-selectable card-text">
-        <%= f.fields_for :available_for_parents do |ci| %>
+        <%= f.fields_for :available_for_parents, include_id: false do |ci| %>
           <%= render partial: "available_parent", object: ci.object, locals: { f: ci } %>
         <% end %>
       </ul>

@@ -64,7 +64,7 @@ class CisTest < ApplicationSystemTestCase
     assert_difference "CisCi.count" do
       click_on "Save"
     end
-    visit edit_ci_url(outage)
+    visit edit_ci_url(ci)
     within('#js-assigned') { assert_text "Server F" }
   end
 
@@ -80,7 +80,7 @@ class CisTest < ApplicationSystemTestCase
     assert_difference "CisCi.count", -1 do
       click_on "Save"
     end
-    visit edit_ci_url(outage)
+    visit edit_ci_url(ci)
     within('#js-available') { assert_text "Server B" }
   end
 
@@ -127,7 +127,7 @@ class CisTest < ApplicationSystemTestCase
     within('#js-available') { assert_text "Server C" }
     click_on "<"
     within('#js-assigned') { assert_text "Server C" }
-    assert_difference "CisCi.count" do
+    assert_no_difference "CisCi.count" do
       click_on "Save"
     end
   end

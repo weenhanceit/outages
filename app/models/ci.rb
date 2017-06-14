@@ -5,7 +5,7 @@ class Ci < ApplicationRecord
   # Putting `inverse_of: ...` on the next four lines causes the association
   # to give incorrect answers.
   has_many :parent_links, foreign_key: :child_id, class_name: "CisCi"
-  accepts_nested_attributes_for :parent_links
+  accepts_nested_attributes_for :parent_links, allow_destroy: true
   has_many :parents, through: :parent_links, class_name: "Ci"
   has_many :child_links, foreign_key: :parent_id, class_name: "CisCi"
   has_many :children, through: :child_links, class_name: "Ci"
@@ -64,10 +64,10 @@ class Ci < ApplicationRecord
   # Process the attributes.
   # TODO: Describe this whole technique somewhere.
   def available_for_parents_attributes=(attributes)
-    puts "available_for_parents_attributes: #{attributes.inspect}"
-    puts "OUTAGE: #{inspect}"
+    # puts "available_for_parents_attributes: #{attributes.inspect}"
+    # puts "OUTAGE: #{inspect}"
     update_attributes(parent_links_attributes: attributes)
-    puts "OUTAGE: #{inspect}"
+    # puts "OUTAGE: #{inspect}"
   end
 
   ##
