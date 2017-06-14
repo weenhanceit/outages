@@ -58,9 +58,11 @@ class CisTest < ApplicationSystemTestCase
     ci = cis(:company_a_ci_d)
     visit edit_ci_url(ci)
 
-    click_list_item "Server F"
-    click_on "<"
-    within('#js-dependent-assigned') { assert_text "Server F" }
+    within '#test-parents' do
+      click_list_item "Server F"
+      click_on "<"
+      within('#js-dependent-assigned') { assert_text "Server F" }
+    end
     assert_difference "CisCi.count" do
       click_on "Save"
     end
@@ -74,9 +76,11 @@ class CisTest < ApplicationSystemTestCase
     ci = cis(:company_a_ci_d)
     visit edit_ci_url(ci)
 
-    click_list_item "Server B"
-    click_on ">"
-    within('#js-dependent-available') { assert_text "Server B" }
+    within '#test-parents' do
+      click_list_item "Server B"
+      click_on ">"
+      within('#js-dependent-available') { assert_text "Server B" }
+    end
     assert_difference "CisCi.count", -1 do
       click_on "Save"
     end
@@ -90,9 +94,11 @@ class CisTest < ApplicationSystemTestCase
     visit new_ci_url
 
     fill_in "Name", with: "Test Router"
-    click_list_item "Server A"
-    click_on "<"
-    within('#js-dependent-assigned') { assert_text "Server A" }
+      within '#test-parents' do
+        click_list_item "Server A"
+        click_on "<"
+        within('#js-dependent-assigned') { assert_text "Server A" }
+      end
     assert_difference "CisCi.count" do
       click_on "Save"
     end
@@ -104,11 +110,13 @@ class CisTest < ApplicationSystemTestCase
     ci = cis(:company_a_ci_d)
     visit edit_ci_url(ci)
 
-    click_list_item "Server A"
-    click_on "<"
-    within('#js-dependent-assigned') { assert_text "Server A" }
-    click_on ">"
-    within('#js-dependent-available') { assert_text "Server A" }
+    within '#test-parents' do
+      click_list_item "Server A"
+      click_on "<"
+      within('#js-dependent-assigned') { assert_text "Server A" }
+      click_on ">"
+      within('#js-dependent-available') { assert_text "Server A" }
+    end
     assert_no_difference "CisCi.count" do
       click_on "Save"
     end
@@ -120,91 +128,104 @@ class CisTest < ApplicationSystemTestCase
     ci = cis(:company_a_ci_d)
     visit edit_ci_url(ci)
 
-    click_list_item "Server C"
-    click_on ">"
-    within('#js-dependent-available') { assert_text "Server C" }
-    click_on "<"
-    within('#js-dependent-assigned') { assert_text "Server C" }
+    within '#test-parents' do
+      click_list_item "Server C"
+      click_on ">"
+      within('#js-dependent-available') { assert_text "Server C" }
+      click_on "<"
+      within('#js-dependent-assigned') { assert_text "Server C" }
+    end
     assert_no_difference "CisCi.count" do
       click_on "Save"
     end
   end
-  #
-  # test "Add a prerequisite service to an existing service" do
-  #   sign_in_for_system_tests(users(:edit_ci_outages))
-  #
-  #   ci = cis(:company_a_ci_d)
-  #   visit edit_ci_url(ci)
-  #
-  #   click_list_item "Server F"
-  #   click_on "<"
-  #   within('#js-prereq-assigned') { assert_text "Server F" }
-  #   assert_difference "CisCi.count" do
-  #     click_on "Save"
-  #   end
-  #   visit edit_ci_url(ci)
-  #   within('#js-prereq-assigned') { assert_text "Server F" }
-  # end
-  #
-  # test "Remove a prerequisite service" do
-  #   sign_in_for_system_tests(users(:edit_ci_outages))
-  #
-  #   ci = cis(:company_a_ci_d)
-  #   visit edit_ci_url(ci)
-  #
-  #   click_list_item "Server B"
-  #   click_on ">"
-  #   within('#js-prereq-available') { assert_text "Server B" }
-  #   assert_difference "CisCi.count", -1 do
-  #     click_on "Save"
-  #   end
-  #   visit edit_ci_url(ci)
-  #   within('#js-prereq-available') { assert_text "Server B" }
-  # end
-  #
-  # test "Add a prerequisite service to a new service" do
-  #   sign_in_for_system_tests(users(:edit_ci_outages))
-  #
-  #   visit new_ci_url
-  #
-  #   fill_in "Name", with: "Test Router"
-  #   click_list_item "Server A"
-  #   click_on "<"
-  #   within('#js-prereq-assigned') { assert_text "Server A" }
-  #   assert_difference "CisCi.count" do
-  #     click_on "Save"
-  #   end
-  # end
-  #
-  # test "Add a prerequisite service to an existing service then remove it" do
-  #   sign_in_for_system_tests(users(:edit_ci_outages))
-  #
-  #   ci = cis(:company_a_ci_d)
-  #   visit edit_ci_url(ci)
-  #
-  #   click_list_item "Server A"
-  #   click_on "<"
-  #   within('#js-prereq-assigned') { assert_text "Server A" }
-  #   click_on ">"
-  #   within('#js-prereq-available') { assert_text "Server A" }
-  #   assert_no_difference "CisCi.count" do
-  #     click_on "Save"
-  #   end
-  # end
-  #
-  # test "Remove a prerequisite service and then add it back" do
-  #   sign_in_for_system_tests(users(:edit_ci_outages))
-  #
-  #   ci = cis(:company_a_ci_d)
-  #   visit edit_ci_url(ci)
-  #
-  #   click_list_item "Server C"
-  #   click_on ">"
-  #   within('#js-prereq-available') { assert_text "Server C" }
-  #   click_on "<"
-  #   within('#js-prereq-assigned') { assert_text "Server C" }
-  #   assert_no_difference "CisCi.count" do
-  #     click_on "Save"
-  #   end
-  # end
+
+  test "Add a prerequisite service to an existing service" do
+    sign_in_for_system_tests(users(:edit_ci_outages))
+
+    ci = cis(:company_a_ci_d)
+    visit edit_ci_url(ci)
+
+    within '#test-children' do
+      click_list_item "Server F"
+      click_on "<"
+      within('#js-prereq-assigned') { assert_text "Server F" }
+    end
+    assert_difference "CisCi.count" do
+      click_on "Save"
+    end
+    visit edit_ci_url(ci)
+    within('#js-prereq-assigned') { assert_text "Server F" }
+  end
+
+  test "Remove a prerequisite service" do
+    sign_in_for_system_tests(users(:edit_ci_outages))
+
+    ci = cis(:company_a_ci_d)
+    visit edit_ci_url(ci)
+
+    within '#test-children' do
+      click_list_item "Router E"
+      click_on ">"
+      within('#js-prereq-available') { assert_text "Router E" }
+    end
+    assert_difference "CisCi.count", -1 do
+      click_on "Save"
+    end
+    visit edit_ci_url(ci)
+    within('#js-prereq-available') { assert_text "Router E" }
+  end
+
+  test "Add a prerequisite service to a new service" do
+    sign_in_for_system_tests(users(:edit_ci_outages))
+
+    visit new_ci_url
+
+    fill_in "Name", with: "Test Router"
+
+    within '#test-children' do
+      click_list_item "Server A"
+      click_on "<"
+      within('#js-prereq-assigned') { assert_text "Server A" }
+    end
+    assert_difference "CisCi.count" do
+      click_on "Save"
+    end
+  end
+
+  test "Add a prerequisite service to an existing service then remove it" do
+    sign_in_for_system_tests(users(:edit_ci_outages))
+
+    ci = cis(:company_a_ci_d)
+    visit edit_ci_url(ci)
+
+    within '#test-children' do
+      click_list_item "Server A"
+      click_on "<"
+      within('#js-prereq-assigned') { assert_text "Server A" }
+      click_on ">"
+      within('#js-prereq-available') { assert_text "Server A" }
+    end
+    assert_no_difference "CisCi.count" do
+      click_on "Save"
+    end
+  end
+
+  test "Remove a prerequisite service and then add it back" do
+    sign_in_for_system_tests(users(:edit_ci_outages))
+
+    ci = cis(:company_a_ci_d)
+    visit edit_ci_url(ci)
+
+    within '#test-children' do
+      click_list_item "Router E"
+      click_on ">"
+      within('#js-prereq-available') { assert_text "Router E" }
+      click_on "<"
+      within('#js-prereq-assigned') { assert_text "Router E" }
+    end
+    assert_no_difference "CisCi.count" do
+      click_on "Save"
+    end
+  end
 end
