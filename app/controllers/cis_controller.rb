@@ -77,8 +77,10 @@ end
 def ci_dag_params
   params
     .require(:ci)
-    .permit( parent_links_attributes: [:child_id, :id, :parent_id, :_destroy],
-      available_for_parents_attributes: [:parent_id, :_destroy])
+    .permit(parent_links_attributes: [:child_id, :id, :parent_id, :_destroy],
+      available_for_parents_attributes: [:parent_id, :_destroy],
+      child_links_attributes: [:child_id, :id, :parent_id, :_destroy],
+      available_for_children_attributes: [:child_id, :_destroy])
 end
 
 def ci_params
@@ -90,7 +92,9 @@ def ci_params
     :maximum_unavailable_children_with_service_maintained,
     :minimum_children_to_maintain_service,
     parent_links_attributes: [:child_id, :id, :parent_id, :_destroy],
-    available_for_parents_attributes: [:parent_id, :_destroy])
+    available_for_parents_attributes: [:parent_id, :_destroy],
+    child_links_attributes: [:child_id, :id, :parent_id, :_destroy],
+    available_for_children_attributes: [:child_id, :_destroy])
 end
 
 def ci_params_without_dag

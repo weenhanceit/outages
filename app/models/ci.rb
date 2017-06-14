@@ -8,6 +8,7 @@ class Ci < ApplicationRecord
   accepts_nested_attributes_for :parent_links, allow_destroy: true
   has_many :parents, through: :parent_links, class_name: "Ci"
   has_many :child_links, foreign_key: :parent_id, class_name: "CisCi"
+  accepts_nested_attributes_for :child_links, allow_destroy: true
   has_many :children, through: :child_links, class_name: "Ci"
   has_many :cis_outages
   has_many :outages, through: :cis_outages
@@ -49,6 +50,10 @@ class Ci < ApplicationRecord
   # Process the attributes.
   # TODO: Describe this whole technique somewhere.
   def available_for_children_attributes=(attributes)
+    # puts "available_for_children_attributes: #{attributes.inspect}"
+    # puts "OUTAGE: #{inspect}"
+    update_attributes(child_links_attributes: attributes)
+    # puts "OUTAGE: #{inspect}"
   end
 
   ##

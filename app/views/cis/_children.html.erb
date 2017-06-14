@@ -1,0 +1,46 @@
+<div class="row" id="test-children">
+  <div class="col-sm-12">
+    <h3>Pre-requisites</h3>
+    <p>
+      This service depends on pre-requisite services.
+      If any of the pre-requisite services are unavailable,
+      this service is unavailable, too.
+    </p>
+  </div>
+  <div class="card col-sm-5">
+    <div class="card-block">
+      <h4 class="card-title">Pre-requisite Services</h3>
+      <ul id="js-prereq-assigned"
+          class="list-unstyled js-connected js-selectable card-text">
+        <%= f.fields_for :child_links do |ci| %>
+          <%= render partial: "child", object: ci.object, locals: { f: ci } %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <div class="col-sm-2">
+    <%= button_tag "<",
+        class: "btn js-assign",
+        data: {
+          source: "#js-prereq-available",
+          target: "#js-prereq-assigned"
+          } %>
+    <%= button_tag ">",
+        class: "btn js-remove",
+        data: {
+          source: "#js-prereq-assigned",
+          target: "#js-prereq-available"
+          } %>
+  </div>
+  <div class="card col-sm-5">
+    <div class="card-block">
+      <h4 class="card-title">Available Services</h3>
+      <ul id="js-prereq-available"
+          class="list-unstyled js-connected js-selectable card-text">
+        <%= f.fields_for :available_for_children, include_id: false do |ci| %>
+          <%= render partial: "available_child", object: ci.object, locals: { f: ci } %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

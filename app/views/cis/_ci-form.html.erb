@@ -1,64 +1,24 @@
 <%= bootstrap_form_for(ci, builder: WeitFormBuilder) do |f| %>
   <%= f.hidden_field :active %>
   <div class="row">
-    <%= f.text_field :name %>
-    <%= f.number_field :maximum_unavailable_children_with_service_maintained %>
-    <%= f.number_field :minimum_children_to_maintain_service %>
+    <%= f.text_field :name, column_width: 6 %>
+    <%= f.number_field :maximum_unavailable_children_with_service_maintained,
+          column_width: 3 %>
+    <%= f.number_field :minimum_children_to_maintain_service,
+          column_width: 3 %>
   </div>
   <div class="row">
     <%= f.text_area :description, column_width: 12 %>
   </div>
-  <%= f.primary "Save" %>
   <div class="row">
     <%= render partial: "parents", locals: { f: f } %>
   </div>
+  <div class="row">
+    <%= render partial: "children", locals: { f: f } %>
+  </div>
+  <%= f.primary "Save" %>
 <% end %>
 
-<div style="margin-top: 100px; border: 1px solid blue;">
-
-  <%= form_tag ci_path(1), method: :put do %>
-  <%# FIXME: method: :put is a hack for prototype %>
-  <p>
-    <%#= label_tag "Name" %>
-    <%#= text_field_tag "Name" %>
-    <%= label_tag "Watch" %>
-    <%= check_box_tag "Watch", 1, true %>
-  </p>
-  <p>
-    <%#= label_tag "Description" %>
-    <%#= text_area_tag "Description" %>
-  </p>
-
-  <div class="m-md">
-    <h3>Children</h3>
-    <div class="p-sm border-sm">
-      <ul class="js-droppable list-unstyled">
-        <li class="js-draggable list-unstyled">
-          afappubu0021
-        </li>
-      </ul>
-    </div>
-    <p>
-      <%= radio_button_tag :redundancy, "", true %>
-      <%= label_tag :minimum, "Minimum number of children required to maintain service" %>
-      <%= number_field_tag "minimum", 1 %>
-    </p>
-    <p>
-      <%= radio_button_tag :redundancy, "" %>
-      <%= label_tag :maximum, "Maximum number of children that can be unavailable and still maintain service" %>
-      <%= number_field_tag "maximum", 1 %>
-    </p>
-  </div>
-
-  <p>
-    <%= submit_tag "ProtoSave" %>
-  </p>
-  <% end %>
-  <p>
-    <%= button_to "ProtoDelete", ci_path(1), method: :delete %>
-  </p>
-  [Undoable.]
-</div>
 <hr>
 <h4>Notes, Issues, Questions, Futures</h4>
 <ul>

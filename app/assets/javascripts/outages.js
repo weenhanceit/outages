@@ -1,38 +1,34 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-// jQueryUI implementation for assigning CIs on the outage#edit page
+// jQueryUI implementation for assigning CIs on the Outage#edit and #new pages
 $(document).on('turbolinks:load', function() {
+  // To generalize:
+  // The classes js-assign and js-remove go on buttons that assign and remove
+  // elements between a pair of lists. The list is current an HTML ul list,
+  // but may have to change.
+  // The assign button can have a data attribute called `target` that is a
+  // css selector, and ideally is an ID. The selector selects the list that
+  // represents the assigned items. If there is no data
+  // attribute for `target`, the default is `#js-assigned`. Similarly,
+  // there's a data attribute called `source`, where the items come from,
+  // and that defaults to `#js-available`.
+  // The remove button can have a data attribute called `target` that is a
+  // css selector, and ideally is an ID. The selector selects the list that
+  // represents the items available to be assigned. If there is no data
+  // attribute for `target`, the default is `#js-available`. Similarly,
+  // there's a data attribute called `source`, where the items come from,
+  // and that defaults to `#js-available`.
   // TODO: figure out where to put these functions so they don't get
   // loaded all the time, but won't frustrate us when testing.
-  // Inspired by http://railscasts.com/episodes/196-nested-model-form-revised
   $.fn.extend({
     destroy_element_for_rails: function () {
       // console.log('Destroying this: ' + $(this).html());
       // console.log('destroy SIZE: ' + this.length);
       $('input[id$="_destroy"]', this).val('1');
     },
-    move_to_assigned: function() {
-      // console.log('MOVE: ' +
-      //   $(this)[0].outerHTML +
-      //   ' to end of ' +
-      //   $('#js-assigned')[0].outerHTML);
-      // console.log('assign SIZE: ' + this.length);
-      $(this).appendTo('#js-assigned');
-      // existing = $('#js-assigned li[id$=' + $(this).data('ci-id') + ']');
-      // console.log('EXISTING: ' + existing[0].outerHTML);
-    },
-    move_to_available: function () {
-      // available_element = '<li class="ui-widget-content" data-name="' +
-      //                       $(this).data('name') +
-      //                       '" data-id="' +
-      //                       $(this).data('ci_id') +
-      //                       '">' +
-      //                       $(this).data('name') +
-      //                       '</li>';
-      // $('#js-available').append(available_element);
-      // console.log('unassign SIZE: ' + this.length);
-      $('#js-available').append($(this));
+    move_to: function(selector) {
+      selector.append($(this));
     },
     undestroy_element_for_rails: function () {
       // console.log('Undestroying this: ' + $(this).html());
@@ -44,21 +40,32 @@ $(document).on('turbolinks:load', function() {
   // Modelled on: http://jqueryui.com/selectable/
   $(".js-selectable").selectable();
   // LCR on top of selectable
-  // FIXME: The selectors have to look in their own list because
-  // both lists can have selections.
+  function source_selector(element, dflt) {
+    return (source = $(element).data('source')) === undefined ?
+      $(dflt) :
+      $(source);
+  }
+  function target_selector(element, dflt) {
+    return (target = $(element).data('target')) === undefined ?
+      $(dflt) :
+      $(target);
+  }
   $('.js-assign').click(function(event) {
     event.preventDefault();
-    elements = $('.ui-selected');
+    source = source_selector(event.target, '#js-available');
+    target = target_selector(event.target, '#js-assigned');
+    elements = $('.ui-selected', source);
     // console.log('ELEMENTS: ' + elements.length);
-    elements.move_to_assigned();
+    elements.move_to(target);
     elements.undestroy_element_for_rails();
   });
   $('.js-remove').click(function(event) {
     event.preventDefault();
-    elements = $('.ui-selected');
+    source = source_selector(event.target, '#js-assigned');
+    target = target_selector(event.target, '#js-available');
+    elements = $('.ui-selected', source);
     // console.log('ELEMENTS: ' + elements.length);
-    // elements.clone().appendTo('#js-available');
-    elements.move_to_available();
+    elements.move_to(target);
     elements.destroy_element_for_rails();
   });
 

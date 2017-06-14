@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" id="test-parents">
   <div class="col-sm-12">
     <h3>Dependents</h3>
     <p>
@@ -10,7 +10,8 @@
   <div class="card col-sm-5">
     <div class="card-block">
       <h4 class="card-title">Dependent Services</h3>
-      <ul id="js-assigned" class="list-unstyled js-connected js-selectable card-text">
+      <ul id="js-dependent-assigned"
+          class="list-unstyled js-connected js-selectable card-text">
         <%= f.fields_for :parent_links do |ci| %>
           <%= render partial: "parent", object: ci.object, locals: { f: ci } %>
         <% end %>
@@ -18,13 +19,24 @@
     </div>
   </div>
   <div class="col-sm-2">
-    <%= button_tag "<", class: "btn js-assign" %>
-    <%= button_tag ">", class: "btn js-remove" %>
+    <%= button_tag "<",
+        class: "btn js-assign",
+        data: {
+          source: "#js-dependent-available",
+          target: "#js-dependent-assigned"
+          } %>
+    <%= button_tag ">",
+        class: "btn js-remove",
+        data: {
+          source: "#js-dependent-assigned",
+          target: "#js-dependent-available"
+          } %>
   </div>
   <div class="card col-sm-5">
     <div class="card-block">
       <h4 class="card-title">Available Services</h3>
-      <ul id="js-available" class="list-unstyled js-connected js-selectable card-text">
+      <ul id="js-dependent-available"
+          class="list-unstyled js-connected js-selectable card-text">
         <%= f.fields_for :available_for_parents, include_id: false do |ci| %>
           <%= render partial: "available_parent", object: ci.object, locals: { f: ci } %>
         <% end %>
