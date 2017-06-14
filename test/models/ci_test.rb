@@ -13,12 +13,31 @@ class CiTest < ActiveSupport::TestCase
 
   test "available_for_parents on new includes all" do
     ci = Ci.new(account: @account)
-    assert_equal ci.available_for_parents.to_a.sort,
-      [@grandparent, @parent, @ci, @child, @grandchild, @unrelated].sort
+    assert_equal [
+        @greatgrandparent,
+        @grandparent,
+        @parent,
+        @ci,
+        @child,
+        @grandchild,
+        @greatgrandchild,
+        @unrelated
+      ].sort,
+      ci.available_for_parents.to_a.sort
   end
 
-  test "available_for_parents includes grandparent" do
+  test "ancestors" do
+    assert_equal [
+        @greatgrandparent,
+        @grandparent,
+        @parent
+      ].sort,
+      @ci.ancestors.to_a.sort
+  end
+
+  test "available_for_parents includes grandparent and greatgrandparent" do
     assert @ci.available_for_parents.to_a.include?(@grandparent)
+    assert @ci.available_for_parents.to_a.include?(@greatgrandparent)
   end
 
   test "available_for_parents doesn't include parent" do
@@ -41,10 +60,28 @@ class CiTest < ActiveSupport::TestCase
     assert @ci.available_for_parents.to_a.include?(@unrelated)
   end
 
+  test "descendants" do
+    assert_equal [
+        @greatgrandchild,
+        @grandchild,
+        @child
+      ].sort,
+      @ci.descendants.to_a.sort
+  end
+
   test "available_for_children on new includes all" do
     ci = Ci.new(account: @account)
-    assert_equal ci.available_for_children.to_a.sort,
-    [@grandparent, @parent, @ci, @child, @grandchild, @unrelated].sort
+    assert_equal [
+      @greatgrandparent,
+      @grandparent,
+      @parent,
+      @ci,
+      @child,
+      @grandchild,
+      @greatgrandchild,
+      @unrelated
+    ].sort,
+    ci.available_for_children.to_a.sort
   end
 
   test "available_for_children doesn't include grandparent" do
@@ -59,8 +96,9 @@ class CiTest < ActiveSupport::TestCase
     assert_not @ci.available_for_children.to_a.include?(@child)
   end
 
-  test "available_for_children includes grandchild" do
+  test "available_for_children includes grandchild and greatgrandchild" do
     assert @ci.available_for_children.to_a.include?(@grandchild)
+    assert @ci.available_for_children.to_a.include?(@greatgrandchild)
   end
 
   test "available_for_children doesn't include self" do
@@ -78,7 +116,11 @@ class CiTest < ActiveSupport::TestCase
     @parent = @ci.parents.create(account: @account, name: "Parent")
     @grandparent =
       @parent.parents.create(account: @account, name: "Grandparent")
+    @greatgrandparent =
+      @grandparent.parents.create(account: @account, name: "Great-grandparent")
     @child = @ci.children.create(account: @account, name: "Child")
     @grandchild = @child.children.create(account: @account, name: "Grandchild")
+    @greatgrandchild =
+      @grandchild.children.create(account: @account, name: "Great-grandchild")
   end
 end
