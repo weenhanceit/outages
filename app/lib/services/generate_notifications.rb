@@ -12,9 +12,11 @@ module Services
         event.outage.cis.map(&:watches).flatten.each do |watch|
           handle_watch event, watch
         end
+
         event.outage.cis.map(&:ancestors_affected)
           .flatten.map(&:watches).flatten.each do |watch|
-          puts "ci watch: #{watch.inspect}"
+
+          handle_watch event, watch
         end
       end
     end
