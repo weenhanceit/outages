@@ -1,0 +1,106 @@
+require "test_helper"
+class GenerateNotificationsTest < ActiveSupport::TestCase
+  test "online notification, outage event, outage watched" do
+    puts "generate_notifications.rb #{__LINE__}: "
+
+    # Prepare a user who wants outage change notifications,
+    # online only
+    user = users(:basic)
+    user.notify_me_on_outage_changes = true
+    user.preference_notifiy_me_by_email = false
+    user.save
+
+    # Create an outage, and a watch on that outage
+    outage = Outage.create(test_outage_defaults.merge(account_id: user.account_id))
+    watch = Watch.create(active: true, user: user, watched: outage)
+
+    # Make sure that all existing events are handled
+    prep_test
+
+    # Generate an :outage event
+    event = Event.create(handled: false, outage_id: outage.id, text: "A test event", event_type: :outage)
+
+    puts "generate_notifications.rb #{__LINE__}: user: #{user.name} outage: #{outage.name}"
+    assert_difference "Notification.all.size" do
+      Services::GenerateNotifications.call()
+      notifications = Notification.where(watch_id: watch.id)
+      assert_equal 1, notifications.size, "Wrong number of notifications generated"
+      notification = notifications.first
+      assert_equal :on_line, notification.notification_type
+    end
+
+
+
+
+    flunk
+  end
+
+
+  test "online notification, outage event, ci watched" do
+    puts "generate_notifications.rb #{__LINE__}: "
+
+    # Prepare a user who wants outage change notifications,
+    # online only
+    user = users(:basic)
+    user.notify_me_on_outage_changes = true
+    user.preference_notifiy_me_by_email = false
+    user.save
+
+
+    # Create an outage, with a ci and a watch on that outage
+    outage = Outage.create(test_outage_defaults.merge(account_id: user.account_id))
+    ci = outage.cis.create(account_id: user.account_id,
+      active: true,
+      description: "Server Test",
+      name: "Server Test")
+
+    watch = ci.watches.create(active: true, user: user)
+
+
+    # Make sure that all existing events are handled
+    prep_test
+
+    # Generate an :outage event
+    event = Event.create(handled: false, outage_id: outage.id, text: "A test event", event_type: :outage)
+
+    puts "generate_notifications.rb #{__LINE__}: user: #{user.name} outage: #{outage.name}"
+    assert_difference "Notification.all.size" do
+      Services::GenerateNotifications.call()
+      notifications = Notification.where(watch_id: watch.id)
+      assert_equal 1, notifications.size, "Wrong number of notifications generated"
+      notification = notifications.first
+      assert_equal :on_line, notification.notification_type
+    end
+
+
+
+
+    flunk
+  end
+
+
+
+
+  private
+
+  def prep_test
+    # -- Mark all events as handled
+    Event.all.each do |e|
+      e.handled = true
+      e.save
+    end
+  end
+
+  def test_outage_defaults
+    {
+      account: accounts(:company_a),
+      active: true,
+      causes_loss_of_service: true,
+      completed: false,
+      description: "A test outage",
+      end_time: Time.find_zone('Samoa').now + 26.hours,
+      name: "Test Outage",
+      start_time: Time.find_zone('Samoa').now + 24.hours
+    }
+  end
+end

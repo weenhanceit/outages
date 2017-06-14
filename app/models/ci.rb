@@ -13,7 +13,10 @@ class Ci < ApplicationRecord
   has_many :tags, as: :taggable
   has_many :watches, as: :watched
 
-  validates :active, inclusion: { in: [true, false], message: "can't be blank" }
+  validates :active,
+   inclusion: { in: [true, false], message: "can't be blank" }
+
+  validates_presence_of :name
 
   default_scope { where(active: true) }
 end

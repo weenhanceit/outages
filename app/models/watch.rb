@@ -4,6 +4,8 @@
 class Watch < ApplicationRecord
   belongs_to :user
   belongs_to :watched, polymorphic: true
+  has_many :notifications, inverse_of: :watches
+
 
   default_scope { where(active: true) }
 end
