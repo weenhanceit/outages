@@ -66,7 +66,10 @@ end
 
 private
 
-# TODO: Does Rails have a better way to handle model defaults?
+# Some sources say the best way to do model defaults is in an
+# `after_initialize` callback. The approach below works as a way of
+# defaulting in the UI, but not making any preconceived notions about
+# the model itself.
 def ci_defaults
   {
     active: true,

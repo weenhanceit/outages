@@ -12,15 +12,11 @@ class OutagesController < ApplicationController
   def new
     # puts "IN NEW"
     @outage = Outage.new(outage_defaults.merge(account: current_account))
-    # TODO: Remove the next line. Test it, of course.
-    @available_cis = all_cis
   end
 
   def edit
     # puts "IN EDIT"
     load_outage
-    # TODO: Remove the next line. Test it, of course.
-    @available_cis = all_cis - @outage.cis
   end
 
   def create
@@ -78,7 +74,10 @@ class OutagesController < ApplicationController
     # puts "Outage loaded: watches.size: #{@outage.watches.size} cis.size: #{@outage.cis.size} cis_outages.size: #{@outage.cis_outages.size}"
   end
 
-  # TODO: Does Rails have a better way to handle model defaults?
+  # Some sources say the best way to do model defaults is in an
+  # `after_initialize` callback. The approach below works as a way of
+  # defaulting in the UI, but not making any preconceived notions about
+  # the model itself.
   def outage_defaults
     {
       active: true,
