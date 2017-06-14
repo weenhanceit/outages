@@ -96,8 +96,6 @@ class CisTest < ApplicationSystemTestCase
     assert_difference "CisCi.count" do
       click_on "Save"
     end
-    visit edit_ci_url(outage)
-    within('#js-assigned') { assert_text "Server A" }
   end
 
   test "Add a dependent service to an existing service then remove it" do

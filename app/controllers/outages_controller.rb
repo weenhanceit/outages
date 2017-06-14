@@ -65,7 +65,7 @@ class OutagesController < ApplicationController
   private
 
   def all_cis
-    Ci.where(account: current_user.account)
+    Ci.where(account: current_user.account).order(:name)
   end
 
   def load_outage

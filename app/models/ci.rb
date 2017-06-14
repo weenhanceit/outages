@@ -38,9 +38,10 @@ class Ci < ApplicationRecord
   # Return the CIs that could be parents of this CI.
   # That means they're not already parents, and they're not children.
   # If they were children, this would not be a DAG.
-  # This will blow up if you don't pass an account, and the outage doesn't
-  # have an account assigned yet.
+  # This will return nothing if you don't pass an account, and the outage
+  # doesn't have an account assigned yet.
   def available_for_children(account = self.account)
+    raise ArgumentError if account.nil?
     all_cis_but_me - children - ancestors
   end
 

@@ -2,14 +2,22 @@ class CisController < ApplicationController
   include TestSuite
 
   def create
-    @ci = Ci.new(ci_params)
+    # The following commented-out lines didn't work, but I think they should.
+    # I fear it's a problem with associations again.
+    # @ci = Ci.new(ci_params)
+    # @ci.account = current_user.account
+    @ci = Ci.new(ci_params_without_dag)
     @ci.account = current_user.account
+
     if @ci.save
-      redirect_to cis_path
-    else
-      logger.warn @ci.errors.full_messages
-      render :new
+      if @ci.update(ci_dag_params)
+        redirect_to cis_path
+        return
+      end
     end
+
+    logger.warn @ci.errors.full_messages
+    render :new
   end
 
   def destroy
@@ -66,6 +74,13 @@ def ci_defaults
   }
 end
 
+def ci_dag_params
+  params
+    .require(:ci)
+    .permit( parent_links_attributes: [:child_id, :id, :parent_id, :_destroy],
+      available_for_parents_attributes: [:parent_id, :_destroy])
+end
+
 def ci_params
   params.require(:ci).permit(:id,
     :account_id,
@@ -76,4 +91,14 @@ def ci_params
     :minimum_children_to_maintain_service,
     parent_links_attributes: [:child_id, :id, :parent_id, :_destroy],
     available_for_parents_attributes: [:parent_id, :_destroy])
+end
+
+def ci_params_without_dag
+  params.require(:ci).permit(:id,
+    :account_id,
+    :active,
+    :description,
+    :name,
+    :maximum_unavailable_children_with_service_maintained,
+    :minimum_children_to_maintain_service)
 end
