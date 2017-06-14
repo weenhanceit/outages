@@ -25,7 +25,13 @@ class Ci < ApplicationRecord
   ##
   # All the ancestor Cis of a CI
   def ancestors
-    parents + parents.map(&:parents).flatten
+    parents + parents.map(&:ancestors).flatten
+  end
+
+  # All the ancestor Cis of a Ci that are affected by an outage
+  # to this Ci
+  def ancestors_affected
+    ancestors
   end
 
   ##
