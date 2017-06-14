@@ -55,6 +55,10 @@ class Ci < ApplicationRecord
   # Process the attributes.
   # TODO: Describe this whole technique somewhere.
   def available_for_parents_attributes=(attributes)
+    puts "available_for_parents_attributes: #{attributes.inspect}"
+    puts "OUTAGE: #{inspect}"
+    update_attributes(parent_links_attributes: attributes)
+    puts "OUTAGE: #{inspect}"
   end
 
   ##
