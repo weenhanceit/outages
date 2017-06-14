@@ -18,6 +18,12 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user
 
+  def current_account
+    self.current_user.account
+  end
+
+  helper_method :current_account
+
   def edit_or_show_ci_path(id)
     current_user.can_edit_cis? ? edit_ci_path(id) : ci_path(id)
   end

@@ -1,0 +1,7 @@
+<li class="ui-widget-content"
+    data-name="<%= available_ci.name -%>"
+    data-ci-id="<%= available_ci.id -%>">
+  <%= available_ci.name %>
+  <%= f.hidden_field :ci_id, value: available_ci.id %>
+  <%= f.hidden_field :_destroy, value: "1" %>
+</li>

@@ -1,4 +1,4 @@
-<ul>
+<!-- <ul>
   <li>Button to delete. Delete must be un-doable. Delete doesn't actually remove the record from the database.</li>
   <li>Select configuration item(s) via the two boxes model that you move
       items between attached and unattached.</li>
@@ -17,44 +17,49 @@
   <li>Start Date/Time</li>
   <li>End Date/Time</li>
   <li>Causes outage or not</li>
-</ul>
+</ul> -->
 
-<%= form_for(outage, builder: WeitFormBuilder) do |f| %>
+<%= bootstrap_form_for(outage, builder: WeitFormBuilder) do |f| %>
   <%= f.hidden_field :active %>
-  <%= f.text_field :name %>
-  <%= f.text_field :description %>
-  <%= f.check_box :completed %>
-  <%= f.check_box :causes_loss_of_service %>
-  <%= f.datetime_local_field :start_time %>
-  <%= f.datetime_local_field :end_time %>
-  <%= f.check_box :watched %>
-  <div class="">
-    <h3>Affected Services</h3>
-    <ul class="js-droppable list-unstyled">
-      <%= f.fields_for :cis do |ci| %>
-        <li class="js-draggable js-selectable">
-          <%#= ci.class %>
-          <%#= ci.object.class %>
-          <%= ci.object.name %>
-          <%= ci.hidden_field :id %>
-        </li>
-      <% end %>
-    </ul>
+  <div class="row">
+    <%= f.text_field :name, column_width: 4 %>
+    <%= f.datetime_local_field :start_time, column_width: 4 %>
+    <%= f.datetime_local_field :end_time, column_width: 4 %>
   </div>
-  <%= button_tag "<", class: "btn js-assign" %>
-  <%= button_tag ">", class: "btn js-remove" %>
-  <div class="">
-    <h3>Available Services</h3>
-    <ul class="js-droppable list-unstyled">
-      <% @available_cis.each do |ci| %>
-        <%= fields_for ci do |ci_f| %>
-          <li class="js-draggable js-selectable">
-            <%= ci.name %>
-            <%= ci_f.hidden_field :id %>
-          </li>
-        <% end %>
-      <% end %>
-    </ul>
+  <div class="row">
+    <%= f.check_box :completed, column_width: 4 %>
+    <%= f.check_box :causes_loss_of_service, column_width: 4 %>
+    <%= f.check_box :watched, column_width: 4 %>
   </div>
-  <%= f.submit "Save" %>
+  <div class="row">
+    <%= f.text_area :description, column_width: 12 %>
+  </div>
+
+  <div class="row">
+    <div class="card col-sm-5">
+      <div class="card-block">
+        <h3 class="card-title">Affected Services</h3>
+        <ul id="js-assigned" class="list-unstyled js-connected js-selectable card-text">
+          <%= f.fields_for :cis_outages do |ci| %>
+          <%= render partial: "assigned_ci", object: ci.object, locals: { f: ci } %>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <%= button_tag "<", class: "btn js-assign" %>
+      <%= button_tag ">", class: "btn js-remove" %>
+    </div>
+    <div class="card col-sm-5">
+      <div class="card-block">
+        <h3 class="card-title">Available Services</h3>
+        <ul id="js-available" class="list-unstyled js-connected js-selectable card-text">
+          <%= f.fields_for :available_cis do |ci| %>
+          <%= render partial: "available_ci", object: ci.object, locals: { f: ci } %>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <%= f.primary "Save" %>
 <% end %>

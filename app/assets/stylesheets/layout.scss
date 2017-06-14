@@ -25,3 +25,13 @@
 .border-sm {
   border: 0.5px solid;
 }
+
+// FIXME: Fix these for our theme.
+.ui-selecting {
+  background: #FECA40;
+}
+
+.ui-selected {
+  background: #F39814;
+  color: white;
+}

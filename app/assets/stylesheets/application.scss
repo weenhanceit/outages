@@ -16,3 +16,10 @@
 @import "layout";
 
 @import "bootstrap";
+
+/*
+ * User normal asset pipeline require because that's what jquery-ui-rails
+ * supports.
+ *= require jquery-ui/selectable
+ *= require jquery-ui/sortable
+*/

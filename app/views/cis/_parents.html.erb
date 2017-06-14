@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-sm-12">
+    <h3>Dependents</h3>
+    <p>
+      Dependent services depend on this service.
+      If a dependent service is unavailable,
+      this service is unavailable, too.
+    </p>
+  </div>
+  <div class="card col-sm-5">
+    <div class="card-block">
+      <h4 class="card-title">Dependent Services</h3>
+      <ul id="js-assigned" class="list-unstyled js-connected js-selectable card-text">
+        <%= f.fields_for :parent_links do |ci| %>
+          <%= render partial: "parent", object: ci.object, locals: { f: ci } %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <div class="col-sm-2">
+    <%= button_tag "<", class: "btn js-assign" %>
+    <%= button_tag ">", class: "btn js-remove" %>
+  </div>
+  <div class="card col-sm-5">
+    <div class="card-block">
+      <h4 class="card-title">Available Services</h3>
+      <ul id="js-available" class="list-unstyled js-connected js-selectable card-text">
+        <%= f.fields_for :available_for_parents do |ci| %>
+          <%= render partial: "available_parent", object: ci.object, locals: { f: ci } %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

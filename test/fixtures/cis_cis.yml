@@ -1,7 +1,11 @@
-company_a_ci_a_parent_of_company_a_ci_b:
-  parent: company_a_ci_a
-  child: company_a_ci_b
-
-company_a_ci_b_parent_of_company_a_ci_c:
+company_a_ci_b_parent_of_company_a_ci_d:
+  child: company_a_ci_d
   parent: company_a_ci_b
-  child: company_a_ci_c
+
+company_a_ci_c_parent_of_company_a_ci_d:
+  child: company_a_ci_d
+  parent: company_a_ci_c
+
+company_a_ci_d_parent_of_company_a_ci_e:
+  child: company_a_ci_e
+  parent: company_a_ci_d

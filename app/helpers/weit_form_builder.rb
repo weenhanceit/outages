@@ -130,6 +130,13 @@ class WeitFormBuilder < BootstrapForm::FormBuilder
   end
 
   ##
+  # Format a text area
+  def text_area(method, options = {})
+    options = process_options(method, options)
+    process_width(options) { super }
+  end
+
+  ##
   # Format a text field
   def text_field(method, options = {})
     options = process_options(method, options)
@@ -158,7 +165,7 @@ class WeitFormBuilder < BootstrapForm::FormBuilder
     width = (options.delete(:column_width) || options.delete(:col_width))
 
     if width
-      content_tag :div, yield, class: "col-md-#{width}"
+      content_tag :div, yield, class: "col-sm-#{width}"
     else
       yield
     end

@@ -1,6 +1,6 @@
 require "application_system_test_case"
 
-class OutagesTest < ApplicationSystemTestCase
+class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
   test "visiting the index" do
     sign_in_for_system_tests(users(:basic))
 
@@ -18,7 +18,8 @@ class OutagesTest < ApplicationSystemTestCase
     assert_difference "Outage.where(account: user.account).size" do
       assert_no_difference "Watch.count" do
         fill_in "Name", with: "Outage 7"
-        fill_in "Description", with: "This is the outage in the seventh ring of your know where."
+        fill_in "Description",
+          with: "This is the outage in the seventh ring of your know where."
         click_on "Save"
       end
     end
@@ -35,7 +36,8 @@ class OutagesTest < ApplicationSystemTestCase
     assert_difference "Outage.where(account: user.account).size" do
       assert_difference "Watch.count" do
         fill_in "Name", with: "Outage 7"
-        fill_in "Description", with: "This is the outage in the seventh ring of your know where."
+        fill_in "Description",
+          with: "This is the outage in the seventh ring of your know where."
         check "Watched"
         click_on "Save"
       end
@@ -115,12 +117,13 @@ class OutagesTest < ApplicationSystemTestCase
     assert_difference "CisOutage.count" do
       click_on "Save"
     end
+    visit edit_outage_url(outage)
+    within('#js-assigned') { assert_text "Server B" }
   end
 
   test "assign a CI in a new outage" do
     user = sign_in_for_system_tests(users(:edit_ci_outages))
 
-    outage = outages(:company_a_outage_c)
     visit new_outage_url
 
     click_list_item "Server C"
@@ -138,14 +141,68 @@ class OutagesTest < ApplicationSystemTestCase
 
     click_list_item "Server B"
     click_on ">"
+    within('#js-available') { assert_text "Server B" }
     assert_difference "CisOutage.count", -1 do
+      click_on "Save"
+    end
+    visit edit_outage_url(outage)
+    within('#js-available') { assert_text "Server B" }
+  end
+
+  test "remove a CI and then assign it" do
+    user = sign_in_for_system_tests(users(:edit_ci_outages))
+
+    outage = outages(:company_a_outage_c)
+    visit edit_outage_url(outage)
+
+    click_list_item "Server B"
+    click_on ">"
+    within('#js-available') { assert_text "Server B" }
+    click_list_item "Server B"
+    click_on "<"
+    within('#js-assigned') { assert_text "Server B" }
+    assert_no_difference "CisOutage.count" do
+      click_on "Save"
+    end
+  end
+
+  test "remove two CIs at once" do
+    skip "I can't figure out how to get this test to select more than one"
+    user = sign_in_for_system_tests(users(:edit_ci_outages))
+
+    outage = outages(:company_a_outage_c)
+    visit edit_outage_url(outage)
+
+    click_list_item "Server A"
+    shift_click_list_item "Server C"
+    click_on "<"
+    within('#js-assigned') { assert_text "Server A" }
+    within('#js-assigned') { assert_text "Server B" }
+    within('#js-assigned') { assert_text "Server C" }
+    assert_difference "CisOutage.count", 2 do
+      click_on "Save"
+    end
+
+    visit edit_outage_url(outage)
+
+    click_list_item "Server B"
+    shift_click_list_item "Server C"
+    click_on ">"
+    within('#js-available') { assert_text "Server B" }
+    within('#js-available') { assert_text "Server C" }
+    assert_difference "CisOutage.count", -2 do
       click_on "Save"
     end
   end
 
   private
 
-  def click_list_item(text)
-    find("li", text: text).click
+  def shift_click_list_item(text)
+    selector = "$('li:contains(\"#{text}\")')"
+    # puts "selector: #{selector}"
+    execute_script("var ctrlClick = jQuery.Event('mousedown');" \
+      "ctrlClick.ctrlKey = true;" \
+      "var target = #{selector};" \
+      "target.click(ctrlClick);")
   end
 end

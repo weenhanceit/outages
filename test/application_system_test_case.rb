@@ -22,4 +22,8 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     # puts "K"
     user
   end
+
+  def click_list_item(text)
+    find("li", text: text).click
+  end
 end
