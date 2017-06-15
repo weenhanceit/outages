@@ -63,6 +63,16 @@ $(document).on('turbolinks:load', function() {
     elements.destroy_element_for_rails();
   });
 
+  //  For the CI page, the assign button fires a patch that creates
+  //  a new CisCi, then retrieves the updated box contents for both
+  //  available and the target.
+  //  The remove button fires a patch that deletes the CisCi, then
+  //  retrieves the updated box contents for the source, and both
+  //  targets.
+  //  Both of the above can result in multiple patches, when the user
+  //  moves multiple items (ctrl or shift click).
+  //  May need promises to do one get at the end after multiple deletes.
+
   // Modelled on: http://jqueryui.com/sortable/#connect-lists
   // These two may be incompatible
   $("#js-assigned, #js-available").sortable({
