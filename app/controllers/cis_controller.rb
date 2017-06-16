@@ -38,6 +38,7 @@ class CisController < ApplicationController
 
   def index
     @cis = current_user.account.cis.where(active: true).order(:name)
+    @notifications = Services::HandleOnlineNotifications.retrieve(current_user)
   end
 
   def new
