@@ -25,6 +25,25 @@ class CisTest < ApplicationSystemTestCase
     assert_not Ci.where(name: "Server 7").empty?
   end
 
+  test "create a new CI with watch" do
+    user = sign_in_for_system_tests(users(:edit_ci_outages))
+
+    visit new_ci_url
+    assert_selector "h1", text: "New Service"
+
+    assert_difference "Service.where(account: user.account).size" do
+      assert_difference "Watch.count" do
+        fill_in "Name", with: "Service 7"
+        fill_in "Description",
+          with: "This is the watch in the seventh ring of you know where."
+        check "Watched"
+        click_on "Save"
+      end
+    end
+
+    assert_not Service.where(name: "Service 7").empty?
+  end
+
   test "edit an existing CI" do
     user = sign_in_for_system_tests(users(:edit_ci_outages))
 
@@ -37,6 +56,36 @@ class CisTest < ApplicationSystemTestCase
     end
 
     assert_not Ci.where(name: "Not Server A").empty?
+  end
+
+  test "add a watch on edit page" do
+    user = sign_in_for_system_tests(users(:edit_ci_outages))
+
+    ci = cis(:company_a_ci_a)
+    visit edit_ci_url(ci)
+    assert_no_checked_field "Watched"
+
+    assert_no_difference "Ci.where(account: user.account).size" do
+      assert_difference "Watch.count" do
+        check "Watched"
+        click_on "Save"
+      end
+    end
+  end
+
+  test "remove a watch on edit page" do
+    user = sign_in_for_system_tests(users(:edit_ci_outages))
+
+    ci = cis(:company_a_ci_watched_by_edit)
+    visit edit_ci_url(ci)
+    assert_checked_field "Watched"
+
+    assert_no_difference "Ci.where(account: user.account).size" do
+      assert_difference "Watch.count", -1 do
+        uncheck "Watched"
+        click_on "Save"
+      end
+    end
   end
 
   test "delete a CI" do

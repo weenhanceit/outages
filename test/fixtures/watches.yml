@@ -7,3 +7,8 @@ edit_watching_company_a_outage_watched_by_edit:
   active: true
   user: edit_ci_outages
   watched: company_a_outage_watched_by_edit (Outage)
+
+edit_watching_company_a_ci_watched_by_edit:
+  active: true
+  user: edit_ci_outages
+  watched: company_a_ci_watched_by_edit (Ci)

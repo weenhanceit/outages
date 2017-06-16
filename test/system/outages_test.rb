@@ -37,7 +37,7 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
       assert_difference "Watch.count" do
         fill_in "Name", with: "Outage 7"
         fill_in "Description",
-          with: "This is the outage in the seventh ring of your know where."
+          with: "This is the outage in the seventh ring of you know where."
         check "Watched"
         click_on "Save"
       end

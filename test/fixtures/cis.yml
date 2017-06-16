@@ -41,3 +41,9 @@ company_a_ci_f:
   name: Server F
   maximum_unavailable_children_with_service_maintained:
   minimum_children_to_maintain_service:
+
+company_a_ci_watched_by_edit:
+    account: company_a
+    active: true
+    description: A CI for watch testing
+    name: Watched by Edit
