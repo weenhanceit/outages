@@ -1,6 +1,8 @@
 ##
 # A configuration item, which can be hardware, software, service, etc.
 class Ci < ApplicationRecord
+  include Watched
+
   belongs_to :account
   # Putting `inverse_of: ...` on the next four lines causes the association
   # to give incorrect answers.

@@ -8,6 +8,7 @@ class CisController < ApplicationController
     # @ci.account = current_user.account
     @ci = Ci.new(ci_params_without_dag)
     @ci.account = current_user.account
+    update_watches
 
     if @ci.save
       if @ci.update(ci_dag_params)
@@ -34,6 +35,7 @@ class CisController < ApplicationController
   def edit
     # puts "IN EDI"
     @ci = current_user.account.cis.find_by(id: params[:id])
+    @ci.watched_by(current_user)
   end
 
   def index
@@ -51,6 +53,7 @@ class CisController < ApplicationController
 
   def update
     @ci = current_user.account.cis.find_by(id: params[:id])
+    update_watches
     #  TODO This was a test that I was trying to create a save error.  But the
     # ci was saved with a null account id
     # @ci.account_id = nil
@@ -63,50 +66,54 @@ class CisController < ApplicationController
       render :edit
     end
   end
-end
 
-private
+  private
 
-# Some sources say the best way to do model defaults is in an
-# `after_initialize` callback. The approach below works as a way of
-# defaulting in the UI, but not making any preconceived notions about
-# the model itself.
-def ci_defaults
-  {
-    active: true,
-    account: current_account
-  }
-end
+  # Some sources say the best way to do model defaults is in an
+  # `after_initialize` callback. The approach below works as a way of
+  # defaulting in the UI, but not making any preconceived notions about
+  # the model itself.
+  def ci_defaults
+    {
+      active: true,
+      account: current_account
+    }
+  end
 
-def ci_dag_params
-  params
-    .require(:ci)
-    .permit(parent_links_attributes: [:child_id, :id, :parent_id, :_destroy],
+  def ci_dag_params
+    params
+      .require(:ci)
+      .permit(parent_links_attributes: [:child_id, :id, :parent_id, :_destroy],
+              available_for_parents_attributes: [:parent_id, :_destroy],
+              child_links_attributes: [:child_id, :id, :parent_id, :_destroy],
+              available_for_children_attributes: [:child_id, :_destroy])
+  end
+
+  def ci_params
+    params.require(:ci).permit(:id,
+      :account_id,
+      :active,
+      :description,
+      :name,
+      :maximum_unavailable_children_with_service_maintained,
+      :minimum_children_to_maintain_service,
+      parent_links_attributes: [:child_id, :id, :parent_id, :_destroy],
       available_for_parents_attributes: [:parent_id, :_destroy],
       child_links_attributes: [:child_id, :id, :parent_id, :_destroy],
       available_for_children_attributes: [:child_id, :_destroy])
-end
+  end
 
-def ci_params
-  params.require(:ci).permit(:id,
-    :account_id,
-    :active,
-    :description,
-    :name,
-    :maximum_unavailable_children_with_service_maintained,
-    :minimum_children_to_maintain_service,
-    parent_links_attributes: [:child_id, :id, :parent_id, :_destroy],
-    available_for_parents_attributes: [:parent_id, :_destroy],
-    child_links_attributes: [:child_id, :id, :parent_id, :_destroy],
-    available_for_children_attributes: [:child_id, :_destroy])
-end
+  def ci_params_without_dag
+    params.require(:ci).permit(:id,
+      :account_id,
+      :active,
+      :description,
+      :name,
+      :maximum_unavailable_children_with_service_maintained,
+      :minimum_children_to_maintain_service)
+  end
 
-def ci_params_without_dag
-  params.require(:ci).permit(:id,
-    :account_id,
-    :active,
-    :description,
-    :name,
-    :maximum_unavailable_children_with_service_maintained,
-    :minimum_children_to_maintain_service)
+  def update_watches
+    @ci.update_watches(current_user, params[:ci][:watched].in?(%w(1 true)))
+  end
 end

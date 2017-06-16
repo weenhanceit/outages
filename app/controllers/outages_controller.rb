@@ -20,6 +20,7 @@ class OutagesController < ApplicationController
   def edit
     # puts "IN EDIT"
     load_outage
+    @outage.watched_by(current_user)
   end
 
   def create

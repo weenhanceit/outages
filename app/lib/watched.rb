@@ -17,4 +17,18 @@ module Watched
     end
     # puts "update_watches watches.size after: #{watches.size}"
   end
+
+  ##
+  # Indicates if the watched item is being watch by the user referenced in
+  # the last call to `#watched_by`. This little hack is to make things work
+  # in the view.
+  def watched
+    @watched
+  end
+
+  ##
+  # Checked if the user is watching this watched item.
+  def watched_by(user)
+    @watched = watches.where(user: user).present?
+  end
 end

@@ -39,8 +39,4 @@ class Outage < ApplicationRecord
     update_attributes(cis_outages_attributes: attributes)
     # puts "OUTAGE: #{inspect}"
   end
-
-  def watched
-    watches.present?
-  end
 end

@@ -31,7 +31,7 @@ class CisTest < ApplicationSystemTestCase
     visit new_ci_url
     assert_selector "h1", text: "New Service"
 
-    assert_difference "Service.where(account: user.account).size" do
+    assert_difference "Ci.where(account: user.account).size" do
       assert_difference "Watch.count" do
         fill_in "Name", with: "Service 7"
         fill_in "Description",
@@ -41,7 +41,7 @@ class CisTest < ApplicationSystemTestCase
       end
     end
 
-    assert_not Service.where(name: "Service 7").empty?
+    assert_not Ci.where(name: "Service 7").empty?
   end
 
   test "edit an existing CI" do

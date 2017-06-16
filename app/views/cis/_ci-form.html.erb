@@ -3,9 +3,11 @@
   <div class="row">
     <%= f.text_field :name, column_width: 6 %>
     <%= f.number_field :maximum_unavailable_children_with_service_maintained,
-          column_width: 3 %>
+          column_width: 2 %>
     <%= f.number_field :minimum_children_to_maintain_service,
-          column_width: 3 %>
+          column_width: 2 %>
+    <%= f.check_box :watched,
+          column_width: 2 %>
   </div>
   <div class="row">
     <%= f.text_area :description, column_width: 12 %>
