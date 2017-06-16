@@ -23,13 +23,15 @@
         class: "btn js-assign",
         data: {
           source: "#js-prereq-available",
-          target: "#js-prereq-assigned"
+          target: "#js-prereq-assigned",
+          other: "#js-dependent-available"
           } %>
     <%= button_tag ">",
         class: "btn js-remove",
         data: {
           source: "#js-prereq-assigned",
-          target: "#js-prereq-available"
+          target: "#js-prereq-available",
+          other: "#js-dependent-available"
           } %>
   </div>
   <div class="card col-sm-5">

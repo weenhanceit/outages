@@ -58,11 +58,13 @@ class CisTest < ApplicationSystemTestCase
     ci = cis(:company_a_ci_d)
     visit edit_ci_url(ci)
 
+    within('#js-prereq-available') { assert_text "Server F" }
     within '#test-parents' do
       click_list_item "Server F"
       click_on "<"
       within('#js-dependent-assigned') { assert_text "Server F" }
     end
+    within('#js-prereq-available') { assert_no_text "Server F" }
     assert_difference "CisCi.count" do
       click_on "Save"
     end
@@ -76,11 +78,13 @@ class CisTest < ApplicationSystemTestCase
     ci = cis(:company_a_ci_d)
     visit edit_ci_url(ci)
 
+    within('#js-prereq-available') { assert_no_text "Server B" }
     within '#test-parents' do
       click_list_item "Server B"
       click_on ">"
       within('#js-dependent-available') { assert_text "Server B" }
     end
+    within('#js-prereq-available') { assert_text "Server B" }
     assert_difference "CisCi.count", -1 do
       click_on "Save"
     end
@@ -146,11 +150,13 @@ class CisTest < ApplicationSystemTestCase
     ci = cis(:company_a_ci_d)
     visit edit_ci_url(ci)
 
+    within('#js-dependent-available') { assert_text "Server F" }
     within '#test-children' do
       click_list_item "Server F"
       click_on "<"
       within('#js-prereq-assigned') { assert_text "Server F" }
     end
+    within('#js-dependent-available') { assert_no_text "Server F" }
     assert_difference "CisCi.count" do
       click_on "Save"
     end
@@ -164,11 +170,13 @@ class CisTest < ApplicationSystemTestCase
     ci = cis(:company_a_ci_d)
     visit edit_ci_url(ci)
 
+    within('#js-dependent-available') { assert_no_text "Router E" }
     within '#test-children' do
       click_list_item "Router E"
       click_on ">"
       within('#js-prereq-available') { assert_text "Router E" }
     end
+    within('#js-dependent-available') { assert_text "Router E" }
     assert_difference "CisCi.count", -1 do
       click_on "Save"
     end
