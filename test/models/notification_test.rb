@@ -11,10 +11,10 @@ class OutageTest < ActiveSupport::TestCase
     assert_equal "New Outage / Changed Outage Info", notification.event_info
 
 # TODO: fix this test.
-    # notification = notifications(:watching_company_a_outage_watched_by_edit)
-    #
-    # assert_equal "You are watching Outage: #{notification.watch.watched.name}",
-    #   notification.reason,
-    #   "Unexpected Reason String"
+    notification = notifications(:watching_company_a_outage_watched_by_edit)
+
+    assert_equal "You are watching Outage: #{notification.watch.watched.name}",
+      notification.reason,
+      "Unexpected Reason String"
   end
 end
