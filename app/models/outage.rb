@@ -1,6 +1,8 @@
 ##
 # A single outage.
 class Outage < ApplicationRecord
+  include Watched
+
   belongs_to :account
   has_many :cis_outages, inverse_of: :outage
   accepts_nested_attributes_for :cis_outages, allow_destroy: true

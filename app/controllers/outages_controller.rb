@@ -15,15 +15,11 @@ class OutagesController < ApplicationController
   def new
     # puts "IN NEW"
     @outage = Outage.new(outage_defaults.merge(account: current_account))
-    # TODO: Remove the next line. Test it, of course.
-    @available_cis = all_cis
   end
 
   def edit
     # puts "IN EDIT"
     load_outage
-    # TODO: Remove the next line. Test it, of course.
-    @available_cis = all_cis - @outage.cis
   end
 
   def create
@@ -81,7 +77,10 @@ class OutagesController < ApplicationController
     #  puts "!!#{__LINE__}: Outage loaded: watches.size: #{@outage.watches.size} cis.size: #{@outage.cis.size} cis_outages.size: #{@outage.cis_outages.size}"
   end
 
-  # TODO: Does Rails have a better way to handle model defaults?
+  # Some sources say the best way to do model defaults is in an
+  # `after_initialize` callback. The approach below works as a way of
+  # defaulting in the UI, but not making any preconceived notions about
+  # the model itself.
   def outage_defaults
     {
       active: true,
@@ -105,27 +104,6 @@ class OutagesController < ApplicationController
   end
 
   def update_watches
-    # puts "update_watches wants to #{params[:outage][:watched] == '1' ? 'Add' : 'Delete'} a watch."
-    # puts "update_watches watches.size before: #{@outage.watches.size}"
-    # puts "OutageController params: #{params.inspect}"
-    #
-    # puts "current_user.id: #{current_user.id}"
-    # puts "Watch.where(user_id: current_user.id).last.inspect: #{Watch.where(user_id: current_user.id).last.inspect}"
-    #
-    watch = @outage.watches.where(user_id: current_user.id).first
-
-    # puts "What the hell is watch? #{watch.inspect}"
-    #
-    if params[:outage][:watched] == "0"
-      # puts "Remove watch" if watch
-      @outage.watches.destroy(watch) if watch
-    elsif !watch
-      # The usual Rails dance: set both sides of the association so the
-      # autosave will work.
-      watch = @outage.watches.build(user_id: current_user.id)
-      watch.watched = @outage
-      # puts "Set watch, watches: #{@outage.watches.inspect}"
-    end
-    # puts "update_watches watches.size after: #{@outage.watches.size}"
+    @outage.update_watches(current_user, params[:outage][:watched].in?(["1", "true"]))
   end
 end

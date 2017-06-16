@@ -1,7 +1,7 @@
-<li class="ui-widget-content"
+<li class="<%= ["ui-widget-content", available_parent.css_class].join(" ") -%>"
     data-name="<%= available_parent.name -%>"
     data-ci-id="<%= available_parent.id -%>">
-  <%= available_parent.name %>
+  <%= available_parent.name.strip -%>
   <%= f.hidden_field :parent_id, value: available_parent.id %>
   <%= f.hidden_field :_destroy, value: "1" %>
 </li>

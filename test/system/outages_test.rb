@@ -80,9 +80,6 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
 
     outage = outages(:company_a_outage_watched_by_edit)
     visit edit_outage_url(outage)
-    # TODO: We might have said this should be checked also in the case
-    # where watching was via the CI. If so, we need a test case or more
-    # go ensure that all works correctly.
     assert_checked_field "Watched"
 
     assert_no_difference "Outage.where(account: user.account).size" do
