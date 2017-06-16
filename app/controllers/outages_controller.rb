@@ -74,7 +74,7 @@ class OutagesController < ApplicationController
               .includes(:watches, :cis_outages, :cis)
               .find(params[:id])
 
-    #  puts "!!#{__LINE__}: Outage loaded: watches.size: #{@outage.watches.size} cis.size: #{@outage.cis.size} cis_outages.size: #{@outage.cis_outages.size}"
+              #  puts "!!#{__LINE__}: Outage loaded: watches.size: #{@outage.watches.size} cis.size: #{@outage.cis.size} cis_outages.size: #{@outage.cis_outages.size}"
   end
 
   # Some sources say the best way to do model defaults is in an

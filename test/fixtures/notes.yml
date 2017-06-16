@@ -1,7 +1,9 @@
 note_a_ci_b:
+  user: user_admin
   note: Note A on CI B
   notable: company_a_ci_b (Ci)
 
 note_b_outage_c:
+  user: edit_ci_outages
   note: Note B on Outage C
-  notable: company_a_outage_c
+  notable: company_a_outage_c (outage)
