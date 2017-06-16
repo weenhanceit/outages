@@ -117,8 +117,10 @@ class OutagesController < ApplicationController
     #
     if params[:outage][:watched] == "0"
       # puts "Remove watch" if watch
-      @outage.watches.destroy(watch) if watch
-    elsif !watch
+      watch.update_attribute(:active, false) if watch
+    elsif watch
+      watch.update_attribute(:active, true)
+    else
       # The usual Rails dance: set both sides of the association so the
       # autosave will work.
       watch = @outage.watches.build(user_id: current_user.id)
