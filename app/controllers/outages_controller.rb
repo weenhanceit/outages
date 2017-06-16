@@ -2,6 +2,9 @@ class OutagesController < ApplicationController
   def index
     # puts "IN INDEX"
     @outages = current_user.account.outages.where(active: true)
+    # @notifications = Services::HandleOnlineNotifications
+    #                  .retrieve(current_user).sort_by { |hsh| hsh[:event_time] }
+    #                  .reverse
   end
 
   def show
@@ -71,7 +74,7 @@ class OutagesController < ApplicationController
               .includes(:watches, :cis_outages, :cis)
               .find(params[:id])
 
-    # puts "Outage loaded: watches.size: #{@outage.watches.size} cis.size: #{@outage.cis.size} cis_outages.size: #{@outage.cis_outages.size}"
+    #  puts "!!#{__LINE__}: Outage loaded: watches.size: #{@outage.watches.size} cis.size: #{@outage.cis.size} cis_outages.size: #{@outage.cis_outages.size}"
   end
 
   # Some sources say the best way to do model defaults is in an

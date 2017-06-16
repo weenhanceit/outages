@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
     @privilege = "Phil"
   end
 
+
   def current_user
     #    return unless session[:user_id]
     @current_user ||=
@@ -29,4 +30,8 @@ class ApplicationController < ActionController::Base
   end
 
   helper_method :edit_or_show_ci_path
+
+  def notifications
+    @notifications = current_user.notifications.where(notified: false, notification_type: "online").order(created_at: :desc)
+  end
 end
