@@ -53,6 +53,16 @@ $(document).on('turbolinks:load', function() {
     // console.log('ELEMENTS: ' + elements.length);
     elements.move_to(target);
     elements.undestroy_element_for_rails();
+
+    if ((other = $(event.target).data('other')) !== undefined) {
+      elements.each(function(i, e) {
+        // console.log('e.text(): ' + $(e).text());
+        // console.log('FOUND: ' + $('li:contains(' + $.trim($(e).text()) + ')', $(other)).length);
+        // console.log('FOUND: ' + "$('li:contains('" + $.trim($(e).text()) + "')', $(other))");
+        $('li:contains(' + $.trim($(e).text()) + ')', $(other)).addClass('hidden');
+      });
+    }
+
     return elements;
   }
   $('.js-assign').click(function(event) {
@@ -81,12 +91,12 @@ $(document).on('turbolinks:load', function() {
   //  in the other (child or parent respectively) available list.
 
   $('.js-dag-assign').click(function(event) {
-    console.log('DAG ASSIGN');
+    // console.log('DAG ASSIGN');
     elements = assign(event);
   });
 
   $('.js-dag-remove').click(function(event) {
-    console.log('DAG REMOVE');
+    // console.log('DAG REMOVE');
     other = $(event.target).data('other');
     elements = remove(event);
     elements.each(function(i, e) {
