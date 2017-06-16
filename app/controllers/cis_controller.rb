@@ -48,7 +48,7 @@ class CisController < ApplicationController
   end
 
   def show
-    @ci = ci_list[params[:id].to_i]
+      @ci = current_user.account.cis.find_by(id: params[:id])
   end
 
   def update

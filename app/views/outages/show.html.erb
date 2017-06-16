@@ -1,10 +1,10 @@
-<h1><%= @outage["short_description"] %> </h1>
+<h1> <%= @outage.name %> </h1>
 <br/>
 <table>
   <tbody>
     <tr>
       <td colspan="2">
-        <%= @outage["long_description"] %>
+        <%= @outage.description %>
       </td>
     </tr>
     <tr>
@@ -12,7 +12,7 @@
           Start Time
       </td>
       <td>
-        <%= @outage["start_time"].strftime("%a, %d %b %Y %H:%M") %>
+        <%= @outage.start_time.strftime("%a, %d %b %Y %H:%M") %>
       </td>
     </tr>
     <tr>
@@ -20,7 +20,7 @@
           End Time
       </td>
       <td>
-        <%= @outage["end_time"].strftime("%a, %d %b %Y %H:%M") %>
+        <%= @outage.end_time.strftime("%a, %d %b %Y %H:%M") %>
       </td>
     </tr>
     <tr>
@@ -28,15 +28,7 @@
           Completed?
       </td>
       <td>
-        <%= @outage["completed"] %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-          Status
-      </td>
-      <td>
-        <%= @outage["status"] %>
+        <%= @outage.completed %>
       </td>
     </tr>
     <tr>
@@ -44,10 +36,14 @@
           CIs
       </td>
       <td>
-        <% @outage["cis"].each do |ci| %>
-          <p>
-            <%= link_to ci["ci"]["name"], edit_or_show_ci_path(ci["id"]) %>
-          </p>
+        <% if @outage.cis.size == 0 %>
+          none
+        <% else %>
+          <% @outage.cis.each do |ci| %>
+            <p>
+              <%= link_to ci.name, ci_path(ci.id) %>
+            </p>
+          <% end %>
         <% end %>
       </td>
     </tr>
@@ -56,14 +52,21 @@
           Notes
       </td>
       <td>
-        <% @outage["notes"].each do |n| %>
-          <p>
-            <%= n["note_item"]["note_date"] %>
-            by
-            <%= n["note_item"]["user"] %>
-            <br/>
-            <%= n["note_item"]["note"] %>
-          </p>
+        <% if @outage.notes.size == 0 %>
+          none
+        <% else %>
+          <% @outage.notes.each do |n| %>
+            <p>
+              <small>
+                <%= n.created_at %>
+                <br />
+                by
+                <%= n.user.name %>
+              </small>
+              <br/>
+              <%= n.note %>
+            </p>
+          <% end %>
         <% end %>
       </td>
     </tr>

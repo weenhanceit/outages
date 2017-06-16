@@ -1,1 +1,69 @@
-<h1>Show <%= @ci["name"] %></h1>
+<h1><%= @ci.name %></h1>
+<br/>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="2">
+        <%= @ci.description %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+          Maximum Unavailable Children with Service Maintained
+      </td>
+      <td>
+        <%= @ci.maximum_unavailable_children_with_service_maintained %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+          Minimum Children to Maintain Service
+      </td>
+      <td>
+        <%= @ci.minimum_children_to_maintain_service %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+          Associated with Outages
+      </td>
+      <td>
+        <% if @ci.outages.size == 0 %>
+          none
+        <% else %>
+          <% @ci.outages.each do |ci| %>
+            <p>
+              <%= link_to ci.name, outage_path(ci.id) %>
+            </p>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+          Notes
+      </td>
+      <td>
+        <% if @ci.notes.size == 0 %>
+          none
+        <% else %>
+          <% @ci.notes.each do |n| %>
+            <p>
+              <small>
+                <%= n.created_at %>
+                <br />
+                by
+                <%= n.user.name %>
+              </small>
+              <br/>
+              <%= n.note %>
+            </p>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+  <tbody>
+</table>
+<div class="content-note">
+  Notes should be presented in a scrollable box in reverse order of date
+</div>
