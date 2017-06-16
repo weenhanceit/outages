@@ -104,29 +104,6 @@ class OutagesController < ApplicationController
   end
 
   def update_watches
-    # puts "update_watches wants to #{params[:outage][:watched] == '1' ? 'Add' : 'Delete'} a watch."
-    # puts "update_watches watches.size before: #{@outage.watches.size}"
-    # puts "OutageController params: #{params.inspect}"
-    #
-    # puts "current_user.id: #{current_user.id}"
-    # puts "Watch.where(user_id: current_user.id).last.inspect: #{Watch.where(user_id: current_user.id).last.inspect}"
-    #
-    watch = @outage.watches.where(user_id: current_user.id).first
-
-    # puts "What the hell is watch? #{watch.inspect}"
-    #
-    if params[:outage][:watched] == "0"
-      # puts "Remove watch" if watch
-      watch.update_attribute(:active, false) if watch
-    elsif watch
-      watch.update_attribute(:active, true)
-    else
-      # The usual Rails dance: set both sides of the association so the
-      # autosave will work.
-      watch = @outage.watches.build(user_id: current_user.id)
-      watch.watched = @outage
-      # puts "Set watch, watches: #{@outage.watches.inspect}"
-    end
-    # puts "update_watches watches.size after: #{@outage.watches.size}"
+    @outage.update_watches(current_user, params[:outage][:watched].in?(["1", "true"]))
   end
 end
