@@ -10,8 +10,8 @@ basic_watching_company_a_ci_a_event_a_email:
   watch: basic_watching_company_a_ci_a
   notified: false
 
-# watching_company_a_outage_watched_by_edit:
-#   event: company_a_outage_a_event_a
-#   notification_type: online
-#   watch: edit_watching_company_a_outage_watched_by_edit
-#   notified: false
+watching_company_a_outage_watched_by_edit:
+  event: company_a_outage_watched_by_edit_event_a
+  notification_type: online
+  watch: edit_watching_company_a_outage_watched_by_edit
+  notified: false
