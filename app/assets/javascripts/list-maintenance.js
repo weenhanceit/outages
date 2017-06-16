@@ -44,7 +44,8 @@ $(document).on('turbolinks:load', function() {
       $(dflt) :
       $(target);
   }
-  $('.js-assign').click(function(event) {
+
+  function assign(event) {
     event.preventDefault();
     source = source_selector(event.target, '#js-available');
     target = target_selector(event.target, '#js-assigned');
@@ -52,8 +53,13 @@ $(document).on('turbolinks:load', function() {
     // console.log('ELEMENTS: ' + elements.length);
     elements.move_to(target);
     elements.undestroy_element_for_rails();
+    return elements;
+  }
+  $('.js-assign').click(function(event) {
+    assign(event);
   });
-  $('.js-remove').click(function(event) {
+
+  function remove(event) {
     event.preventDefault();
     source = source_selector(event.target, '#js-assigned');
     target = target_selector(event.target, '#js-available');
@@ -61,8 +67,37 @@ $(document).on('turbolinks:load', function() {
     // console.log('ELEMENTS: ' + elements.length);
     elements.move_to(target);
     elements.destroy_element_for_rails();
+    return elements;
+  }
+  $('.js-remove').click(function(event) {
+    remove(event);
   });
 
+  //  The server is now sending all CIs (except self) for both available
+  //  lists. The ones that shouldn't be there are hidden.
+  //  On an assign for either parent or child, you have to hide the CI
+  //  in the other (child or parent respectively) available list.
+  //  On a remove for either parent or child, you have to show the CI
+  //  in the other (child or parent respectively) available list.
+
+  $('.js-dag-assign').click(function(event) {
+    console.log('DAG ASSIGN');
+    elements = assign(event);
+  });
+
+  $('.js-dag-remove').click(function(event) {
+    console.log('DAG REMOVE');
+    other = $(event.target).data('other');
+    elements = remove(event);
+    elements.each(function(i, e) {
+      // console.log('e.text(): ' + $(e).text());
+      // console.log('FOUND: ' + $('li:contains(' + $.trim($(e).text()) + ')', $(other)).length);
+      // console.log('FOUND: ' + "$('li:contains('" + $.trim($(e).text()) + "')', $(other))");
+      $('li:contains(' + $.trim($(e).text()) + ')', $(other)).removeClass('hidden');
+    });
+  });
+
+  //  NOTE: If I ever do ajax version:
   //  For the CI page, the assign button fires a patch that creates
   //  a new CisCi, then retrieves the updated box contents for both
   //  available and the target.

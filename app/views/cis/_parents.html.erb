@@ -20,16 +20,18 @@
   </div>
   <div class="col-sm-2">
     <%= button_tag "<",
-        class: "btn js-assign",
+        class: "btn js-dag-assign",
         data: {
           source: "#js-dependent-available",
-          target: "#js-dependent-assigned"
+          target: "#js-dependent-assigned",
+          other: "#js-prereq-available"
           } %>
     <%= button_tag ">",
-        class: "btn js-remove",
+        class: "btn js-dag-remove",
         data: {
           source: "#js-dependent-assigned",
-          target: "#js-dependent-available"
+          target: "#js-dependent-available",
+          other: "#js-prereq-available"
           } %>
   </div>
   <div class="card col-sm-5">
