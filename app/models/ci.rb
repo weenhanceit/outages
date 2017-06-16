@@ -17,11 +17,13 @@ class Ci < ApplicationRecord
   has_many :watches, as: :watched
 
   validates :active,
-   inclusion: { in: [true, false], message: "can't be blank" }
+    inclusion: { in: [true, false], message: "can't be blank" }
 
   validates_presence_of :name
 
   default_scope { where(active: true) }
+
+  attr_accessor :css_class
 
   ##
   # All the ancestor Cis of a CI
@@ -36,14 +38,17 @@ class Ci < ApplicationRecord
   end
 
   ##
-  # Return the CIs that could be parents of this CI.
-  # That means they're not already parents, and they're not children.
-  # If they were children, this would not be a DAG.
-  # This will return nothing if you don't pass an account, and the outage
-  # doesn't have an account assigned yet.
+  # Return all the CIs for the account.
+  # Those that could be assigned as children of this CI are visible.
+  # That means they're not already children, and they're not ancestors.
+  # If they were ancestors, this would not be a DAG.
+  # CIs that can't be children are hidden.
+  # This method will raise an ArgumentError exceopt if you don't pass an
+  # account, and the outage doesn't have an account assigned yet.
   def available_for_children(account = self.account)
     raise ArgumentError if account.nil?
-    all_cis_but_me - children - ancestors
+    ((children + ancestors) .map { |ci| ci.css_class = "hidden"; ci }) +
+      (all_cis_but_me - children - ancestors)
   end
 
   ##
@@ -57,13 +62,20 @@ class Ci < ApplicationRecord
   end
 
   ##
-  # Return the CIs that could be parents of this CI.
-  # That means they're not already parents, and they're not children.
-  # If they were children, this would not be a DAG.
-  # This will blow up if you don't pass an account, and the outage doesn't
-  # have an account assigned yet.
+  # Return all the CIs for the account.
+  # Those that could be assigned as parents of this CI are visible.
+  # That means they're not already parents, and they're not descendants.
+  # If they were descendants, this would not be a DAG.
+  # CIs that can't be parents are hidden.
+  # This method will raise an ArgumentError exceopt if you don't pass an
+  # account, and the outage doesn't have an account assigned yet.
   def available_for_parents(account = self.account)
-    all_cis_but_me - parents - descendants
+    raise ArgumentError if account.nil?
+    # puts "all_cis_but_me: #{all_cis_but_me.map(&:name).join(", ")}"
+    # puts "parents: #{parents.map(&:name).join(", ")}"
+    # puts "descendants: #{descendants.map(&:name).join(", ")}"
+    ((parents + descendants) .map { |ci| ci.css_class = "hidden"; ci }) +
+      (all_cis_but_me - parents - descendants)
   end
 
   ##
@@ -82,6 +94,10 @@ class Ci < ApplicationRecord
     children + children.map(&:descendants).flatten
   end
 
+  private
+
+  ##
+  # Return all the CIs for the account, expect self, if self has been saved.
   def all_cis_but_me
     all = Ci.where(account: account)
     all = all.where.not(id: id) if id

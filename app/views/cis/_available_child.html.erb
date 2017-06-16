@@ -1,4 +1,4 @@
-<li class="ui-widget-content"
+<li class="<%= ["ui-widget-content", available_child.css_class].join(" ") -%>"
     data-name="<%= available_child.name -%>"
     data-ci-id="<%= available_child.id -%>">
   <%= available_child.name %>
