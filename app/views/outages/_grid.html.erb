@@ -1,0 +1,83 @@
+<table>
+  <thead>
+    <tr>
+      <td>
+        CIs
+      </td>
+      <td>
+        Start Time
+      </td>
+      <td>
+        End Time
+      </td>
+      <td>
+        Short Description
+      </td>
+      <td>
+        Completed?
+      </td>
+      <td>
+        Notes
+      </td>
+      <td>
+        Watch?
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @outages.each_with_index do |outage, index| %>
+    <%# [1,2].each do |outage| %>
+
+    <tr>
+      <td>
+        <% if outage.cis.size < 3 %>
+        <% outage.cis.each do |o| %>
+        <p>
+          <%= link_to o.name, edit_or_show_ci_path(o.id) %>
+        </p>
+        <% end %>
+        <% else %>
+        <p>
+          <%= link_to outage.cis[0].name, edit_or_show_ci_path(outage.cis[0]) %>
+        </p>
+        <p>
+          <%= link_to outage.cis[1].name, edit_or_show_ci_path(outage.cis[1]) %>
+        </p>
+        <p>
+          <%= link_to "More .. ", outage_path(outage) %>
+        </p>
+        <% end %>
+      </td>
+      <td>
+        <%= outage.start_time.strftime("%a, %d %b %Y %H:%M") if outage.start_time %>
+      </td>
+      <td>
+        <%= outage.end_time.strftime("%a, %d %b %Y %H:%M") if outage.end_time %>
+      </td>
+      <td>
+        <% if current_user.can_edit_outages? %>
+        <%= link_to outage.name, edit_outage_path(outage) %>
+        <% else %>
+        <%= link_to outage.name, outage_path(outage) %>
+        <% end %>
+      </td>
+      <td>
+        <%= outage.completed %>
+      </td>
+      <td>
+        <% if outage.notes.size > 0 %>
+        <%= link_to "Yes", outage_path(outage) %>
+        <% else %>
+        no
+        <% end %>
+      </td>
+      <td>
+        <p>
+          <input type="checkbox" name="watch" value="Yes" checked>
+          <!-- All watches have same properties, which come from user preferences -->
+        </p>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

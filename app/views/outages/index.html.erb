@@ -81,9 +81,10 @@
 <%# # , locals: { active_notifications: current_user.active_notifications } %>
 
 <h2>Outages</h2>
-  <ul class="nav nav-tabs role="tablist"">
+<div role="tabpanel">
+  <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active" href="#day" data-toggle="tab" role="tab">Day</a>
+      <a class="nav-link" href="#day" data-toggle="tab" role="tab">Day</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="#fourday" data-toggle="tab" role="tab">4-Day</a>
@@ -95,134 +96,28 @@
       <a class="nav-link" href="#month" data-toggle="tab" role="tab">Month</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#grid" data-toggle="tab" role="tab">Grid</a>
+      <a class="nav-link active" href="#grid" data-toggle="tab" role="tab">Grid</a>
     </li>
   </ul>
-  <div class="tab-content">
-    <div class="tab-pane active" id="grid" role="tabpanel">
-      <table>
-        <thead>
-          <tr>
-            <td>
-              CIs
-            </td>
-            <td>
-              Start Time
-            </td>
-            <td>
-              End Time
-            </td>
-            <td>
-              Short Description
-            </td>
-            <td>
-              Completed?
-            </td>
-            <td>
-              Notes
-            </td>
-            <td>
-              Watch?
-            </td>
-          </tr>
-        </thead>
-        <tbody>
-          <% @outages.each_with_index do |outage, index| %>
-          <%# [1,2].each do |outage| %>
 
-          <tr>
-            <td>
-              <% if outage.cis.size < 3 %>
-              <% outage.cis.each do |o| %>
-              <p>
-                <%= link_to o.name, edit_or_show_ci_path(o.id) %>
-              </p>
-              <% end %>
-              <% else %>
-              <p>
-                <%= link_to outage.cis[0].name, edit_or_show_ci_path(outage.cis[0]) %>
-              </p>
-              <p>
-                <%= link_to outage.cis[1].name, edit_or_show_ci_path(outage.cis[1]) %>
-              </p>
-              <p>
-                <%= link_to "More .. ", outage_path(outage) %>
-              </p>
-              <% end %>
-            </td>
-            <td>
-              <%= outage.start_time.strftime("%a, %d %b %Y %H:%M") if outage.start_time %>
-            </td>
-            <td>
-              <%= outage.end_time.strftime("%a, %d %b %Y %H:%M") if outage.end_time %>
-            </td>
-            <td>
-              <% if current_user.can_edit_outages? %>
-              <%= link_to outage.name, edit_outage_path(outage) %>
-              <% else %>
-              <%= link_to outage.name, outage_path(outage) %>
-              <% end %>
-            </td>
-            <td>
-              <%= outage.completed %>
-            </td>
-            <td>
-              <% if outage.notes.size > 0 %>
-              <%= link_to "Yes", outage_path(outage) %>
-              <% else %>
-              no
-              <% end %>
-            </td>
-            <td>
-              <p>
-                <input type="checkbox" name="watch" value="Yes" checked>
-                <!-- All watches have same properties, which come from user preferences -->
-              </p>
-            </td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+  <div class="tab-content">
     <div class="tab-pane" id="day" role="tabpanel">
-      Day
+      <%= render partial: "day" %>
     </div>
     <div class="tab-pane" id="fourday" role="tabpanel">
-      Four day
+      <%= render partial: "fourday" %>
     </div>
     <div class="tab-pane" id="week" role="tabpanel">
-      Week
+      <%= render partial: "week" %>
     </div>
     <div class="tab-pane" id="month" role="tabpanel">
-      Month
+      <%= render partial: "month" %>
+    </div>
+    <div class="tab-pane active show" id="grid" role="tabpanel">
+      <%= render partial: "grid" %>
     </div>
   </div>
-<!-- <div class="quicktab">
-  <button class="tablinks" onclick="openCity(event, 'Calendar')">Calender View</button>
-  <button class="tablinks active" onclick="openCity(event, 'Grid')">Grid View</button>
 </div>
-<div id="Calendar" class="tabcontent">
-  <div class="content-note">
-    <p>
-      This will be a calendar view of the data in the grid. It likely would NOT
-      include the status, completed or list of CI's.
-    </p>
-    <p>
-      The outage short name will appear on the calendar (stretched between start
-      and end dates?) and will be a link that will take you to the show page.
-    </p>
-    <p>
-      This will likely be the default
-      view, but possible ways of deciding the default view include:
-      <ul>
-        <li>Always is the calendar view </li>
-        <li>Always is the last view the user used</li>
-        <li>Is a user preference (Note, above may be one of the preferences)</li>
-      </ul>
-    </p>
-  </div>
-</div> -->
-
 <p>
   <% if current_user.can_edit_outages? %>
     <%= link_to "<button>Add Outage</button>".html_safe, new_outage_path %>
