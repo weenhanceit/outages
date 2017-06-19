@@ -1,0 +1,166 @@
+<h1>
+  List of Outages of Interest to the User
+  <br/>
+  <small>
+    User's home Page
+  </small>
+</h1>
+<div class="content-note">
+<p>Calendar of outages, or spreadsheet-like view of outages.</p>
+<p>
+  By default you're seeing the list of outages that affect the CIs you're watching,
+  that happen in the next two weeks.
+</p>
+</div>
+
+<h2>Filters</h2>
+<div class="content-note">
+    Filters Allow the user to limit the outages displayed on the grid or in the calendar.  Outages
+    displayed must match EACH of the 3 criteria below.
+    <br/>
+    The page will be refreshed when any of the following are changed
+</div>
+
+<%= form_tag "#" do %>
+  <p>
+    <%= label_tag "frag", "Fragment" %>
+    <%= text_field_tag "frag" %>
+    <div class="content-note">
+        Outages meet this criteria if the Outage Short Description, Outage Long
+        Description, Outage Status contains this fragment, if any of the Notes
+        associated with an Outage contain the fragment or if any of the
+        associated CIs Name, Description, Tags contains this fragment.
+    </div>
+  </p>
+  <p>
+    <%= radio_button_tag :watching, "Watched", true %>
+    <%= label_tag :watching, "Watched", value: "Watched" %>
+    <%= radio_button_tag :watching, "All" %>
+    <%= label_tag :watching, "All", value: "All" %>
+  </p>
+  <p>
+    Add outages not watched by me but:
+    <%= check_box_tag :created_by_me, 1, true %>
+    <%= label_tag :created_by_me, "Created By Me" %>
+    <%= check_box_tag :edited_by_me, 1, true %>
+    <%= label_tag :edited_by_me, "Edited By Me" %>
+  </p>
+  <div class="content-note">
+    Still not sure that this would be "logically" clear to users (because it is
+    a bit of an "AND/OR".  Wondering if this should simply be 'all' or 'watched/edited by me' radio button)
+  </div>
+
+  <p>
+    <%= label_tag "earliest", "Outages After" %>
+    <%= datetime_field_tag "earliest", Time.zone.now.beginning_of_day.strftime("%Y-%m-%dT%H:%M") %>
+    <%= label_tag "latest", "Outages Before" %>
+    <%= datetime_field_tag "latest", (Time.zone.now.beginning_of_day + 2.weeks).strftime("%Y-%m-%dT%H:%M") %>
+  </p>
+  <div class="content-note">
+    <p>
+      If an earliest time is provided, show outages that don't end before the earliest time.
+      If the earliest time is blank, outage end time is a don't care.
+    </p>
+    <p>
+      If a latest time is provided, show outages that don't start after the end_time.
+      If the latest time is blank, the outage start time is a don't care.
+    </p>
+    <p>
+      If both times are provided, show the intersection of the above, or actually,
+      do both of the above tests in the same query.
+    </p>
+    <p>
+      Or to put it another way, show all outages that overlap the filter's start
+      and end times.
+    </p>
+  </div>
+
+<% end %>
+
+<%= render partial: "notifications/active"  %>
+<%# # , locals: { active_notifications: current_user.active_notifications } %>
+
+<h2>Outages</h2>
+<div role="tabpanel">
+  <ul class="nav nav-pills">
+    <%# FIXME: how to set the active pill for each page? %>
+    <li class="nav-item">
+      <%= link_to "Day", day_outages_path, class: "nav-link" %>
+    </li>
+    <li class="nav-item">
+      <%= link_to "4-Day", fourday_outages_path, class: "nav-link" %>
+    </li>
+    <li class="nav-item">
+      <%= link_to "Week", week_outages_path, class: "nav-link" %>
+    </li>
+    <li class="nav-item">
+      <%= link_to "Month", month_outages_path, class: "nav-link" %>
+    </li>
+    <li class="nav-item">
+      <%= link_to "Grid", outages_path, class: "nav-link" %>
+    </li>
+  </ul>
+
+  <%= yield :outages_view %>
+</div>
+<p>
+  <% if current_user.can_edit_outages? %>
+    <%= link_to "<button>Add Outage</button>".html_safe, new_outage_path %>
+  <% end %>
+</p>
+<hr>
+<h4>Notes, Issues, Questions, Futures</h4>
+<ul>
+  <li><strong>Problem: Entering a blank name means that no link appears for the
+    outage and it can't be edited.
+  </strong></li>
+  <li><strong>
+      Problem: Entering a blank date causes this page to fail
+      </strong>
+  </li>
+  <li><strong>
+      Note/Question: After Edit save, redirected to Services.  Suggest should
+      redirect to Outages, but not sure of Larry's thinking
+      </strong>
+  </li>
+
+  <li>
+    There are at least 3 options for long lists:
+      <ul>
+          <li>An intermediate page with the whole list (overlay)</li>
+          <li>Max height plus scroll bar</li>
+          <li>Jump to Outages page, where whole list is displayed.</li>
+        </ul>
+  </li>
+  <li>
+    What option might there be for the calendar?  Presumably the calendar may be
+    scrolled back and forth through time - but what options will there for
+    the period of time displayed? Will these be user preferences or will we
+    default to showing weeks and the weeks displayed cover the period of time
+    set by the filter above?
+  </li>
+  <li>
+    Likely should add a filter for Completed
+  </li>
+  <li>Filters: Show me what's changed (TBC)</li>
+  <li>Maybe more filters?</li>
+  <li>
+    Should remember the filters for each user so when they come back
+    to the page, whether it is this session or a new session, the filter
+    will be the same
+  </li>
+  <li>
+    Need to design a graceful way to handle the situations where the user
+    sets filters to return too much data (paging?), or the calendar range
+    is set so long as to return a ridiculous number of weeks (max before today,
+    max after today as limits?)
+  </li>
+  <li>
+    Outages that have an active, on-line notification will be highlighted
+    somehow (bold or backgroun colour?).
+  </li>
+  <li>
+    Future: Preference to automatically acknowledge and notifications
+    that too old.
+  </li>
+</ul>

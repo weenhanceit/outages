@@ -1,7 +1,13 @@
 class OutagesController < ApplicationController
+  before_action :outage, only: [
+    :update, :edit, :show, :destroy
+  ]
+  before_action :outages, only: [
+    :day, :fourday, :index, :month, :week
+  ]
+
   def index
     # puts "IN INDEX"
-    @outages = current_user.account.outages.where(active: true)
     # @notifications = Services::HandleOnlineNotifications
     #                  .retrieve(current_user).sort_by { |hsh| hsh[:event_time] }
     #                  .reverse
@@ -9,7 +15,6 @@ class OutagesController < ApplicationController
 
   def show
     # puts "IN SHOW"
-    load_outage
   end
 
   def new
@@ -19,7 +24,6 @@ class OutagesController < ApplicationController
 
   def edit
     # puts "IN EDIT"
-    load_outage
     @outage.watched_by(current_user)
   end
 
@@ -38,7 +42,6 @@ class OutagesController < ApplicationController
 
   def update
     # puts "IN UPDATE"
-    load_outage
     update_watches
     # puts "params.require(:outage): #{params.require(:outage).inspect}"
     # puts "outage_params: #{outage_params.inspect}"
@@ -52,7 +55,6 @@ class OutagesController < ApplicationController
 
   def destroy
     # puts "IN DESTROY"
-    load_outage
     @outage.active = false
     if @outage.save
       redirect_to outages_path
@@ -64,11 +66,9 @@ class OutagesController < ApplicationController
 
   private
 
-  def all_cis
-    Ci.where(account: current_user.account).order(:name)
-  end
-
-  def load_outage
+  ##
+  # Set up the @outage instance variable for the single-instance actions.
+  def outage
     @outage = current_user
               .account
               .outages
@@ -102,6 +102,12 @@ class OutagesController < ApplicationController
       :start_time,
       cis_outages_attributes: [:id, :ci_id, :outage_id, :_destroy],
       available_cis_attributes: [:ci_id, :_destroy])
+  end
+
+  ##
+  # Set up the @outages instance variable for the "index-like" actions.
+  def outages
+    @outages = current_user.account.outages.where(active: true)
   end
 
   def update_watches
