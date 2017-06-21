@@ -40,7 +40,7 @@
           <%# puts "---------------------------------------------------------" %>
         <tr>
           <td>
-            <%= n.event.created_at.in_time_zone(current_user.time_zone).strftime("%Y %b %e %H:%M:%S.%L %Z") %>
+            <%= n.event.created_at.strftime("%Y %b %e %H:%M:%S.%L %Z") %>
           </td>
           <td>
             <%= link_to n.event.outage.name, outage_url(n.event.outage_id) %>

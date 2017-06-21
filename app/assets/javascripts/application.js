@@ -24,3 +24,6 @@
 //= require jquery-ui/widgets/selectable
 //= require jquery-ui/widgets/sortable
 // End jQueryUI
+
+//= require detect_timezone
+//= require jquery.detect_timezone

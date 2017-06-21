@@ -1,6 +1,12 @@
 class ApplicationController < ActionController::Base
   # require 'lib/user.rb'
   protect_from_forgery with: :exception
+  around_action :user_time_zone, if: :current_user
+
+  def user_time_zone(&block)
+    Time.use_zone(current_user.time_zone, &block) if current_user
+  end
+
   before_action :get_privilege
 
   def get_privilege
