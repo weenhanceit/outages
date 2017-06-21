@@ -41,7 +41,7 @@ gem 'bootstrap_form', git: "https://github.com/bootstrap-ruby/rails-bootstrap-fo
 gem 'jquery-ui-rails'
 
 gem "simple_calendar", "~> 2.0", git: "https://github.com/lcreid/simple_calendar.git"
-
+gem "devise"
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
