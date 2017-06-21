@@ -15,7 +15,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     # TODO This should be done using the actual steps a user would follow
     # This shortcut is in place until the functionality is implemented
     ci = cis(:company_a_ci_a)
-    puts "notifications_test.rb #{__LINE__}: ci: #{ci.name}"
+    # puts "notifications_test.rb #{__LINE__}: ci: #{ci.name}"
     ci.watches.create(active: true, user: user)
 
     # Create and outage and assign our ci to it

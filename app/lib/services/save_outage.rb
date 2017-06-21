@@ -42,12 +42,14 @@ module Services
     def self.event_text (outage)
       if outage.new_record? && outage.active
         "New Outage"
-      elsif !outage.new_record? && outage.changed? && !outage.active_changed? && outage.active
-        "Outage Changed"
-      elsif !outage.new_record? && outage.changed? && outage.active_changed? && !outage.active
-        "Outage Cancelled"
-      elsif !outage.new_record? && outage.changed? && outage.active_changed? && outage.active
-        "New Outage"
+      elsif !outage.new_record? && outage.changed?
+        if !outage.active_changed? && outage.active
+          "Outage Changed"
+        elsif outage.active_changed? && !outage.active
+          "Outage Cancelled"
+        elsif outage.active_changed? && outage.active
+          "New Outage"
+        end
       end
     end
   end

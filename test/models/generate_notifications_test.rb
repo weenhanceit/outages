@@ -386,7 +386,7 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
     user.outstanding_online_notifications.each do |n|
       assert n.notification_type
       assert n.watch
-      assert_not n.watch.watched.name
+      assert n.watch.watched.name
       assert n.event
       assert n.event.outage
     end
