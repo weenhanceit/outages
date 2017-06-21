@@ -41,4 +41,86 @@ class OutageTest < ActiveSupport::TestCase
       Outage.find(outages(:company_a_outage_inactive).id)
     end
   end
+
+  test "outage exactly one day" do
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      start_time = Time.zone.local(2017, 7, 1, 0, 0, 0)
+      end_time = Time.zone.local(2017, 7, 2, 0, 0, 0)
+      outage = Outage.new(start_time: start_time, end_time: end_time)
+
+      assert_equal start_time, outage.start_time_on_date(start_time.to_date)
+      assert_equal end_time, outage.end_time_on_date(start_time.to_date)
+    end
+  end
+
+  test "outage two days" do
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      start_time = Time.zone.local(2017, 7, 1, 0, 0, 0)
+      end_time = Time.zone.local(2017, 7, 2, 0, 0, 1)
+      outage = Outage.new(start_time: start_time, end_time: end_time)
+
+      assert_equal start_time,
+        outage.start_time_on_date(Time.zone.local(2017, 7, 1).to_date)
+      assert_equal start_time + 1.day,
+        outage.end_time_on_date(Time.zone.local(2017, 7, 1).to_date)
+
+      assert_equal end_time.beginning_of_day,
+        outage.start_time_on_date(Time.zone.local(2017, 7, 2).to_date)
+      assert_equal end_time,
+        outage.end_time_on_date(Time.zone.local(2017, 7, 2).to_date)
+    end
+  end
+
+  test "outage three days" do
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      start_time = Time.zone.local(2017, 6, 30, 23, 59, 59)
+      end_time = Time.zone.local(2017, 7, 2, 0, 0, 1)
+      outage = Outage.new(start_time: start_time, end_time: end_time)
+
+      assert_equal start_time,
+        outage.start_time_on_date(Time.zone.local(2017, 6, 30).to_date)
+      assert_equal (start_time + 1.day).beginning_of_day,
+        outage.end_time_on_date(Time.zone.local(2017, 6, 30).to_date)
+
+      assert_equal Time.zone.local(2017, 7, 1).beginning_of_day,
+        outage.start_time_on_date(Time.zone.local(2017, 7, 1).to_date)
+      assert_equal Time.zone.local(2017, 7, 2).beginning_of_day,
+        outage.end_time_on_date(Time.zone.local(2017, 7, 1).to_date)
+
+      assert_equal Time.zone.local(2017, 7, 2).beginning_of_day,
+        outage.start_time_on_date(Time.zone.local(2017, 7, 2).to_date)
+      assert_equal end_time,
+        outage.end_time_on_date(Time.zone.local(2017, 7, 2).to_date)
+    end
+  end
+
+  test "outage before date" do
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      start_time = Time.zone.local(2017, 7, 1, 0, 0, 0)
+      end_time = Time.zone.local(2017, 7, 2, 0, 0, 0)
+      outage = Outage.new(start_time: start_time, end_time: end_time)
+
+      assert_raises ArgumentError do
+        outage.start_time_on_date(Time.zone.local(2017, 7, 2).to_date)
+      end
+      assert_raises ArgumentError do
+        outage.end_time_on_date(Time.zone.local(2017, 7, 2).to_date)
+      end
+    end
+  end
+
+  test "outage after date" do
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      start_time = Time.zone.local(2017, 7, 1, 0, 0, 0)
+      end_time = Time.zone.local(2017, 7, 2, 0, 0, 0)
+      outage = Outage.new(start_time: start_time, end_time: end_time)
+
+      assert_raises ArgumentError do
+        outage.start_time_on_date(Time.zone.local(2017, 6, 30).to_date)
+      end
+      assert_raises ArgumentError do
+        outage.end_time_on_date(Time.zone.local(2017, 6, 30).to_date)
+      end
+    end
+  end
 end

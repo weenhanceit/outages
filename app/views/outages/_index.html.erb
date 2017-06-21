@@ -96,11 +96,12 @@
 </div>
 <p>
   <% if current_user.can_edit_outages? %>
-  <%= link_to "<button>Add Outage</button>".html_safe, new_outage_path %>
+  <%= link_to "Add Outage", new_outage_path, class: "btn btn-secondary" %>
   <% end %>
 </p>
-<hr>
+
 <div class="content-note">
+  <hr>
   <h4>Notes, Issues, Questions, Futures</h4>
   <ul>
     <li>

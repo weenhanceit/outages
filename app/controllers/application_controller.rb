@@ -30,4 +30,14 @@ class ApplicationController < ActionController::Base
   end
 
   helper_method :edit_or_show_ci_path
+
+  def edit_or_show_outage_path(id)
+    current_user.can_edit_outages? ? edit_outage_path(id) : outage_path(id)
+  end
+
+  helper_method :edit_or_show_outage_path
+
+  def notifications
+    @notifications = current_user.notifications.where(notified: false, notification_type: "online").order(created_at: :desc)
+  end
 end
