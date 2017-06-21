@@ -118,6 +118,10 @@
         Current User:
         <%= current_user ? current_user.user_privilege_text : "Nil"  %>
       </p>
+      <p>
+        Time Zone Cookie:
+        <%= cookies["tz"].inspect %>
+      </p>
     </div>
   </body>
 </html>
