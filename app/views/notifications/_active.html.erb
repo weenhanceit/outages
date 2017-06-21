@@ -1,9 +1,9 @@
-<h2>Notifications</h2>
-<% if @notifications %>
+<% if @online_notifications && @online_notifications.size > 0  %>
+<%# puts "_active.html.erb #{__LINE__}: Hi There! @notification class: #{@notifications.class}" %>
   <div class="notifications">
     <h2>Notifications</h2>
     <p>
-      You have <%= @notifications.size %> un-acknowledged notifications.
+      You have <%= @online_notifications.size %> un-acknowledged notifications.
     </p>
     <table>
       <thead>
@@ -29,23 +29,30 @@
         </tr>
       </thead>
       <tbody>
-        <% @notifications.each do |n| %>
+        <% @online_notifications.each do |n| %>
+          <%# puts "_active.html.erb #{__LINE__}: Hi There! n class: #{n.class}" %>
+          <%# puts "---------------------------------------------------------" %>
+          <%# puts n.inspect %>
+          <%# puts "---------------------------------------------------------" %>
+          <%# puts n.event.inspect %>
+          <%# puts "---------------------------------------------------------" %>
+          <%# puts n.event.outage.inspect %>
+          <%# puts "---------------------------------------------------------" %>
         <tr>
           <td>
-            <%#= n[:event_time] %>
-            <%= n[:event_time].in_time_zone(current_user.time_zone).strftime("%Y %b %e %H:%M %Z") %>
+            <%= n.event.created_at.in_time_zone(current_user.time_zone).strftime("%Y %b %e %H:%M:%S.%L %Z") %>
           </td>
           <td>
-            <%= link_to n[:outage_name], outage_url(n[:outage_id]) %>
+            <%= link_to n.event.outage.name, outage_url(n.event.outage_id) %>
           </td>
           <td>
-            <%= n[:event_type] %>
+            <%= n.event.event_type %>
           </td>
           <td>
-            <%= n[:event] %>
+            <%= n.event_info %>
           </td>
           <td>
-            <%= n[:reason] %>
+            <%= n.reason %>
           </td>
           <td>
             <%= check_box_tag :acknowledged, 1, true %>
@@ -55,38 +62,5 @@
       </tbody>
     </table>
     <hr>
-
-    <p>
-      You have <%#= %> a lot of un-acknowledged notifications.
-    </p>
-    <table>
-      <thead>
-        <tr>
-          <td>
-            Notification
-          </td>
-          <td>
-            Acknowledged
-            <%#= label_tag :acknowledged_all, "Edited By Me" %>
-            <br/>
-            <%= check_box_tag :acknowledge_all, 1, false %>
-          </td>
-        </tr>
-      </thead>
-      <tbody>
-        <%#= active_notifications.each |notification| do %>
-        <tr>
-
-          <td>
-            <%= link_to "Outage A", "#" %>
-            blah blah blah
-          </td>
-          <td>
-            <%= check_box_tag :acknowledged, 1, true %>
-          </td>
-        </tr>
-        <%# end %>
-      </tbody>
-    </table>
   </div>
 <% end %>

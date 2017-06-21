@@ -9,6 +9,8 @@ class Notification < ApplicationRecord
   belongs_to :event
   belongs_to :watch
 
+  default_scope { where.not(watch: nil) }
+
   # This method provides an english text description of the event type
   def event_info
     # TODO: Add text for other event types
@@ -19,7 +21,6 @@ class Notification < ApplicationRecord
       "--unknown--"
     end
   end
-
 
   # This method provides an english text explaination for why the notification
   # was created.  It is based on the item watched

@@ -8,9 +8,7 @@ class OutagesController < ApplicationController
 
   def index
     # puts "IN INDEX"
-    # @notifications = Services::HandleOnlineNotifications
-    #                  .retrieve(current_user).sort_by { |hsh| hsh[:event_time] }
-    #                  .reverse
+    @online_notifications = current_user.outstanding_online_notifications
   end
 
   def show
@@ -32,7 +30,7 @@ class OutagesController < ApplicationController
     @outage = Outage.new(outage_params)
     @outage.account = current_user.account
     update_watches
-    if @outage.save
+    if Services::SaveOutage.call(@outage)
       redirect_to outages_path
     else
       logger.warn @outage.errors.full_messages
@@ -45,7 +43,8 @@ class OutagesController < ApplicationController
     update_watches
     # puts "params.require(:outage): #{params.require(:outage).inspect}"
     # puts "outage_params: #{outage_params.inspect}"
-    if @outage.update(outage_params)
+    @outage.update_attributes(outage_params)
+    if Services::SaveOutage.call(@outage)
       redirect_to outages_path
     else
       logger.warn @outage.errors.full_messages
@@ -56,7 +55,7 @@ class OutagesController < ApplicationController
   def destroy
     # puts "IN DESTROY"
     @outage.active = false
-    if @outage.save
+    if Services::SaveOutage.call(@outage)
       redirect_to outages_path
     else
       logger.warn @outage.errors.full_messages

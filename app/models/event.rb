@@ -6,5 +6,6 @@ class Event < ApplicationRecord
   validates :handled,
     inclusion: { in: [true, false], message: "can't be blank" }
 
-  belongs_to :outage
+  belongs_to :outage, -> { unscope(where: :active) }
+
 end

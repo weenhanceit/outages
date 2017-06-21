@@ -3,7 +3,7 @@ module Services
   # as notified
   class HandleOnlineNotifications
     # Method retrieve outstanding notifications for a user
-    def self.retrieve(user)
+    def self.call
       # TODO: the following should be run as a 'background task'  For demo
       # purposes, this is run whenever this method is called (usually from
       # a controller index method)

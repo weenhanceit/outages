@@ -40,7 +40,7 @@ class CisController < ApplicationController
 
   def index
     @cis = current_user.account.cis.where(active: true).order(:name)
-    @notifications = Services::HandleOnlineNotifications.retrieve(current_user)
+    @online_notifications = current_user.outstanding_online_notifications
   end
 
   def new
@@ -48,7 +48,7 @@ class CisController < ApplicationController
   end
 
   def show
-      @ci = current_user.account.cis.find_by(id: params[:id])
+    @ci = current_user.account.cis.find_by(id: params[:id])
   end
 
   def update

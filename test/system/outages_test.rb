@@ -50,6 +50,7 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
     user = sign_in_for_system_tests(users(:edit_ci_outages))
 
     outage = outages(:company_a_outage_a)
+    puts ""
     visit edit_outage_url(outage)
 
     assert_no_difference "Outage.where(account: user.account).size" do
@@ -91,11 +92,10 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
   end
 
   test "delete an outage" do
+    # skip "WTF is going down"
     user = sign_in_for_system_tests(users(:edit_ci_outages))
-
     outage = outages(:company_a_outage_a)
     visit edit_outage_url(outage)
-
     assert_difference "Outage.where(account: user.account).size", -1 do
       click_on "Delete"
     end
