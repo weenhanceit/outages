@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  # Put this before Devise during the transition so the old tests still work.
+  resources :users, only: [:create, :destroy]
   devise_for :users
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root "outages#index"
@@ -16,5 +18,4 @@ Rails.application.routes.draw do
   end
   resources :preferences, only: [:edit]
   resources :searches, only: [:index]
-  resources :users, only: [:create, :destroy]
 end
