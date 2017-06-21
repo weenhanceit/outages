@@ -1,0 +1,8 @@
+<%= calendar(number_of_days: 4, events: @outages) do |date, outages| %>
+  <%= date %>
+  <% outages.each do |outage| %>
+    <div>
+      <%= outage.name %>
+    </div>
+  <% end %>
+<% end %>
