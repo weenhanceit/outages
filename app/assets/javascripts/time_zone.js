@@ -32,17 +32,17 @@ $(document).on('turbolinks:load', function() {
     browser_tz = $().get_timezone();
     // console.log('Browser time zone: ' + browser_tz);
 
-    if (browser_tz !== current_user_tz) {
-      msg = 'You appear to be in ' +
+    if (browser_tz !== current_user_tz && current_user_tz !== "") {
+      msg = '<p>You appear to be in ' +
         browser_tz +
         ' time zone, but your preference is set to ' +
         current_user_tz_rails +
         '. If you want to change to ' +
         browser_tz +
-        ', go to the preferences page.';
+        ', go to the preferences page.</p>';
 
       // alert(msg);
-      $('.js-time-zone-warning').html(msg);
+      $('.js-time-zone-warning').append(msg);
 
       set_cookie('tz', browser_tz);
     }
