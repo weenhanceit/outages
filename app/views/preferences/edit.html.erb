@@ -1,58 +1,77 @@
-<h2>Preferences</h2>
+<div style="border: 1px solid red; background-color: #F0F0FF; padding: 7px; width: 50%";>
+  <%= @display %>
+  <br>
+  <%= @phil %>
+</div>
 
-<p>
-  Time Zone: <%= select_tag "time_zone", time_zone_options_for_select %>
-  Should default to the current time zone,
-  which if not set in the user profile,
-  should be set in a cookie
-  by Javascript based on the code to guess time zone
-  in the browser.
-</p>
-<!-- NOTE: Don't need to let the user set a preference.
-<hr/>
-<p>
-  <%= check_box_tag "highlight", 1, true %>
-  <%= label_tag "highlight", "Highlight outages that are new or changed" %>
-  This might be show it in bold in the list or calendar views until
-  the user has read the outage. But what does "read the outage" mean?
-</p> -->
-<hr/>
-<h2>Notification Preferences</h2>
-<p>
-  <%= check_box_tag "changes", 1, true %>
-  <%= label_tag "changes", "Notify me about new or changed outages for CIs I'm watching." %>
-  "Changed" means change to start or end time, CI list.
-</p>
+<%= bootstrap_form_for(@user, as: :preference, url: preference_path(@user), builder: WeitFormBuilder) do |f| %>
 
-<p>
-  <%= check_box_tag "notes", 1, true %>
-  <%= label_tag "notes", "Notify me when notes are added, changed, or deleted." %>
-</p>
+<div class="row">
+  <h3>Preferences</h3>
+</div>
+<div class="row">
+  <div class="col-sm-1"></div>
+  <%= f.time_zone_select :time_zone %>
+  <div class="col-sm-1 content-note" >
+    Should default to the current time zone, which if not set in the user
+    profile, should be set in a cookie by Javascript based on the code to
+    guess time zone in the browser.
+    <!-- NOTE: Don't need to let the user set a preference.
+    <hr/>
+    <p>
+      <%= check_box_tag "highlight", 1, true %>
+      <%= label_tag "highlight", "Highlight outages that are new or changed" %>
+      This might be show it in bold in the list or calendar views until
+      the user has read the outage. But what does "read the outage" mean?
+    </p> -->
+  </div>
+</div>
+<div class="row">
+  <h3>Notification Preferences</h3>
+</div>
+<div class="row">
+  <div class="col-sm-1"></div>
+  <%= f.check_box :notify_me_on_outage_changes, label: "Notify me about new or changed outages associated with anything I'm watching.", column_width: 10  %>
+</div>
 
-<p>
-  <%= check_box_tag "completion", 1, true %>
-  <%= label_tag "completion", "Notify me when the outage is completed." %>
-</p>
+<div class="row">
+  <div class="col-sm-1"></div>
+  <%= f.check_box :notify_me_on_note_changes, label: "Notify me when notes are added, changed, or deleted.", column_width: 10  %>
+</div>
 
-<p>
-  <%= check_box_tag "non_completion", 1, true %>
-  <%= label_tag "non_completion", "Notify me when the outage is not completed by its scheduled end time." %>
-</p>
+<div class="row">
+  <div class="col-sm-1"></div>
+  <%= f.check_box :notify_me_on_outage_complete, label: "Notify me when the outage is completed.", column_width: 10  %>
+</div>
 
-<p>
-  <%= check_box_tag "warning", 1, true %>
-  <%= label_tag "warning", "Notify me" %>
-  <%= number_field_tag "warning_interval", 1 %>
-  <%= select_tag "warning_interval_unit", options_for_select([ "hours", "days", "weeks", "months" ], "days") %>
-  before outage starts.
-</p>
+<div class="row">
+  <div class="col-sm-1"></div>
+  <%= f.check_box :notify_me_on_overdue_outage, label: "Notify me when the outage is not completed by its scheduled end time.", column_width: 10  %>
+</div>
 
-<hr/>
-<h2>E-Mail Notification Preferences</h2>
-<p>
-  <%= check_box_tag "email", 1, true %>
-  <%= label_tag "email", "Also notify me by e-mail." %>
-</p>
+<div class="row">
+  <div class="col-sm-1"></div>
+  <%= f.check_box :notify_me_before_outage, label: "", column_width: 1  %>
+  <%= f.number_field :notification_periods_before_outage, label: "Notify me", column_width: 2  %>
+  <%= f.select :notification_period_interval, [ "hours", "days", "weeks", "months" ], label: "Before outage starts" %>
+</div>
+
+<div class="row">
+  <h3>E-Mail Notification Preferences</h3>
+</div>
+<div class="row">
+  <div class="col-sm-1"></div>
+  <%= f.check_box :preference_notify_me_by_email, label: "Also notify me by e-mail.", column_width: 10  %>
+</div>
+<div class="row">
+  <div class="col-sm-1"></div>
+  <%= f.radio_button :preference_individual_email_notifications, 1, label: " Individual e-mail for each outage "%>
+  <%= f.radio_button :preference_individual_email_notifications, 0, label: " One e-mail per day ", column_width: 10  %>
+  <%= f.time_field :preference_email_time, label: "at", column_width: 3  %>
+
+</div>
+
+
 <p>
   <p>
     <%= radio_button_tag :digest, "separate", true %>
@@ -64,4 +83,10 @@
     <%= time_field_tag "e_mail_time", "08:00" %>
   </p>
 </p>
-<%= submit_tag %>
+<p>
+  <%= check_box_tag "changes", 1, true %>
+  <%= label_tag "changes", "Notify me about new or changed outages for CIs I'm watching." %>
+  "Changed" means change to start or end time, CI list.
+</p>
+  <%= f.primary "Save" %>
+<% end %>

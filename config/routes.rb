@@ -13,7 +13,7 @@ Rails.application.routes.draw do
       get "week"
     end
   end
-  resources :preferences, only: [:edit]
+  resources :preferences, only: [:edit, :update]
   resources :searches, only: [:index]
   resources :users, only: [:create, :destroy]
 end
