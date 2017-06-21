@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
 
   def current_account
-    self.current_user.account
+    current_user.account
   end
 
   helper_method :current_account
