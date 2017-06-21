@@ -38,7 +38,7 @@ basic:
 edit_ci_outages:
   account: company_a
   active: true
-  email: edit_ci_outages_user@outages.com
+  email: edit_ci_outages@outages.com
   name: Can Edit CIs/Outages
   notification_periods_before_outage: 1
   notification_period_interval: days

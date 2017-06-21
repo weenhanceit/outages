@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   # Put this before Devise during the transition so the old tests still work.
-  resources :users, only: [:create, :destroy]
   devise_for :users
   # The following should be where Devise goes after login.
   get "user_root_path", to: "outages#index"
@@ -21,4 +20,5 @@ Rails.application.routes.draw do
   resources :preferences, only: [:edit]
   resources :searches, only: [:index]
   resources :welcome, only: [:index]
+  # resources :users, only: [:create, :destroy]
 end

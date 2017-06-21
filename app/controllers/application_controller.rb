@@ -2,17 +2,6 @@ class ApplicationController < ActionController::Base
   # require 'lib/user.rb'
   protect_from_forgery with: :exception
 
-  def current_user
-    #    return unless session[:user_id]
-    @current_user ||=
-      User.find_by(name: session[:user_id] || "Basic User (Read Only)" )
-    session[:user_id] = @current_user.name
-    # puts "Get current_user: #{@current_user.name} session: #{session[:user_id]}"
-    @current_user
-  end
-
-  helper_method :current_user
-
   def current_account
     current_user.account
   end
