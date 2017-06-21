@@ -13,6 +13,7 @@ class UserTest < ActiveSupport::TestCase
       "Notify me on outage changes can't be blank",
       "Notify me on outage complete can't be blank",
       "Notify me on overdue outage can't be blank",
+      "Password can't be blank",
       "Preference individual email notifications can't be blank",
       "Preference notify me by email can't be blank",
       "Privilege account can't be blank",
