@@ -6,7 +6,7 @@ class User < ApplicationRecord
   has_many :notes, inverse_of: :user
   has_many :watches, inverse_of: :user
   has_many :notifications, through: :watches
-  
+
   validates :active,
     :notify_me_before_outage,
     :notify_me_on_note_changes,
@@ -23,7 +23,6 @@ class User < ApplicationRecord
 
   validates_presence_of :email
 
-
   default_scope { where(active: true) }
 
   def can_edit_outages?
@@ -32,6 +31,18 @@ class User < ApplicationRecord
 
   def can_edit_cis?
     privilege_edit_cis
+  end
+
+  # Provide an array of outstanding (notified false) online notifications
+  # for the user
+  def outstanding_online_notifications
+    ## TODO: This class method generates notifications.  It is anticipated
+    ## this will be run as a background task.  It is places here during
+    ## development and NEED to re-evaluate where this should wind up
+    Services::GenerateNotifications.call
+    notifications.where(notified: false,
+                        notification_type: "online")
+                 .order(created_at: :desc)
   end
 
   ##

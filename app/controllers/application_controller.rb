@@ -30,8 +30,4 @@ class ApplicationController < ActionController::Base
   end
 
   helper_method :edit_or_show_ci_path
-
-  def notifications
-    @notifications = current_user.notifications.where(notified: false, notification_type: "online").order(created_at: :desc)
-  end
 end
