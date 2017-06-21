@@ -18,11 +18,27 @@ basic:
   privilege_edit_outages: false
   privilege_manage_users: false
   time_zone: Samoa
+  encrypted_password: <%= User.new.send(:password_digest, "password") %>
+  reset_password_token:
+  reset_password_sent_at:
+  remember_created_at:
+  sign_in_count: 0
+  current_sign_in_at:
+  last_sign_in_at:
+  current_sign_in_ip:
+  last_sign_in_ip:
+  confirmation_token:
+  confirmed_at: <%= Time.zone.now - 1.hour %>
+  confirmation_sent_at: <%= Time.zone.now - 2.hours %>
+  unconfirmed_email:
+  failed_attempts: 0
+  unlock_token:
+  locked_at:
 
 edit_ci_outages:
   account: company_a
   active: true
-  email: edit_ci_outages_user@outages.com
+  email: edit_ci_outages@outages.com
   name: Can Edit CIs/Outages
   notification_periods_before_outage: 1
   notification_period_interval: days
@@ -39,6 +55,22 @@ edit_ci_outages:
   privilege_edit_outages: true
   privilege_manage_users: false
   time_zone: Samoa
+  encrypted_password: <%= User.new.send(:password_digest, "password") %>
+  reset_password_token:
+  reset_password_sent_at:
+  remember_created_at:
+  sign_in_count: 0
+  current_sign_in_at:
+  last_sign_in_at:
+  current_sign_in_ip:
+  last_sign_in_ip:
+  confirmation_token:
+  confirmed_at: <%= Time.zone.now - 1.hour %>
+  confirmation_sent_at: <%= Time.zone.now - 2.hours %>
+  unconfirmed_email:
+  failed_attempts: 0
+  unlock_token:
+  locked_at:
 
 user_admin:
   account: company_a
@@ -60,6 +92,22 @@ user_admin:
   privilege_edit_outages: true
   privilege_manage_users: true
   time_zone: Samoa
+  encrypted_password: <%= User.new.send(:password_digest, "password") %>
+  reset_password_token:
+  reset_password_sent_at:
+  remember_created_at:
+  sign_in_count: 0
+  current_sign_in_at:
+  last_sign_in_at:
+  current_sign_in_ip:
+  last_sign_in_ip:
+  confirmation_token:
+  confirmed_at: <%= Time.zone.now - 1.hour %>
+  confirmation_sent_at: <%= Time.zone.now - 2.hours %>
+  unconfirmed_email:
+  failed_attempts: 0
+  unlock_token:
+  locked_at:
 
 domain_admin:
   account: company_a
@@ -81,3 +129,19 @@ domain_admin:
   privilege_edit_outages: true
   privilege_manage_users: true
   time_zone: Samoa
+  encrypted_password: <%= User.new.send(:password_digest, "password") %>
+  reset_password_token:
+  reset_password_sent_at:
+  remember_created_at:
+  sign_in_count: 0
+  current_sign_in_at:
+  last_sign_in_at:
+  current_sign_in_ip:
+  last_sign_in_ip:
+  confirmation_token:
+  confirmed_at: <%= Time.zone.now - 1.hour %>
+  confirmation_sent_at: <%= Time.zone.now - 2.hours %>
+  unconfirmed_email:
+  failed_attempts: 0
+  unlock_token:
+  locked_at:

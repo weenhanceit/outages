@@ -48,45 +48,60 @@
         <div class="container">
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <%= link_to "Outages", outages_path, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
-                <%= link_to "Services", cis_path, class: "nav-link" %>
-              </li>
+              <% if current_user %>
+                <li class="nav-item">
+                  <%= link_to "Outages", outages_path, class: "nav-link" %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "Services", cis_path, class: "nav-link" %>
+                </li>
+              <% end %>
             </ul>
             <ul class="navbar-nav">
-              <li class="nav-item">
-                <!-- TODO: Turn the below into a WEIT Bootstrap Forms helper. -->
-                <%= form_with url: searches_path,
-                      method: :get,
-                      local: true,
-                      class: "form-inline my-2 my-lg-0" do |search_form| %>
-                      <!--  value: params... below keeps the search criteria in the field
-                      after submitting the search, which is good if the search bar
-                      is still on the screen after the search. -->
-                      <%= search_form.text_field :criteria,
-                            value: params[:criteria],
-                            class: "form-control mr-sm-2",
-                            placeholder: "Search" %>
-                      <!--  Set the name: "" so we don't pass the search button text as a
-                      parameter. -->
-                      <%= search_form.submit "Search",
-                            name: "",
-                            class: "btn btn-outline-success my-2 my-sm-0" %>
-                <% end %>
-              </li>
-              <!-- TODO: The following use a :id of 1.  This is ignored by the
-                  edit preference page as it uses current user. This need to
-                  be reviewed.  I think we should either use current_user or
-                  set the routes for this page such that they don't require an
-                  id -->
-              <li class="nav-item">
-                <%= link_to "Sign Out", user_path(1), method: :delete, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
-                <%= link_to "Preferences", edit_preference_path(1), class: "nav-link" %>
-              </li>
+              <% if current_user %>
+                <li class="nav-item">
+                  <!-- TODO: Turn the below into a WEIT Bootstrap Forms helper. -->
+                  <%= form_with url: searches_path,
+                  method: :get,
+                  local: true,
+                  class: "form-inline my-2 my-lg-0" do |search_form| %>
+                  <!--  value: params... below keeps the search criteria in the field
+                  after submitting the search, which is good if the search bar
+                  is still on the screen after the search. -->
+                  <%= search_form.text_field :criteria,
+                  value: params[:criteria],
+                  class: "form-control mr-sm-2",
+                    placeholder: "Search" %>
+                    <!--  Set the name: "" so we don't pass the search button text as a
+                    parameter. -->
+                    <%= search_form.submit "Search",
+                    name: "",
+                    class: "btn btn-outline-success my-2 my-sm-0" %>
+                    <% end %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to current_user.name,
+                        edit_preference_path(current_user),
+                        class: "nav-link" %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "Sign Out",
+                        destroy_user_session_path,
+                        method: :delete,
+                        class: "nav-link" %>
+                </li>
+              <% else %>
+                <li class="nav-item">
+                  <%= link_to "Sign In",
+                    new_user_session_path,
+                    class: "nav-link" %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "Sign Up",
+                  new_user_registration_path,
+                  class: "nav-link" %>
+                </li>
+              <% end %>
             </ul>
           </div>
         </div>
@@ -94,20 +109,12 @@
     </div>
 
     <div class="container">
+      <p class="text-warning"><%= notice %></p>
+      <p class="text-danger"><%= alert %></p>
 
-      <p>
-        <%= form_tag(users_path) do %>
-        <%= select_tag "selected_privilege", options_for_select([ "Domain Admin", "User Admin (Manager)", "Can Edit CIs/Outages", "Basic User (Read Only)" ], current_user.user_privilege_text), {onchange: "$(this).parent('form').submit();"} %>
-        <% end %>
-      </p>
-
+      <%# TODO: Combine this with the above, but have to change the Javascript %>
       <div class="text-warning js-time-zone-warning">
       </div>
-
-      <% flash.each do |name, msg| -%>
-      <%= content_tag :div, msg, class: name %>
-      <hr/>
-      <% end -%>
 
       <%= yield %>
       <hr/>
@@ -116,7 +123,7 @@
       <%= params.inspect %>
       <p>
         Current User:
-        <%= current_user ? current_user.user_privilege_text : "Nil"  %>
+        <%= current_user ? current_user.name : "Nil"  %>
       </p>
       <p>
         Time Zone Cookie:

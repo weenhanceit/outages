@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  root "outages#index"
+  # Put this before Devise during the transition so the old tests still work.
+  devise_for :users
+  # The following should be where Devise goes after login.
+  get "user_root_path", to: "outages#index"
+
+  root "welcome#index"
 
   # get "/outages", to: "outages#index", as: "outages_index"
   # resources :cis, only: [:index, :edit, :update, :destroy, :show, :new]
@@ -15,5 +19,6 @@ Rails.application.routes.draw do
   end
   resources :preferences, only: [:edit, :update]
   resources :searches, only: [:index]
-  resources :users, only: [:create, :destroy]
+  resources :welcome, only: [:index]
+  # resources :users, only: [:create, :destroy]
 end

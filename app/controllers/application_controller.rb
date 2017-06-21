@@ -7,26 +7,8 @@ class ApplicationController < ActionController::Base
     Time.use_zone(current_user.time_zone, &block) if current_user
   end
 
-  before_action :get_privilege
-
-  def get_privilege
-    @privilege = "Phil"
-  end
-
-
-  def current_user
-    #    return unless session[:user_id]
-    @current_user ||=
-      User.find_by(name: session[:user_id] || "Basic User (Read Only)" )
-    session[:user_id] = @current_user.name
-    # puts "Get current_user: #{@current_user.name} session: #{session[:user_id]}"
-    @current_user
-  end
-
-  helper_method :current_user
-
   def current_account
-    self.current_user.account
+    current_user.account
   end
 
   helper_method :current_account

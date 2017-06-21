@@ -10,8 +10,8 @@ class NavigationTest < ApplicationSystemTestCase
     user = sign_in_for_system_tests(users(:edit_ci_outages))
 
     assert_text "List of Outages"
-    assert_select "selected_privilege", selected: "Can Edit CIs/Outages"
+    assert_link "Can Edit CIs/Outages"
     click_link "Services"
-    assert_select "selected_privilege", selected: "Can Edit CIs/Outages"
+    assert_link "Can Edit CIs/Outages"
   end
 end
