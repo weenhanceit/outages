@@ -40,7 +40,7 @@ class CisController < ApplicationController
 
   def index
     @cis = current_user.account.cis.where(active: true).order(:name)
-    # @notifications = current_user.notifications
+    @online_notifications = current_user.outstanding_online_notifications
   end
 
   def new

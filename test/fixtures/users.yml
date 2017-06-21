@@ -12,7 +12,7 @@ basic:
   notify_me_on_overdue_outage: false
   preference_email_time: "8:00"
   preference_individual_email_notifications: false
-  preference_notifiy_me_by_email: false
+  preference_notify_me_by_email: false
   privilege_account: false
   privilege_edit_cis: false
   privilege_edit_outages: false
@@ -33,7 +33,7 @@ edit_ci_outages:
   notify_me_on_overdue_outage: false
   preference_email_time: "8:00"
   preference_individual_email_notifications: false
-  preference_notifiy_me_by_email: false
+  preference_notify_me_by_email: false
   privilege_account: false
   privilege_edit_cis: true
   privilege_edit_outages: true
@@ -54,7 +54,7 @@ user_admin:
   notify_me_on_overdue_outage: false
   preference_email_time: "8:00"
   preference_individual_email_notifications: false
-  preference_notifiy_me_by_email: false
+  preference_notify_me_by_email: false
   privilege_account: false
   privilege_edit_cis: true
   privilege_edit_outages: true
@@ -75,7 +75,7 @@ domain_admin:
   notify_me_on_overdue_outage: false
   preference_email_time: "8:00"
   preference_individual_email_notifications: false
-  preference_notifiy_me_by_email: false
+  preference_notify_me_by_email: false
   privilege_account: true
   privilege_edit_cis: true
   privilege_edit_outages: true

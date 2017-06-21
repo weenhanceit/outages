@@ -5,7 +5,7 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
     # online only
     user = users(:basic)
     user.notify_me_on_outage_changes = true
-    user.preference_notifiy_me_by_email = false
+    user.preference_notify_me_by_email = false
     user.save
 
     # Create an outage, and a watch on that outage
@@ -34,7 +34,7 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
     # online only
     user = users(:basic)
     user.notify_me_on_outage_changes = true
-    user.preference_notifiy_me_by_email = false
+    user.preference_notify_me_by_email = false
     user.save
 
     # Create an outage, with a ci and a watch on that ci
@@ -66,7 +66,7 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
     # online only
     user = users(:basic)
     user.notify_me_on_outage_changes = true
-    user.preference_notifiy_me_by_email = false
+    user.preference_notify_me_by_email = false
     user.save
 
     # Create an outage
@@ -107,7 +107,7 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
     # online only
     user = users(:basic)
     user.notify_me_on_outage_changes = true
-    user.preference_notifiy_me_by_email = false
+    user.preference_notify_me_by_email = false
     user.save
 
     # Create an outage, with a ci and a watch on that outage
@@ -137,7 +137,7 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
     # online only
     user = users(:basic)
     user.notify_me_on_outage_changes = true
-    user.preference_notifiy_me_by_email = false
+    user.preference_notify_me_by_email = false
     user.save
 
     # Create an outage, and a watch on that outage
@@ -179,7 +179,7 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
     # online only
     user = users(:basic)
     user.notify_me_on_outage_changes = true
-    user.preference_notifiy_me_by_email = false
+    user.preference_notify_me_by_email = false
     user.save
 
     # Create an outage, with a ci and a watch on that ci
@@ -221,7 +221,7 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
     # online only
     user = users(:basic)
     user.notify_me_on_outage_changes = true
-    user.preference_notifiy_me_by_email = false
+    user.preference_notify_me_by_email = false
     user.save
 
     # Create an outage, and an inactive watch on that outage
@@ -246,7 +246,7 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
     # online only
     user = users(:basic)
     user.notify_me_on_outage_changes = true
-    user.preference_notifiy_me_by_email = false
+    user.preference_notify_me_by_email = false
     user.save
 
     # Create an outage, with a ci and an inactive watch on that outage
@@ -276,7 +276,7 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
     # online only
     user = users(:basic)
     user.notify_me_on_outage_changes = true
-    user.preference_notifiy_me_by_email = false
+    user.preference_notify_me_by_email = false
     user.save
 
     # Create an outage, and a watch on that outage
@@ -314,7 +314,7 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
     # online only
     user = users(:basic)
     user.notify_me_on_outage_changes = true
-    user.preference_notifiy_me_by_email = false
+    user.preference_notify_me_by_email = false
     user.save
 
     # Create an outage, with a ci and a watch on that ci

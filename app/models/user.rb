@@ -14,7 +14,7 @@ class User < ApplicationRecord
     :notify_me_on_outage_complete,
     :notify_me_on_overdue_outage,
     :preference_individual_email_notifications,
-    :preference_notifiy_me_by_email,
+    :preference_notify_me_by_email,
     :privilege_account,
     :privilege_edit_cis,
     :privilege_edit_outages,

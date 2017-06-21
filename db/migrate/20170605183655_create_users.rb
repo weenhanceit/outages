@@ -14,7 +14,7 @@ class CreateUsers < ActiveRecord::Migration[5.1]
       t.boolean :notify_me_on_overdue_outage, null: false
       t.time :preference_email_time
       t.boolean :preference_individual_email_notifications, null: false
-      t.boolean :preference_notifiy_me_by_email, null: false
+      t.boolean :preference_notify_me_by_email, null: false
       t.boolean :privilege_account, null: false
       t.boolean :privilege_edit_cis, null: false
       t.boolean :privilege_edit_outages, null: false
