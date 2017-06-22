@@ -50,7 +50,6 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
     user = sign_in_for_system_tests(users(:edit_ci_outages))
 
     outage = outages(:company_a_outage_a)
-    puts ""
     visit edit_outage_url(outage)
 
     assert_no_difference "Outage.where(account: user.account).size" do
