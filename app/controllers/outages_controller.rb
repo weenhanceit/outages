@@ -21,7 +21,7 @@ class OutagesController < ApplicationController
   end
 
   def edit
-    # puts "IN EDIT"
+    #  puts "IN EDIT"
     @outage.watched_by(current_user)
   end
 
@@ -43,7 +43,14 @@ class OutagesController < ApplicationController
     update_watches
     # puts "params.require(:outage): #{params.require(:outage).inspect}"
     # puts "outage_params: #{outage_params.inspect}"
-    @outage.update_attributes(outage_params)
+    # logger.debug "outages_controller.rb TP_#{__LINE__} Is this an outage? #{@outage.is_a?(Outage)}   #{@outage.inspect}"
+
+    @outage.assign_attributes(outage_params)
+    # logger.debug "outages_controller.rb TP_#{__LINE__} changed: #{@outage.changed?}"
+    # @outage.attributes= outage_params
+    # o = Outage.find(@outage.id)
+    # puts "outages_controller.rb TP_#{__LINE__} #{o.inspect}"
+    # puts "outages_controller.rb TP_#{__LINE__} #{@outage.inspect} changed: #{@outage.changed?}"
     if Services::SaveOutage.call(@outage)
       redirect_to outages_path
     else
