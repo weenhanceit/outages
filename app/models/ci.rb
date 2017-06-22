@@ -59,7 +59,7 @@ class Ci < ApplicationRecord
   def available_for_children_attributes=(attributes)
     # puts "available_for_children_attributes: #{attributes.inspect}"
     # puts "OUTAGE: #{inspect}"
-    update_attributes(child_links_attributes: attributes)
+    assign_attributes(child_links_attributes: attributes)
     # puts "OUTAGE: #{inspect}"
   end
 
@@ -86,7 +86,7 @@ class Ci < ApplicationRecord
   def available_for_parents_attributes=(attributes)
     # puts "available_for_parents_attributes: #{attributes.inspect}"
     # puts "OUTAGE: #{inspect}"
-    update_attributes(parent_links_attributes: attributes)
+    assign_attributes(parent_links_attributes: attributes)
     # puts "OUTAGE: #{inspect}"
   end
 
