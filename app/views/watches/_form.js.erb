@@ -1,0 +1,8 @@
+// Remember that you have to search for the ID both times, because the first
+// time you're throwing out the elements that you found.
+var id = '#js-watch-row-<%= row_index %>';
+$(id).replaceWith('<%= j(render(partial: "form",
+    formats: [:html],
+    locals: { watch: @watch, row_index: row_index }).html_safe) %>');
+$(id).change(function() { $(this).submit();});
+// console.log($('#js-watch-row-<%= row_index %>').html());

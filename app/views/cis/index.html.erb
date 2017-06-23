@@ -17,8 +17,8 @@
     </tr>
   </thead>
   <tbody>
-    <% @cis.each do |ci| %>
-      <tr>
+    <% @cis.each_with_index do |ci, index| %>
+      <tr class="test-<%= ci.id %>">
         <td>
           <%= link_to ci.name, edit_or_show_ci_path(ci.id) %>
           <!-- TODO: Where the above goes to may depend on permissions. -->
@@ -28,7 +28,11 @@
         </td>
         <td>
           <p>
-            <%= check_box_tag "Watch", 1, true %>
+            <%= render partial: "watches/form",
+                  locals: {
+                    watch: ci.watched_by_or_new(current_user),
+                    row_index: index
+                    } %>
             <!-- All watches have same properties, which come from user preferences -->
           </p>
         </td>

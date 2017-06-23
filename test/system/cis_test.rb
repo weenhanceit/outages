@@ -1,12 +1,23 @@
 require "application_system_test_case"
 
 class CisTest < ApplicationSystemTestCase
-  test "visiting the index" do
+  test "visiting the index and setting and unsetting a watch" do
     sign_in_for_system_tests(users(:basic))
 
     visit cis_url
-
     assert_selector "h1", text: "Services"
+
+    within("tr.test-#{cis(:company_a_ci_a).id}") do
+      assert_checked_field "Watched"
+      assert_difference "Watch.count", -1 do
+        uncheck "Watched"
+        sleep 2
+      end
+      assert_difference "Watch.count" do
+        check "Watched"
+        sleep 2
+      end
+    end
   end
 
   test "create a new CI" do
