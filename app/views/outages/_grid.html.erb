@@ -28,7 +28,7 @@
     <% @outages.each_with_index do |outage, index| %>
     <%# [1,2].each do |outage| %>
 
-    <tr>
+    <tr class="test-<%= outage.id %>">
       <td>
         <% if outage.cis.size < 3 %>
         <% outage.cis.each do |o| %>
@@ -73,7 +73,12 @@
       </td>
       <td>
         <p>
-          <input type="checkbox" name="watch" value="Yes" checked>
+          <%= render partial: "watches/form",
+                locals: {
+                  watch: outage.watched_by_or_new(current_user),
+                  row_index: index
+                  } %>
+          <!-- <input type="checkbox" name="watch" value="Yes" checked> -->
           <!-- All watches have same properties, which come from user preferences -->
         </p>
       </td>

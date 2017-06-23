@@ -1,6 +1,6 @@
 module Watched
   def update_watches(user, active)
-    watch = watches.find_by(user: user)
+    watch = watches.unscope(where: :active).find_by(user: user)
 
     if !active
       # puts "Remove watch" if watch
@@ -23,12 +23,16 @@ module Watched
   # the last call to `#watched_by`. This little hack is to make things work
   # in the view.
   def watched
-    @watched
+    !!@watched
   end
 
   ##
   # Checked if the user is watching this watched item.
   def watched_by(user)
-    @watched = watches.where(user: user).present?
+    @watched = watches.find_by(user: user)
+  end
+
+  def watched_by_or_new(user)
+    watched_by(user) || watches.build(user: user, active: false)
   end
 end

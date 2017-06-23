@@ -1,12 +1,25 @@
 require "application_system_test_case"
 
 class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
-  test "visiting the index" do
+  test "visiting the index and setting and unsetting a watch" do
     sign_in_for_system_tests(users(:basic))
 
     visit outages_url
-
     assert_selector "h1", text: "Outages"
+
+    within("tr.test-#{outages(:company_a_outage_a).id}") do
+      assert_unchecked_field "Watched"
+      assert_difference "Watch.count" do
+        check "Watched"
+        assert_checked_field "Watched"
+        sleep 2
+      end
+      assert_difference "Watch.count", -1 do
+        uncheck "Watched"
+        assert_unchecked_field "Watched"
+        sleep 2
+      end
+    end
   end
 
   test "create a new outage" do
