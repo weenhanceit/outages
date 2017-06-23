@@ -40,8 +40,6 @@ module Services
       # end
     end
 
-    private
-
     def self.event_text (outage)
       # puts "-xxyeh- save_outage.rb: TP_#{__LINE__}"
       # puts "-xxyeh- New: #{outage.new_record?} Active: #{outage.active} Changed: #{outage.changed?} Active Changed: #{outage.active_changed?}"
