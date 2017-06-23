@@ -19,7 +19,10 @@
   The page will be refreshed when any of the following are changed
 </div>
 
-<%= form_tag "#" do %>
+<%= form_with url: "#",
+      local: true,
+      method: :get,
+      builder: WeitFormBuilder do |f| %>
 <p>
   <%= label_tag "frag", "Fragment" %>
   <%= text_field_tag "frag" %>
@@ -27,19 +30,11 @@
     Outages meet this criteria if the Outage Short Description, Outage Long Description, Outage Status contains this fragment, if any of the Notes associated with an Outage contain the fragment or if any of the associated CIs Name, Description, Tags
     contains this fragment.
   </div>
-</p>
-<p>
-  <%= radio_button_tag :watching, "Watched", true %>
-  <%= label_tag :watching, "Watched", value: "Watched" %>
+
+  <%= radio_button_tag :watching, "Of interest to me", true %>
+  <%= label_tag :watching, "Of interest to me", value: "Interested" %>
   <%= radio_button_tag :watching, "All" %>
   <%= label_tag :watching, "All", value: "All" %>
-</p>
-<p>
-  Add outages not watched by me but:
-  <%= check_box_tag :created_by_me, 1, true %>
-  <%= label_tag :created_by_me, "Created By Me" %>
-  <%= check_box_tag :edited_by_me, 1, true %>
-  <%= label_tag :edited_by_me, "Edited By Me" %>
 </p>
 <div class="content-note">
   Still not sure that this would be "logically" clear to users (because it is a bit of an "AND/OR". Wondering if this should simply be 'all' or 'watched/edited by me' radio button)
@@ -51,6 +46,9 @@
   <%= label_tag "latest", "Outages Before" %>
   <%= datetime_field_tag "latest", (Time.zone.now.beginning_of_day + 2.weeks).strftime("%Y-%m-%dT%H:%M") %>
 </p>
+
+<%= f.primary "Refresh" %>
+
 <div class="content-note">
   <p>
     If an earliest time is provided, show outages that don't end before the earliest time. If the earliest time is blank, outage end time is a don't care.
@@ -72,7 +70,7 @@
 <%# # , locals: { active_notifications: current_user.active_notifications } %>
 
 <h2>Outages</h2>
-<div role="tabpanel">
+<div role="tabpanel" class="outages">
   <ul class="nav nav-pills">
     <%# FIXME: how to set the active pill for each page? %>
     <li class="nav-item">

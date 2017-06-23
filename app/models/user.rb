@@ -37,6 +37,17 @@ class User < ApplicationRecord
     privilege_edit_cis
   end
 
+  ##
+  # Filter outages based on criteria specified by the user, passed in the
+  # params hash.
+  def filter_outages(params)
+    scope = account.outages.where(active: true)
+    if params[:frag].present?
+      scope = scope.where("name like ?", "%#{params[:frag]}%")
+    end
+    scope
+  end
+
   # Provide an array of outstanding (notified false) online notifications
   # for the user
   def outstanding_online_notifications

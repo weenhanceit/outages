@@ -8,7 +8,6 @@ class OutagesController < ApplicationController
 
   def index
     # puts "IN INDEX"
-    @online_notifications = current_user.outstanding_online_notifications
   end
 
   def show
@@ -112,8 +111,11 @@ class OutagesController < ApplicationController
 
   ##
   # Set up the @outages instance variable for the "index-like" actions.
+  # Set up the @online_notifications instance variable, too.
   def outages
-    @outages = current_user.account.outages.where(active: true)
+    @outages = current_user.filter_outages(params)
+
+    @online_notifications = current_user.outstanding_online_notifications
   end
 
   def update_watches
