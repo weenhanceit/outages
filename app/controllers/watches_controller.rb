@@ -8,7 +8,7 @@ class WatchesController < ApplicationController
 
     respond_to do |format|
       format.js do
-        render locals: { row_index: params[:row_index] }
+        render "edit", locals: { row_index: params[:row_index] }
       end
     end
     # puts "Leaving controller Watch.count: #{Watch.count}"
@@ -23,7 +23,7 @@ class WatchesController < ApplicationController
 
     respond_to do |format|
       format.js do
-        render locals: { row_index: params[:row_index] }
+        render "edit", locals: { row_index: params[:row_index] }
       end
     end
     # puts "@watch.active: #{@watch.active}"

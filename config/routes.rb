@@ -19,6 +19,6 @@ Rails.application.routes.draw do
   end
   resources :preferences, only: [:edit, :update]
   resources :searches, only: [:index]
-  resources :watches, only: [:create, :update]
+  resources :watches, only: [:create, :edit, :update]
   resources :welcome, only: [:index]
 end
