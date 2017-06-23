@@ -55,7 +55,12 @@
             <%= n.reason %>
           </td>
           <td>
-            <%= check_box_tag :acknowledged, 1, true %>
+            <%#= check_box_tag :acknowledged, 1, true %>
+            <%= form_with model: n,
+                  builder: WeitFormBuilder,
+                  class: "js-submit-on-change" do |f| %>
+              <% f.check_box :notified, label: "Acknowledge" %>
+            <% end %>
           </td>
         <tr>
         <% end %>

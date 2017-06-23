@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       get "week"
     end
   end
+  resources :notifications, only: [:update]
   resources :preferences, only: [:edit, :update]
   resources :searches, only: [:index]
   resources :watches, only: [:create, :edit, :update]

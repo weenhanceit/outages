@@ -11,6 +11,8 @@ class Notification < ApplicationRecord
 
   default_scope { where.not(watch: nil) }
 
+  scope :unacknowledged, -> { where(notified: false )}
+
   # This method provides an english text description of the event type
   def event_info
     # TODO: Add text for other event types
