@@ -5,6 +5,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     sign_in_for_system_tests(users(:basic))
     visit outages_url
     click_link "Grid"
+    choose "watching_All"
 
     fill_in "Fragment", with: "Outage B"
     click_button "Refresh"
@@ -15,7 +16,24 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
   end
 
   test "of interest filter off and on" do
-    flunk
+    user = sign_in_for_system_tests(users(:basic))
+
+    visit outages_url
+    click_link "Grid"
+
+    choose "watching_Of_interest_to_me"
+    click_button "Refresh"
+    within(".outages") do
+      assert_text "Outage A", count: 1
+      assert_selector "tbody tr", count: 1
+    end
+
+    choose "watching_All"
+    click_button "Refresh"
+    within(".outages") do
+      assert_text "Outage A", count: 1
+      assert_selector "tbody tr", count: 4
+    end
   end
 
   test "start time and end time" do

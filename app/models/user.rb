@@ -45,6 +45,12 @@ class User < ApplicationRecord
     if params[:frag].present?
       scope = scope.where("name like ?", "%#{params[:frag]}%")
     end
+
+    # puts params.inspect
+    if params[:watching].present? && params[:watching] == "Of interest to me"
+      # FIXME: Unfake this when we make this
+      scope = scope.where(id: 567011998)
+    end
     scope
   end
 
@@ -73,5 +79,21 @@ class User < ApplicationRecord
     # else
     #   "Basic User (Read Only)"
     # end
+  end
+
+  ##
+  # A Relation for all the
+  # All the outages the user is directly watching
+  # All outages the directly affect a CI that the user is watching
+  # All the outages that have a CI that has a descendent of a CI that the user is watching
+  # The previous could be:
+  # If the user is watching a CI that is an ancestor of a CI in an outage,
+  # include that outage
+  # FIXME: Correct this when we implement that real deal.
+  # This just covers the first two cases.
+  def watched_outages
+    # watches.where(watched_type: "Outage").first.w
+    # watches.where(watched_type: "Ci").first.watched.outages
+    where(id: 567011998)
   end
 end
