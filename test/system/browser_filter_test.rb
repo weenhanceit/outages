@@ -7,14 +7,17 @@ class BrowserFilterTest < ApplicationSystemTestCase
     visit edit_outage_url(outage)
 
     fill_in "Filter Affected Services", with: "a"
-    within('#js-available') do
+    within('#js-assigned') do
+      # Assert the right number first, so we avoid false positives.
+      # If we check the selectors before the browser has reduced the
+      # selection, we might have false positives.
       assert_selector "li", count: 1
       assert_text "Server A"
       assert_selector "li", count: 1
     end
 
     fill_in "Filter Affected Services", with: "z"
-    within('#js-available') do
+    within('#js-assigned') do
       assert_no_selector "li"
     end
   end
@@ -25,21 +28,21 @@ class BrowserFilterTest < ApplicationSystemTestCase
 
     fill_in "Filter Available Services", with: "l"
     within('#js-available') do
-      assert_text "Load Balancer D"
       assert_selector "li", count: 1
+      assert_text "Load Balancer D"
     end
 
     fill_in "Filter Available Services", with: "o"
     within('#js-available') do
+      assert_selector "li", count: 2
       assert_text "Load Balancer D"
       assert_text "Router E"
-      assert_selector "li", count: 2
     end
 
     fill_in "Filter Available Services", with: "ro"
     within('#js-available') do
-      assert_text "Router E"
       assert_selector "li", count: 1
+      assert_text "Router E"
     end
   end
 
@@ -50,15 +53,15 @@ class BrowserFilterTest < ApplicationSystemTestCase
 
     fill_in "Filter Dependent Services", with: "b"
     within "#test-parents" do
-      assert_text "Server B"
       assert_selector "li", count: 1
+      assert_text "Server B"
     end
 
     fill_in "Filter Dependent Services", with: "rv"
     within "#test-parents" do
+      assert_selector "li", count: 2
       assert_text "Server B"
       assert_text "Server C"
-      assert_selector "li", count: 2
     end
   end
 
@@ -68,11 +71,11 @@ class BrowserFilterTest < ApplicationSystemTestCase
 
     fill_in "Filter Available Dependents", with: "rv"
     within "#test-parents" do
+      assert_selector "li", count: 4
       assert_text "Server A"
       assert_text "Server B"
       assert_text "Server C"
       assert_text "Server F"
-      assert_selector "li", count: 4
     end
   end
 
@@ -88,8 +91,8 @@ class BrowserFilterTest < ApplicationSystemTestCase
 
     fill_in "Filter Pre-requisite Services", with: "T"
     within "#test-children" do
-      assert_text "Router E"
       assert_selector "li", count: 1
+      assert_text "Router E"
     end
   end
 
@@ -99,8 +102,8 @@ class BrowserFilterTest < ApplicationSystemTestCase
 
     fill_in "Filter Available Pre-requisites", with: "cer"
     within "#test-children" do
-      assert_text "Load Balancer D"
       assert_selector "li", count: 1
+      assert_text "Load Balancer D"
     end
   end
 end
