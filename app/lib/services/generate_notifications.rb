@@ -4,19 +4,19 @@ module Services
     # Method to exam outstanding (handeled: false) events and generate required
     # notifications
     def self.call
-      # Rails.logger.debug " - xde -"
-      # puts "generate_notification #{__LINE__}: - xde -"
-      # Rails.logger.debug "generate_notification.rb #{__LINE__}: -- IN the Loop!!!!!!!!!!!!!!!!!! xde"
+      # puts "-xxyeh-: TP_#{__LINE__}"
+      # puts "generate_notification #{__LINE__}: - -xxyeh- -"
+      # puts "generate_notification.rb #{__LINE__}: -- IN the Loop!!!!!!!!!!!!!!!!!! -xxyeh-"
       events_to_handle = Event.where(handled: false)
       events_to_handle.each do |event|
-        # puts "TP_#{__LINE__}"
-        # Rails.logger.debug "generate_notification.rb #{__LINE__}: Event: #{event.id} xde"
-        # Rails.logger.debug "xde: #{event.inspect}"
+        # puts "-xxyeh-: TP_#{__LINE__}"
+        # puts "generate_notification.rb #{__LINE__}: Event: #{event.id} -xxyeh-"
+        # puts "-xxyeh-: #{event.inspect}"
         if event.outage
-          # puts "TP_#{__LINE__}"
-          # Rails.logger.debug "generate_notification.rb #{__LINE__}: Outage: #{event.outage.name} xde"
+          # puts "-xxyeh-: TP_#{__LINE__}"
+          # puts "generate_notification.rb #{__LINE__}: Outage: #{event.outage.name} -xxyeh-"
           event.outage.watches.each do |watch|
-            # puts "TP_#{__LINE__}"
+            # puts "-xxyeh-: TP_#{__LINE__}"
             handle_watch event, watch
           end
           event.outage.cis.map(&:watches).flatten.each do |watch|
@@ -30,6 +30,7 @@ module Services
             handle_watch event, watch
           end
         end
+        # puts "-xxyeh-: TP_#{__LINE__}"
         event.handled = true
         event.save
       end
@@ -38,14 +39,15 @@ module Services
     private
 
     def self.handle_watch(event, watch)
+      # puts "-xxyeh-: generate_notification.rb #{__LINE__}:"
       case event.event_type
       when "outage"
         # puts "TP_#{__LINE__} #{watch.user.notify_me_on_outage_changes}"
 
-        # Rails.logger.debug "xde: generate_notification.rb #{__LINE__}: Notify Me!: #{watch.user.notify_me_on_outage_changes}"
+        # puts "-xxyeh-: generate_notification.rb #{__LINE__}: Notify Me!: #{watch.user.notify_me_on_outage_changes}"
         create_notification(event, watch, "online") if watch.user.notify_me_on_outage_changes
       else
-        Rails.logger.debug "xde: WTF! #{event.event_type}"
+        puts "-xxyeh-: WTF! #{event.event_type}"
       end
     end
 

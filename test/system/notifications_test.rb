@@ -43,6 +43,42 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     assert_not Outage.where(name: outage_name).empty?
     assert_selector "h2", text: "Notifications"
   end
+  test "notification generated for edit outage on watched outage" do
+    # Set up the user and outage name to be used in this test
+    # Set notified to be true on all outstanding online notifications
+    user = sign_in_for_system_tests(users(:edit_ci_outages))
+    user.notify_me_on_outage_changes = true
+    user.save!
+    mark_all_existing_notifications_notified
+    user.reload
+
+    # Pick an outage, any outage and create a watch on it
+    outage = Outage.where(account: user.account).first
+    outage.watches.create(active: true, user: user)
+
+    # Edit the outage and check that 1 event and no new outages or watches
+    # were generated
+    # puts "notifications_test.rb TP_#{__LINE__}: Outage: #{outage.inspect}"
+    visit edit_outage_url(outage.id)
+    # puts "notifications_test.rb TP_#{__LINE__}:"
+
+    assert_difference "Event.count" do
+      assert_no_difference "Outage.where(account: user.account).size" do
+        assert_no_difference "Watch.count" do
+          fill_in "Description",
+            with: "#{outage.description} -- changed"
+          click_on "Save"
+        end
+      end
+    end
+    # After save we should be on the Outage index page
+    # There should be a single notification and the outage name show be listed
+    assert_selector "h1", text: "List of Outages of Interest to the User"
+    assert_selector "h2", text: "Notifications"
+    assert_not Outage.where(name: outage.name).empty?
+
+  end
+
 
   def mark_all_existing_notifications_notified
     Notification.all.each do |n|

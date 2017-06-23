@@ -12,12 +12,15 @@ module Services
       unless outage.is_a?(Outage)
         raise ArgumentError, "Services::SaveOutage.call: Expected Outage, got #{outage.class}"
       end
+      # puts "-xxyeh- save_outage.rb: TP_#{__LINE__}"
 
       use_event_text = event_text(outage)
+      # puts "-xxyeh- save_outage.rb: TP_#{__LINE__} event text: #{use_event_text}"
       return false unless outage.save
+      # puts "-xxyeh- save_outage.rb: TP_#{__LINE__}"
 
       return true unless use_event_text
-
+      # puts "-xxyeh- save_outage.rb: TP_#{__LINE__}"
       outage.events.create(event_type: "outage",
                            text: use_event_text,
                            handled: false)
@@ -40,6 +43,8 @@ module Services
     private
 
     def self.event_text (outage)
+      # puts "-xxyeh- save_outage.rb: TP_#{__LINE__}"
+      # puts "-xxyeh- New: #{outage.new_record?} Active: #{outage.active} Changed: #{outage.changed?} Active Changed: #{outage.active_changed?}"
       if outage.new_record? && outage.active
         "New Outage"
       elsif !outage.new_record? && outage.changed?

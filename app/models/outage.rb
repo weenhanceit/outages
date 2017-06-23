@@ -35,9 +35,9 @@ class Outage < ApplicationRecord
   # an association.
   def available_cis_attributes=(attributes)
     # puts "available_cis_attributes: #{attributes.inspect}"
-    # puts "OUTAGE: #{inspect}"
-    update_attributes(cis_outages_attributes: attributes)
-    # puts "OUTAGE: #{inspect}"
+    # logger.debug "Changed: #{changed?} OUTAGE: #{inspect}"
+    assign_attributes(cis_outages_attributes: attributes)
+    # logger.debug "Changed: #{changed?} OUTAGE: #{inspect}"
   end
 
   ##
