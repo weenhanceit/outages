@@ -74,7 +74,7 @@ $(document).on('turbolinks:load', function() {
         // console.log('e.text(): ' + $(e).text());
         // console.log('FOUND: ' + $('li:contains(' + $.trim($(e).text()) + ')', $(other)).length);
         // console.log('FOUND: ' + "$('li:contains('" + $.trim($(e).text()) + "')', $(other))");
-        $(item_selector_text(e), $(other)).addClass('hidden');
+        $(item_selector_text(e), $(other)).addClass('list-maintenance-hidden');
       });
     }
   });
@@ -95,7 +95,7 @@ $(document).on('turbolinks:load', function() {
         // console.log('e.text(): ' + $(e).text());
         // console.log('FOUND: ' + $('li:contains(' + $.trim($(e).text()) + ')', $(other)).length);
         // console.log('FOUND: ' + "$('li:contains('" + $.trim($(e).text()) + "')', $(other))");
-        $(item_selector_text(e), $(other)).removeClass('hidden');
+        $(item_selector_text(e), $(other)).removeClass('list-maintenance-hidden');
       });
     }
   });

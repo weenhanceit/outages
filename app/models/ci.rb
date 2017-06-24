@@ -45,11 +45,12 @@ class Ci < ApplicationRecord
   # That means they're not already children, and they're not ancestors.
   # If they were ancestors, this would not be a DAG.
   # CIs that can't be children are hidden.
-  # This method will raise an ArgumentError exceopt if you don't pass an
+  # This method will raise an ArgumentError if you don't pass an
   # account, and the outage doesn't have an account assigned yet.
   def available_for_children(account = self.account)
     raise ArgumentError if account.nil?
-    ((children + ancestors) .map { |ci| ci.css_class = "hidden"; ci }) +
+    ((children + ancestors)
+      .each { |ci| ci.css_class = "list-maintenance-hidden" }) +
       (all_cis_but_me - children - ancestors)
   end
 
@@ -69,14 +70,15 @@ class Ci < ApplicationRecord
   # That means they're not already parents, and they're not descendants.
   # If they were descendants, this would not be a DAG.
   # CIs that can't be parents are hidden.
-  # This method will raise an ArgumentError exceopt if you don't pass an
+  # This method will raise an ArgumentErrorlist-maintenance-hidden if you don't pass an
   # account, and the outage doesn't have an account assigned yet.
   def available_for_parents(account = self.account)
     raise ArgumentError if account.nil?
     # puts "all_cis_but_me: #{all_cis_but_me.map(&:name).join(", ")}"
     # puts "parents: #{parents.map(&:name).join(", ")}"
     # puts "descendants: #{descendants.map(&:name).join(", ")}"
-    ((parents + descendants) .map { |ci| ci.css_class = "hidden"; ci }) +
+    ((parents + descendants)
+      .each { |ci| ci.css_class = "list-maintenance-hidden" }) +
       (all_cis_but_me - parents - descendants)
   end
 
