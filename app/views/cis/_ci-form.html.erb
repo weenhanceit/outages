@@ -12,12 +12,8 @@
   <div class="row">
     <%= f.text_area :description, column_width: 12 %>
   </div>
-  <div class="row">
-    <%= render partial: "parents", locals: { f: f } %>
-  </div>
-  <div class="row">
-    <%= render partial: "children", locals: { f: f } %>
-  </div>
+  <%= render partial: "parents", locals: { f: f } %>
+  <%= render partial: "children", locals: { f: f } %>
   <%= f.primary "Save" %>
 <% end %>
 
