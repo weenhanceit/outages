@@ -22,10 +22,10 @@ $(document).on('turbolinks:load', function() {
       console.log('Looking at ' + $(e).text().trim());
       if (regexp.test($(e).text())) {
         console.log('Showing it');
-        $(e).removeClass('hidden');
+        $(e).removeClass('browser-filter-hidden');
       } else {
         console.log('Hiding it');
-        $(e).addClass('hidden');
+        $(e).addClass('browser-filter-hidden');
       }
     });
   });
