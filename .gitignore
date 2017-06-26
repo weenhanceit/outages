@@ -30,3 +30,4 @@ pip*
 
 # Don't check in the documentation. Generate it as needed.
 doc/
+erd.pdf
