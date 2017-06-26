@@ -87,4 +87,30 @@ class Outage < ApplicationRecord
       raise ArgumentError
     end
   end
+
+  ##
+  # A Relation for all the
+  # All the outages the user is directly watching
+  # All outages the directly affect a CI that the user is watching
+  # All the outages that have a CI that has a descendent of a CI that the user is watching
+  # The previous could be:
+  # If the user is watching a CI that is an ancestor of a CI in an outage,
+  # include that outage
+  # FIXME: Correct this when we implement that real deal.
+  # This just covers the first two cases.
+  def self.watched_outages(user)
+    self.directly_watched_outages(user) + self.directly_watched_by_cis(user)
+    # directly_watched_outages(user).or(directly_watched_by_cis(user))
+    # self.directly_watched_outages(user)
+    # watches.where(watched_type: "Outage").first.w
+    # watches.where(watched_type: "Ci").first.watched.outages
+    # where(id: 567011998)
+  end
+  def self.directly_watched_outages(user)
+    joins(:watches).where(watches: {user_id: user})
+  end
+  def self.directly_watched_by_cis(user)
+    joins(cis: :watches).where(watches: {user_id: user})
+  end
+
 end
