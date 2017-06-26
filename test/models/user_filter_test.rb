@@ -63,20 +63,79 @@ class UserFilterTest < ActiveSupport::TestCase
                                            start_time: Time.new + 2.day)
 
     # Set up 2 cis
-    ci_in_filter = Ci.create(account: @account,
+    ci_watched_by_user = Ci.create(account: @account,
                              active: true,
-                             name: "ci_in_filter")
-    ci_not_in_filter = Ci.create(account: @account,
+                             name: "ci_watched_by_user")
+    ci_not_watched_by_user = Ci.create(account: @account,
                                  active: true,
-                                 name: "ci_not_in_filter")
+                                 name: "ci_not_watched_by_user")
     # Assign 1 ci to first in filter outage, the other to the first
     # not in filter outage.
-    outages_in_filter[0].cis_outages.create(ci: ci_in_filter)
-    outages_not_in_filter[0].cis_outages.create(ci: ci_not_in_filter)
+    outages_in_filter[0].cis_outages.create(ci: ci_watched_by_user)
+    outages_not_in_filter[0].cis_outages.create(ci: ci_not_watched_by_user)
 
     # Set up watches
-    Watch.create(user: @user1, watched: ci_in_filter)
-    Watch.create(user: @user2, watched: ci_not_in_filter)
+    Watch.create(user: @user1, watched: ci_watched_by_user)
+    Watch.create(user: @user2, watched: ci_not_watched_by_user)
+
+    # Check Filters
+    assert_equal outages_in_filter,
+      @user1.filter_outages(watching: "Of interest to me")
+
+    assert_equal (outages_in_filter + outages_not_in_filter).sort,
+      @user1.filter_outages(watching: "All").sort
+  end
+
+  test "of interest 1 indirectly watched ci out of 2" do
+    skip
+    # initialize_account_and_users
+    initialize_account_and_users
+
+    # Set up our outages
+    outages_in_filter = []
+    outages_not_in_filter = []
+
+    outages_in_filter << Outage.create(account: @account,
+                                       active: true,
+                                       causes_loss_of_service: true,
+                                       completed: false,
+                                       end_time: Time.new + 1.day + 1.hour,
+                                       name: "outage 1",
+                                       start_time: Time.new + 1.day)
+
+
+    outages_not_in_filter << Outage.create(account: @account,
+                                           active: true,
+                                           causes_loss_of_service: true,
+                                           completed: false,
+                                           end_time: Time.new + 2.day + 1.hour,
+                                           name: "outage 2",
+                                           start_time: Time.new + 2.day)
+
+    # Set up 3 cis
+    ci_watched_by_user = Ci.create(account: @account,
+                             active: true,
+                             name: "ci_watched_by_user")
+    ci_not_watched_by_user = Ci.create(account: @account,
+                                 active: true,
+                                 name: "ci_not_watched_by_user")
+     ci_on_outage = Ci.create(account: @account,
+                                  active: true,
+                                  name: "ci_on_outage")
+
+    # Assign 1 ci to first in filter outage, the other to the first
+    # not in filter outage.
+    outages_in_filter[0].cis_outages.create(ci: ci_on_outage)
+    outages_not_in_filter[0].cis_outages.create(ci: ci_not_watched_by_user)
+
+    # Set the outage ci parent to be ci watched
+    ci_on_outage.parent_links.create(child: ci_watched_by_user)
+    # assert ci_on_outage.save
+    # assert ci_watched_by_user.save
+
+    # Set up watches
+    Watch.create(user: @user1, watched: ci_watched_by_user)
+    Watch.create(user: @user2, watched: ci_not_watched_by_user)
 
     # Check Filters
     assert_equal outages_in_filter,

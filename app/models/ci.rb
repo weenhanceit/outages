@@ -28,6 +28,12 @@ class Ci < ApplicationRecord
   attr_accessor :css_class
 
   ##
+  # Scope returning the ci and all its dependents
+  def self.affected_cis(ci)
+    where(ci: ci.ancestors_affected + ci)
+  end
+
+  ##
   # All the ancestor Cis of a CI
   def ancestors
     parents + parents.map(&:ancestors).flatten

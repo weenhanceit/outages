@@ -8,6 +8,7 @@ class Outage < ApplicationRecord
   accepts_nested_attributes_for :cis_outages, allow_destroy: true
   has_many :cis, through: :cis_outages
   accepts_nested_attributes_for :cis
+  has_many :affected_cis, through: :cis_outages, source: :affected_cis
   has_many :contributors, inverse_of: :outage
   has_many :events, inverse_of: :outage
   has_many :notes, as: :notable
@@ -99,7 +100,9 @@ class Outage < ApplicationRecord
   # FIXME: Correct this when we implement that real deal.
   # This just covers the first two cases.
   def self.watched_outages(user)
-    self.directly_watched_outages(user) + self.directly_watched_by_cis(user)
+    self.directly_watched_outages(user) +
+      self.directly_watched_by_cis(user) +
+      self.indirectly_watched_by_cis(user)
     # directly_watched_outages(user).or(directly_watched_by_cis(user))
     # self.directly_watched_outages(user)
     # watches.where(watched_type: "Outage").first.w
@@ -113,4 +116,8 @@ class Outage < ApplicationRecord
     joins(cis: :watches).where(watches: {user_id: user})
   end
 
+  def self.indirectly_watched_by_cis(user)
+    none
+    # joins(cis: { affected_cis: :watches }).where(watches: {user_id: user})
+  end
 end

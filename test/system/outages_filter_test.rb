@@ -25,7 +25,8 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     click_button "Refresh"
     within(".outages") do
       assert_text "Outage A", count: 1
-      assert_selector "tbody tr", count: 1
+      assert_text "Outage B", count: 1
+      assert_selector "tbody tr", count: 2
     end
 
     choose "watching_All"
