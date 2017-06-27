@@ -30,7 +30,7 @@ class Ci < ApplicationRecord
   ##
   # Scope returning the ci and all its dependents
   def self.affected_cis(ci)
-    where(ci: ci.ancestors_affected + ci)
+    where(id: (ci.ancestors_affected << ci).uniq)
   end
 
   ##
@@ -41,6 +41,8 @@ class Ci < ApplicationRecord
 
   # All the ancestor Cis of a Ci that are affected by an outage
   # to this Ci
+  # TODO: add the CI (self) to this array, and remove it where it's redundant.
+  # TODO: or maybe not. Think about it.
   def ancestors_affected
     ancestors
   end
