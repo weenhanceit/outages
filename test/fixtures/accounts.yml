@@ -3,3 +3,8 @@ company_a:
 
 company_b:
   name: Company B
+
+# Company C contains a hierarchy of CIs and is for testing
+# hierarchies of CIs.
+company_c:
+  name: Company C

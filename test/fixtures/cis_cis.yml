@@ -9,3 +9,60 @@ company_a_ci_c_parent_of_company_a_ci_d:
 company_a_ci_d_parent_of_company_a_ci_e:
   child: company_a_ci_e
   parent: company_a_ci_d
+
+# Company C is for testing CI hierarchies only
+company_c_001_002:
+  child: company_c_002
+  parent: company_c_001
+
+company_c_001_003:
+  child: company_c_003
+  parent: company_c_001
+
+company_c_002_004:
+  child: company_c_004
+  parent: company_c_002
+
+company_c_002_005:
+  child: company_c_005
+  parent: company_c_002
+
+company_c_003_006:
+  child: company_c_006
+  parent: company_c_003
+
+company_c_003_006:
+  child: company_c_006
+  parent: company_c_003
+
+company_c_004_007:
+  child: company_c_007
+  parent: company_c_004
+
+company_c_005_007:
+  child: company_c_007
+  parent: company_c_005
+
+company_c_005_008:
+  child: company_c_008
+  parent: company_c_005
+
+company_c_006_008:
+  child: company_c_008
+  parent: company_c_006
+
+company_c_007_009:
+  child: company_c_009
+  parent: company_c_007
+
+company_c_008_010:
+  child: company_c_010
+  parent: company_c_008
+
+company_c_009_011:
+  child: company_c_011
+  parent: company_c_009
+
+company_c_011_012:
+  child: company_c_012
+  parent: company_c_011

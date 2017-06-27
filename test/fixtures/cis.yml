@@ -43,7 +43,80 @@ company_a_ci_f:
   minimum_children_to_maintain_service:
 
 company_a_ci_watched_by_edit:
-    account: company_a
-    active: true
-    description: A CI for watch testing
-    name: Watched by Edit
+  account: company_a
+  active: true
+  description: A CI for watch testing
+  name: Watched by Edit
+
+# Company C CIs are only for testing hierarchies of CIs
+company_c_001:
+  account: company_c
+  active: true
+  description: Great-grand-parent
+  name: "001"
+
+company_c_002:
+  account: company_c
+  active: true
+  description: grand-parent
+  name: "002"
+
+company_c_003:
+  account: company_c
+  active: true
+  description: grand-parent
+  name: "003"
+
+company_c_004:
+  account: company_c
+  active: true
+  description: parent
+  name: "004"
+
+company_c_005:
+  account: company_c
+  active: true
+  description: parent
+  name: "005"
+
+company_c_006:
+  account: company_c
+  active: true
+  description: parent
+  name: "006"
+
+company_c_007:
+  account: company_c
+  active: true
+  description: current
+  name: "007"
+
+company_c_008:
+  account: company_c
+  active: true
+  description: current
+  name: "008"
+
+company_c_009:
+  account: company_c
+  active: true
+  description: child
+  name: "009"
+
+company_c_010:
+  account: company_c
+  active: true
+  description: child
+  name: "010"
+
+company_c_011:
+  account: company_c
+  active: true
+  description: grand child
+  name: "011"
+
+company_c_012:
+  account: company_c
+  active: true
+  description: Great grand child
+  name: "012"
