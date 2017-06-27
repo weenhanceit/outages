@@ -53,7 +53,6 @@ class UserFilterTest < ActiveSupport::TestCase
                                        name: "outage 1",
                                        start_time: Time.new + 1.day)
 
-
     outages_not_in_filter << Outage.create(account: @account,
                                            active: true,
                                            causes_loss_of_service: true,
@@ -64,11 +63,11 @@ class UserFilterTest < ActiveSupport::TestCase
 
     # Set up 2 cis
     ci_watched_by_user = Ci.create(account: @account,
-                             active: true,
-                             name: "ci_watched_by_user")
+                                   active: true,
+                                   name: "ci_watched_by_user")
     ci_not_watched_by_user = Ci.create(account: @account,
-                                 active: true,
-                                 name: "ci_not_watched_by_user")
+                                       active: true,
+                                       name: "ci_not_watched_by_user")
     # Assign 1 ci to first in filter outage, the other to the first
     # not in filter outage.
     outages_in_filter[0].cis_outages.create(ci: ci_watched_by_user)
@@ -87,7 +86,6 @@ class UserFilterTest < ActiveSupport::TestCase
   end
 
   test "of interest 1 indirectly watched ci out of 2" do
-    skip
     # initialize_account_and_users
     initialize_account_and_users
 
@@ -103,7 +101,6 @@ class UserFilterTest < ActiveSupport::TestCase
                                        name: "outage 1",
                                        start_time: Time.new + 1.day)
 
-
     outages_not_in_filter << Outage.create(account: @account,
                                            active: true,
                                            causes_loss_of_service: true,
@@ -114,14 +111,14 @@ class UserFilterTest < ActiveSupport::TestCase
 
     # Set up 3 cis
     ci_watched_by_user = Ci.create(account: @account,
-                             active: true,
-                             name: "ci_watched_by_user")
+                                   active: true,
+                                   name: "ci_watched_by_user")
     ci_not_watched_by_user = Ci.create(account: @account,
-                                 active: true,
-                                 name: "ci_not_watched_by_user")
-     ci_on_outage = Ci.create(account: @account,
-                                  active: true,
-                                  name: "ci_on_outage")
+                                       active: true,
+                                       name: "ci_not_watched_by_user")
+    ci_on_outage = Ci.create(account: @account,
+                             active: true,
+                             name: "ci_on_outage")
 
     # Assign 1 ci to first in filter outage, the other to the first
     # not in filter outage.
@@ -129,9 +126,9 @@ class UserFilterTest < ActiveSupport::TestCase
     outages_not_in_filter[0].cis_outages.create(ci: ci_not_watched_by_user)
 
     # Set the outage ci parent to be ci watched
-    ci_on_outage.parent_links.create(child: ci_watched_by_user)
-    # assert ci_on_outage.save
-    # assert ci_watched_by_user.save
+    assert ci_on_outage.parent_links.create(parent: ci_watched_by_user)
+    assert ci_watched_by_user.save, ci_watched_by_user.errors.full_messages
+    assert ci_on_outage.save, ci_on_outage.errors.full_messages
 
     # Set up watches
     Watch.create(user: @user1, watched: ci_watched_by_user)
@@ -149,7 +146,7 @@ class UserFilterTest < ActiveSupport::TestCase
 
   # set_up_test creates a new account, and a new user in that account within
   # with edit ci/outage privileges
-  def initialize_account_and_users(account=nil)
+  def initialize_account_and_users(account = nil)
     @account = account ? account : Account.new(name: "This Account test")
     assert @account.save
 

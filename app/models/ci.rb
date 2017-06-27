@@ -106,6 +106,13 @@ class Ci < ApplicationRecord
     children + children.map(&:descendants).flatten
   end
 
+  # All the descendant Cis of a Ci that are watched indirectly
+  # TODO: add the CI (self) to this array, and remove it where it's redundant.
+  # TODO: or maybe not. Think about it.
+  def descendants_affected
+    descendants
+  end
+
   private
 
   ##
