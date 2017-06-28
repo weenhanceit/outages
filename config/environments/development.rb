@@ -28,6 +28,10 @@ Rails.application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
+  # LCR
+  # See the ActionMailer API docs and the Mailer guide.
+  config.action_mailer.delivery_method = :file
+  # end LCR
 
   config.action_mailer.perform_caching = false
 
@@ -54,5 +58,7 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::FileUpdateChecker
 
   # Devise
+  # This is complicated with the Vagrant boxes, because you never know
+  # what port the host is mapping.
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 end
