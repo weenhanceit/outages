@@ -40,14 +40,17 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
   end
 
   test "start time and end time" do
+    skip "TODO: Implement suitable system test on times"
     flunk
   end
 
   test "start time only" do
+    skip "TODO: Implement suitable system test on times"
     flunk
   end
 
   test "end time only" do
+    skip "TODO: Implement suitable system test on times"
     flunk
   end
 end

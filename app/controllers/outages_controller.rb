@@ -116,6 +116,7 @@ class OutagesController < ApplicationController
     @outages = current_user.filter_outages(params)
 
     @online_notifications = current_user.outstanding_online_notifications
+    @now = Time.zone.now
   end
 
   def update_watches

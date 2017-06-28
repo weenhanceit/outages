@@ -5,7 +5,27 @@
     <p>
       You have <%= @online_notifications.size %> un-read notifications.
     </p>
-    <table>
+    <% @online_notifications.each do |n| %>
+      <div class="row notification-spacer">
+        <div class="col-sm-4">
+            <%= form_with model: n,
+                  builder: WeitFormBuilder,
+                  class: "js-submit-on-change" do |f| %>
+              <% f.check_box :notified, label: "Read" %>
+            <% end %>
+          </div>
+          <div class="col-sm-8">
+            <div class="notification-item">
+              <%= link_to n.event.outage.name, outage_url(n.event.outage_id) %>
+            </div>
+            <div class="notification-interval">
+              <%= distance_of_time_in_words(n.event.created_at, @now, options = {include_seconds: true }) %> ago
+            </div>
+          </div>
+      </div>
+    <% end %>
+
+    <!-- <table>
       <thead>
         <tr>
           <td>
@@ -65,6 +85,6 @@
         <tr>
         <% end %>
       </tbody>
-    </table>
+    </table> -->
   </div>
 <% end %>
