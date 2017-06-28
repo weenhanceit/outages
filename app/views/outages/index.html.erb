@@ -1,4 +1,6 @@
 <% content_for :outages_view do %>
-  <%= render partial: "grid" %>
+  <%# FIXME: Just render month for now while we reorganize the calendar views %>
+  <%# FIXME: Week view blows up currently %>
+  <%= render partial: "month" %>
 <% end %>
 <%= render partial: "index" %>
