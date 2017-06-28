@@ -12,7 +12,6 @@
   </p>
 </div>
 
-<h2>Filters</h2>
 <div class="content-note">
   Filters Allow the user to limit the outages displayed on the grid or in the calendar. Outages displayed must match EACH of the 3 criteria below.
   <br/>
@@ -23,74 +22,73 @@
       local: true,
       method: :get,
       builder: WeitFormBuilder do |f| %>
-<p>
-  <%= label_tag "frag", "Fragment" %>
-  <%= text_field_tag "frag" %>
+  <p>
+    <%= label_tag "frag", "Fragment" %>
+    <%= text_field_tag "frag" %>
+    <div class="content-note">
+      Outages meet this criteria if the Outage Short Description, Outage Long Description, Outage Status contains this fragment, if any of the Notes associated with an Outage contain the fragment or if any of the associated CIs Name, Description, Tags
+      contains this fragment.
+    </div>
+
+    <%= radio_button_tag :watching, "Of interest to me", true %>
+    <%= label_tag :watching, "Of interest to me", value: "Interested" %>
+    <%= radio_button_tag :watching, "All" %>
+    <%= label_tag :watching, "All", value: "All" %>
+  </p>
   <div class="content-note">
-    Outages meet this criteria if the Outage Short Description, Outage Long Description, Outage Status contains this fragment, if any of the Notes associated with an Outage contain the fragment or if any of the associated CIs Name, Description, Tags
-    contains this fragment.
+    Still not sure that this would be "logically" clear to users (because it is a bit of an "AND/OR". Wondering if this should simply be 'all' or 'watched/edited by me' radio button)
   </div>
 
-  <%= radio_button_tag :watching, "Of interest to me", true %>
-  <%= label_tag :watching, "Of interest to me", value: "Interested" %>
-  <%= radio_button_tag :watching, "All" %>
-  <%= label_tag :watching, "All", value: "All" %>
-</p>
-<div class="content-note">
-  Still not sure that this would be "logically" clear to users (because it is a bit of an "AND/OR". Wondering if this should simply be 'all' or 'watched/edited by me' radio button)
-</div>
+  <p>
+    <%= label_tag "earliest", "Outages After" %>
+    <%= datetime_field_tag "earliest", Time.zone.now.beginning_of_day.strftime("%Y-%m-%dT%H:%M") %>
+    <%= label_tag "latest", "Outages Before" %>
+    <%= datetime_field_tag "latest", (Time.zone.now.beginning_of_day + 2.weeks).strftime("%Y-%m-%dT%H:%M") %>
+  </p>
 
-<p>
-  <%= label_tag "earliest", "Outages After" %>
-  <%= datetime_field_tag "earliest", Time.zone.now.beginning_of_day.strftime("%Y-%m-%dT%H:%M") %>
-  <%= label_tag "latest", "Outages Before" %>
-  <%= datetime_field_tag "latest", (Time.zone.now.beginning_of_day + 2.weeks).strftime("%Y-%m-%dT%H:%M") %>
-</p>
+  <%= f.primary "Refresh" %>
 
-<%= f.primary "Refresh" %>
-
-<div class="content-note">
-  <p>
-    If an earliest time is provided, show outages that don't end before the earliest time. If the earliest time is blank, outage end time is a don't care.
-  </p>
-  <p>
-    If a latest time is provided, show outages that don't start after the end_time. If the latest time is blank, the outage start time is a don't care.
-  </p>
-  <p>
-    If both times are provided, show the intersection of the above, or actually, do both of the above tests in the same query.
-  </p>
-  <p>
-    Or to put it another way, show all outages that overlap the filter's start and end times.
-  </p>
-</div>
+  <div class="content-note">
+    <p>
+      If an earliest time is provided, show outages that don't end before the earliest time. If the earliest time is blank, outage end time is a don't care.
+    </p>
+    <p>
+      If a latest time is provided, show outages that don't start after the end_time. If the latest time is blank, the outage start time is a don't care.
+    </p>
+    <p>
+      If both times are provided, show the intersection of the above, or actually, do both of the above tests in the same query.
+    </p>
+    <p>
+      Or to put it another way, show all outages that overlap the filter's start and end times.
+    </p>
+  </div>
 
 <% end %>
 
-<%= render partial: "notifications/active"  %>
-<%# # , locals: { active_notifications: current_user.active_notifications } %>
-
-<h2>Outages</h2>
 <div role="tabpanel" class="outages">
-  <ul class="nav nav-pills">
-    <%# FIXME: how to set the active pill for each page? %>
-    <li class="nav-item">
-      <%= link_to "Day", day_outages_path, class: "nav-link" %>
-    </li>
-    <li class="nav-item">
-      <%= link_to "4-Day", fourday_outages_path, class: "nav-link" %>
-    </li>
-    <li class="nav-item">
-      <%= link_to "Week", week_outages_path, class: "nav-link" %>
-    </li>
-    <li class="nav-item">
-      <%= link_to "Month", month_outages_path, class: "nav-link" %>
-    </li>
-    <li class="nav-item">
-      <%= link_to "Grid", outages_path, class: "nav-link" %>
-    </li>
-  </ul>
+  <div class="row border rounded">
+    <ul class="nav nav-pills">
+      <%# FIXME: how to set the active pill for each page? %>
+      <li class="nav-item">
+        <%= link_to "Day", day_outages_path, class: "nav-link" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "4-Day", fourday_outages_path, class: "nav-link" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Week", week_outages_path, class: "nav-link" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Month", month_outages_path, class: "nav-link" %>
+      </li>
+    </ul>
 
-  <%= yield :outages_view %>
+    <%= yield :outages_view %>
+  </div>
+
+  <div class="row border rounded">
+    <%= render partial: "grid" %>
+  </div>
 </div>
 <p>
   <% if current_user.can_edit_outages? %>

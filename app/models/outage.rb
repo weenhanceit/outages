@@ -8,7 +8,7 @@ class Outage < ApplicationRecord
   accepts_nested_attributes_for :cis_outages, allow_destroy: true
   has_many :cis, through: :cis_outages
   accepts_nested_attributes_for :cis
-  has_many :affected_cis, through: :cis_outages, source: :affected_cis
+  # has_many :affected_cis, through: :cis_outages, source: :affected_cis
   has_many :contributors, inverse_of: :outage
   has_many :events, inverse_of: :outage
   has_many :notes, as: :notable
@@ -53,11 +53,11 @@ class Outage < ApplicationRecord
     # puts "(date + 1).beginning_of_day: #{(date + 1).beginning_of_day}"
     # puts "end_time: #{end_time}"
     if date.beginning_of_day < end_time &&
-      end_time <= (date + 1).beginning_of_day
+       end_time <= (date + 1).beginning_of_day
       # puts "returning end time: #{end_time}"
       end_time
     elsif (date + 1).beginning_of_day < end_time &&
-      start_time < (date + 1).beginning_of_day
+          start_time < (date + 1).beginning_of_day
       # puts "returning end of date: #{(date + 1).beginning_of_day}"
       (date + 1).beginning_of_day
     else
@@ -77,11 +77,11 @@ class Outage < ApplicationRecord
     # puts "(date + 1).beginning_of_day: #{(date + 1).beginning_of_day}"
     # puts "end_time: #{end_time}"
     if date.beginning_of_day <= start_time &&
-      start_time < (date + 1).beginning_of_day
+       start_time < (date + 1).beginning_of_day
       # puts "returning start time: #{start_time}"
       start_time
     elsif start_time < date.beginning_of_day &&
-      date.beginning_of_day < end_time
+          date.beginning_of_day < end_time
       # puts "returning start of date: #{date.beginning_of_day}"
       date.beginning_of_day
     else
@@ -93,31 +93,63 @@ class Outage < ApplicationRecord
   # A Relation for all the
   # All the outages the user is directly watching
   # All outages the directly affect a CI that the user is watching
-  # All the outages that have a CI that has a descendent of a CI that the user is watching
+  # All the outages that have a CI that has a descendent of a CI
+  # that the user is watching
   # The previous could be:
   # If the user is watching a CI that is an ancestor of a CI in an outage,
   # include that outage
   # FIXME: Correct this when we implement that real deal.
   # This just covers the first two cases.
   def self.watched_outages(user)
-    self.directly_watched_outages(user) +
-      self.directly_watched_by_cis(user) +
-      self.indirectly_watched_by_cis(user)
+    directly_watched_outages(user) + watched_by_cis(user)
     # directly_watched_outages(user).or(directly_watched_by_cis(user))
     # self.directly_watched_outages(user)
     # watches.where(watched_type: "Outage").first.w
     # watches.where(watched_type: "Ci").first.watched.outages
     # where(id: 567011998)
   end
+
   def self.directly_watched_outages(user)
-    joins(:watches).where(watches: {user_id: user})
-  end
-  def self.directly_watched_by_cis(user)
-    joins(cis: :watches).where(watches: {user_id: user})
+    joins(:watches).where(watches: { user_id: user })
   end
 
+  # TODO: This method isn't needed anymore
+  def self.directly_watched_by_cis(user)
+    joins(cis: :watches).where(watches: { user_id: user })
+  end
+
+  # TODO: This method isn't needed anymore
   def self.indirectly_watched_by_cis(user)
-    none
+    ci_watches = user.watches.where(watched_type: "Ci")
+    # puts "indirectly_watched_by_cis: #{ci_watches.inspect}"
+    watched_cis = ci_watches.map do |watch|
+      # puts "indirectly_watched_by_cis: #{watch.inspect}"
+      # puts "indirectly_watched_by_cis: #{watch.watched.descendants_affected.inspect}"
+      watch.watched.descendants_affected # TODO: put this in to combine methods + [watch.watched
+    end.flatten.uniq
+    # puts "indirectly_watched_by_cis: #{watched_cis.inspect}"
+
+    scope = joins(:cis_outages).where(cis_outages: { ci_id: watched_cis })
+    # puts "indirectly_watched_by_cis: #{scope.to_sql}"
+    scope
+    # joins(cis: { affected_cis: :watches }).where(watches: {user_id: user})
+  end
+
+  def self.watched_by_cis(user)
+    # directly_watched_by_cis(user) +
+    # indirectly_watched_by_cis(user)
+    ci_watches = user.watches.where(watched_type: "Ci")
+    # puts "watched_by_cis: #{ci_watches.inspect}"
+    watched_cis = ci_watches.map do |watch|
+      # puts "watched_by_cis: #{watch.inspect}"
+      # puts "watched_by_cis: #{watch.watched.descendants_affected.inspect}"
+      watch.watched.descendants_affected + [watch.watched]
+    end.flatten.uniq
+    # puts "watched_by_cis: #{watched_cis.inspect}"
+
+    scope = joins(:cis_outages).where(cis_outages: { ci_id: watched_cis })
+    # puts "watched_by_cis: #{scope.to_sql}"
+    scope
     # joins(cis: { affected_cis: :watches }).where(watches: {user_id: user})
   end
 end

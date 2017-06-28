@@ -20,19 +20,7 @@
         <%= link_to "The Outage Site", root_path, class: "navbar-brand" %>
         <!-- The ml-auto and mr-auto classes set the left and right margins
             to auto for justification -->
-        <ul class="navbar-nav ml-auto">
-        </ul>
-        <div class="ml-auto">
-          <% if current_user %>
-            Time Zone:
-            <span class="js-user-time-zone-rails">
-              <%= current_user.time_zone %>
-            </span>
-            <span class="js-user-time-zone-iana hidden">
-              <%= ActiveSupport::TimeZone[current_user.time_zone].tzinfo.name %>
-            </span>
-          <% end %>
-        </div>
+        <ul class="navbar-nav ml-auto"></ul>
       </div>
     </nav>
 
@@ -49,58 +37,58 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
               <% if current_user %>
-                <li class="nav-item">
-                  <%= link_to "Outages", outages_path, class: "nav-link" %>
-                </li>
-                <li class="nav-item">
-                  <%= link_to "Services", cis_path, class: "nav-link" %>
-                </li>
+              <li class="nav-item">
+                <%= link_to "Outages", outages_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Services", cis_path, class: "nav-link" %>
+              </li>
               <% end %>
             </ul>
             <ul class="navbar-nav">
               <% if current_user %>
-                <li class="nav-item">
-                  <!-- TODO: Turn the below into a WEIT Bootstrap Forms helper. -->
-                  <%= form_with url: searches_path,
+              <li class="nav-item">
+                <!-- TODO: Turn the below into a WEIT Bootstrap Forms helper. -->
+                <%= form_with url: searches_path,
                   method: :get,
                   local: true,
                   class: "form-inline my-2 my-lg-0" do |search_form| %>
-                  <!--  value: params... below keeps the search criteria in the field
+                <!--  value: params... below keeps the search criteria in the field
                   after submitting the search, which is good if the search bar
                   is still on the screen after the search. -->
-                  <%= search_form.text_field :criteria,
+                <%= search_form.text_field :criteria,
                   value: params[:criteria],
                   class: "form-control mr-sm-2",
                     placeholder: "Search" %>
-                    <!--  Set the name: "" so we don't pass the search button text as a
+                <!--  Set the name: "" so we don't pass the search button text as a
                     parameter. -->
-                    <%= search_form.submit "Search",
+                <%= search_form.submit "Search",
                     name: "",
                     class: "btn btn-outline-success my-2 my-sm-0" %>
-                    <% end %>
-                </li>
-                <li class="nav-item">
-                  <%= link_to current_user.name,
+                <% end %>
+              </li>
+              <li class="nav-item">
+                <%= link_to current_user.name,
                         edit_preference_path(current_user),
                         class: "nav-link" %>
-                </li>
-                <li class="nav-item">
-                  <%= link_to "Sign Out",
+              </li>
+              <li class="nav-item">
+                <%= link_to "Sign Out",
                         destroy_user_session_path,
                         method: :delete,
                         class: "nav-link" %>
-                </li>
-              <% else %>
-                <li class="nav-item">
-                  <%= link_to "Sign In",
+              </li>
+            <% else %>
+              <li class="nav-item">
+                <%= link_to "Sign In",
                     new_user_session_path,
                     class: "nav-link" %>
-                </li>
-                <li class="nav-item">
-                  <%= link_to "Sign Up",
+              </li>
+              <li class="nav-item">
+                <%= link_to "Sign Up",
                   new_user_registration_path,
                   class: "nav-link" %>
-                </li>
+              </li>
               <% end %>
             </ul>
           </div>
@@ -109,14 +97,33 @@
     </div>
 
     <div class="container">
-      <p class="text-warning js-time-zone-warning"><%= notice %></p>
-      <p class="text-danger"><%= alert %></p>
+      <div class="row">
+        <p class="text-warning js-time-zone-warning"><%= notice %></p>
+        <p class="text-danger"><%= alert %></p>
 
-      <%# TODO: Combine this with the above, but have to change the Javascript %>
-      <div class="text-warning">
+        <%# TODO: Combine this with the above, but have to change the Javascript %>
+        <div class="text-warning"></div>
       </div>
 
-      <%= yield %>
+      <div class="row">
+        <div class="col-md-9">
+          <%= yield %>
+        </div>
+        <div class="col-md-3">
+          <div class="row border rounded">
+            <div class="col-md-12">
+              <%= render partial: "notifications/active"  %>
+              <%# # , locals: { active_notifications: current_user.active_notifications } %>
+            </div>
+          </div>
+          <div class="row border rounded">
+            <div class="col-md-12">
+              <h4>Selected Outage</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <hr/>
       <p>Footer</p>
       <p>Params</p>
@@ -128,6 +135,17 @@
       <p>
         Time Zone Cookie:
         <%= cookies["tz"].inspect %>
+      </p>
+      <p>
+        <% if current_user %>
+        Time Zone:
+        <span class="js-user-time-zone-rails">
+          <%= current_user.time_zone %>
+        </span>
+        <span class="js-user-time-zone-iana hidden">
+          <%= ActiveSupport::TimeZone[current_user.time_zone].tzinfo.name %>
+        </span>
+        <% end %>
       </p>
     </div>
   </body>

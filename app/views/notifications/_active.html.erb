@@ -3,7 +3,7 @@
   <div class="notifications">
     <h2>Notifications</h2>
     <p>
-      You have <%= @online_notifications.size %> un-acknowledged notifications.
+      You have <%= @online_notifications.size %> un-read notifications.
     </p>
     <table>
       <thead>
@@ -34,7 +34,7 @@
           <%# puts "---------------------------------------------------------" %>
           <%# puts n.inspect %>
           <%# puts "---------------------------------------------------------" %>
-          <%# puts n.event.inspect %>
+          <%# puts n.event.inspect Error: source does not appear to be markup.
           <%# puts "---------------------------------------------------------" %>
           <%# puts n.event.outage.inspect %>
           <%# puts "---------------------------------------------------------" %>
@@ -66,6 +66,5 @@
         <% end %>
       </tbody>
     </table>
-    <hr>
   </div>
 <% end %>
