@@ -20,7 +20,9 @@
               <%= link_to n.event.outage.name, outage_url(n.event.outage_id) %>
             </div>
             <div class="notification-interval">
-              <%= distance_of_time_in_words(n.event.created_at, @now, options = {include_seconds: true }) %> ago
+              <%= distance_of_time_in_words(n.event.created_at,
+                    Time.zone.now,
+                    options = {include_seconds: true }) %> ago
             </div>
           </div>
       </div>
