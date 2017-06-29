@@ -20,33 +20,54 @@
 
 <%= form_with url: "#",
       local: true,
-      method: :get,
-      builder: WeitFormBuilder do |f| %>
-  <p>
-    <%= label_tag "frag", "Fragment" %>
-    <%= text_field_tag "frag" %>
-    <div class="content-note">
-      Outages meet this criteria if the Outage Short Description, Outage Long Description, Outage Status contains this fragment, if any of the Notes associated with an Outage contain the fragment or if any of the associated CIs Name, Description, Tags
-      contains this fragment.
+      method: :get do |f| %>
+  <div class="row form-group">
+    <%= label_tag "frag", class: "col col-form-label" do %>
+      Fragment
+      <%= text_field_tag "frag", nil, class: "form-control" %>
+    <% end %>
+    <%= label_tag "earliest", class: "col col-form-label" do %>
+      Outages After
+      <%= datetime_field_tag "earliest",
+        Time.zone.now.beginning_of_day.strftime("%Y-%m-%dT%H:%M"),
+        class: "form-control" %>
+    <% end %>
+    <%= label_tag "latest", class: "col col-form-label" do %>
+      Outages Before
+      <%= datetime_field_tag "latest",
+        (Time.zone.now.beginning_of_day + 2.weeks).strftime("%Y-%m-%dT%H:%M"),
+        class: "form-control" %>
+    <% end %>
+    <div class="form-group">
+      <div class="form-check">
+        <%= label_tag :watching,
+              value: "Interested",
+              class: "col-form-label form-check-label" do %>
+          <%= radio_button_tag :watching,
+                "Of interest to me",
+                true,
+                class: "form-check-input" %> Of interest to me
+        <% end %>
+      </div>
+      <div class="form-check">
+        <%= label_tag :watching,
+              value: "All",
+              class: "col-form-label form-check-label" do %>
+          <%= radio_button_tag :watching,
+                "All",
+                false,
+                class: "form-check-input" %> All
+        <% end %>
+      </div>
     </div>
+  </div>
 
-    <%= radio_button_tag :watching, "Of interest to me", true %>
-    <%= label_tag :watching, "Of interest to me", value: "Interested" %>
-    <%= radio_button_tag :watching, "All" %>
-    <%= label_tag :watching, "All", value: "All" %>
-  </p>
   <div class="content-note">
     Still not sure that this would be "logically" clear to users (because it is a bit of an "AND/OR". Wondering if this should simply be 'all' or 'watched/edited by me' radio button)
   </div>
 
-  <p>
-    <%= label_tag "earliest", "Outages After" %>
-    <%= datetime_field_tag "earliest", Time.zone.now.beginning_of_day.strftime("%Y-%m-%dT%H:%M") %>
-    <%= label_tag "latest", "Outages Before" %>
-    <%= datetime_field_tag "latest", (Time.zone.now.beginning_of_day + 2.weeks).strftime("%Y-%m-%dT%H:%M") %>
-  </p>
 
-  <%= f.primary "Refresh" %>
+  <%= button_tag "Refresh", class: "btn btn-primary" %>
 
   <div class="content-note">
     <p>

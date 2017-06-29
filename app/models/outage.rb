@@ -55,7 +55,7 @@ class Outage < ApplicationRecord
     if end_time.nil?
       start_time_on_date(date)
     elsif date.beginning_of_day < end_time &&
-       end_time <= (date + 1).beginning_of_day
+          end_time <= (date + 1).beginning_of_day
       # puts "returning end time: #{end_time}"
       end_time
     elsif (date + 1).beginning_of_day < end_time &&
@@ -126,7 +126,8 @@ class Outage < ApplicationRecord
     # puts "indirectly_watched_by_cis: #{ci_watches.inspect}"
     watched_cis = ci_watches.map do |watch|
       # puts "indirectly_watched_by_cis: #{watch.inspect}"
-      # puts "indirectly_watched_by_cis: #{watch.watched.descendants_affected.inspect}"
+      # puts "indirectly_watched_by_cis: " \
+      # "#{watch.watched.descendants_affected.inspect}"
       watch.watched.descendants_affected # TODO: put this in to combine methods + [watch.watched
     end.flatten.uniq
     # puts "indirectly_watched_by_cis: #{watched_cis.inspect}"
