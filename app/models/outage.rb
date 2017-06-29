@@ -52,7 +52,9 @@ class Outage < ApplicationRecord
     # puts "start_time: #{start_time}"
     # puts "(date + 1).beginning_of_day: #{(date + 1).beginning_of_day}"
     # puts "end_time: #{end_time}"
-    if date.beginning_of_day < end_time &&
+    if end_time.nil?
+      start_time_on_date(date)
+    elsif date.beginning_of_day < end_time &&
        end_time <= (date + 1).beginning_of_day
       # puts "returning end time: #{end_time}"
       end_time
