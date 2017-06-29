@@ -41,6 +41,7 @@ class CisController < ApplicationController
   def index
     @cis = current_user.account.cis.where(active: true).order(:name)
     @online_notifications = current_user.outstanding_online_notifications
+    @now = Time.zone.now
   end
 
   def new

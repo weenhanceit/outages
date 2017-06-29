@@ -1,14 +1,10 @@
 class PreferencesController < ApplicationController
   def edit
     # puts "IN EDIT"
-    @display = "First Time"
-    @phil = "Individual e-mails?: #{current_user.preference_individual_email_notifications}"
     @user = current_user
   end
 
   def update
-    @display = preference_params.inspect
-    @phil = "Individual e-mails?: #{current_user.preference_individual_email_notifications}"
     @user = current_user
 
     if current_user.update(preference_params)

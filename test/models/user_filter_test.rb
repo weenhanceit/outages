@@ -142,6 +142,108 @@ class UserFilterTest < ActiveSupport::TestCase
       @user1.filter_outages(watching: "All").sort
   end
 
+  test "date range filter" do
+    # Test includes times, wrap test in time zone
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      # Set up the earliest and latest dates for our filter
+      interval = 10.hours
+      earliest = Time.zone.now + 10.days
+      latest = earliest + interval
+      during = earliest + (interval / 2)
+      pre = earliest - 1.hour
+      post = latest + 1.hour
+
+      # initialize_account_and_users
+      initialize_account_and_users
+
+      # initialize our outages
+
+      outage_pre_post = Outage.create(account: @account,
+                                      active: true,
+                                      causes_loss_of_service: true,
+                                      completed: false,
+                                      end_time: post,
+                                      name: "outage pre post",
+                                      start_time: pre)
+
+       outage_pre_during = Outage.create(account: @account,
+                                         active: true,
+                                         causes_loss_of_service: true,
+                                         completed: false,
+                                         end_time: during,
+                                         name: "outage pre during",
+                                         start_time: pre)
+
+       outage_during_post = Outage.create(account: @account,
+                                          active: true,
+                                          causes_loss_of_service: true,
+                                          completed: false,
+                                          end_time: post,
+                                          name: "outage during post",
+                                          start_time: during)
+
+      outage_earliest_latest = Outage.create(account: @account,
+                                             active: true,
+                                             causes_loss_of_service: true,
+                                             completed: false,
+                                             end_time: latest,
+                                             name: "outage earliest latest",
+                                             start_time: earliest)
+
+      outage_pre_earliest = Outage.create(account: @account,
+                                          active: true,
+                                          causes_loss_of_service: true,
+                                          completed: false,
+                                          end_time: earliest,
+                                          name: "outage earliest latest",
+                                          start_time: pre)
+
+      outage_earliest_post = Outage.create(account: @account,
+                                           active: true,
+                                           causes_loss_of_service: true,
+                                           completed: false,
+                                           end_time: post,
+                                           name: "outage earliest latest",
+                                           start_time: latest)
+
+      # Both Earliest and latest date present
+      # Set up array of exepected outages
+      outages_in_filter = [outage_pre_post]
+      outages_in_filter << outage_pre_during
+      outages_in_filter << outage_during_post
+      outages_in_filter << outage_earliest_latest
+
+      assert_equal outages_in_filter,
+        @user1.filter_outages(earliest: earliest, latest: latest),
+        "Unexpected outages from filter with both earliest and latest dates"
+
+      # latest date only, present
+      # Set up array of exepected outages
+      outages_in_filter = [outage_pre_post]
+      outages_in_filter << outage_pre_during
+      outages_in_filter << outage_during_post
+      outages_in_filter << outage_earliest_latest
+      outages_in_filter << outage_pre_earliest
+
+      assert_equal outages_in_filter,
+        @user1.filter_outages(earliest: earliest, latest: latest),
+        "Unexpected outages from filter with only latest date"
+
+      # Earliest date only, present
+      # Set up array of exepected outages
+      outages_in_filter = [outage_pre_post]
+      outages_in_filter << outage_pre_during
+      outages_in_filter << outage_during_post
+      outages_in_filter << outage_earliest_latest
+      outages_in_filter << outage_latest_post
+
+      assert_equal outages_in_filter,
+        @user1.filter_outages(earliest: earliest, latest: latest),
+        "Unexpected outages from filter with only earliest date"
+    end
+    flunk
+  end
+
   private
 
   # set_up_test creates a new account, and a new user in that account within
@@ -175,4 +277,5 @@ class UserFilterTest < ActiveSupport::TestCase
              privilege_edit_outages: true,
              privilege_manage_users: false)
   end
+
 end
