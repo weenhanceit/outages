@@ -51,6 +51,23 @@ class User < ApplicationRecord
       # FIXME: Unfake this when we make this
       scope = scope.watched_outages(self)
     end
+
+    # EXCLUDED: end < earliest || latest <= start
+    # EXCLUDED: earliest <= end || start <= latest
+    if params[:earliest].present?
+      earliest = params[:earliest]
+      earliest = Time.zone.parse(earliest) if earliest.is_a?(String)
+      scope = scope.where("coalesce(end_time, start_time) >= ?", earliest)
+    end
+
+    if params[:latest].present?
+      latest = params[:latest]
+      latest = Time.zone.parse(latest) if latest.is_a?(String)
+      scope = scope.where("? > coalesce(start_time, end_time)", latest)
+    end
+
+    # puts "SCOPE.TO_SQL: #{scope.to_sql}"
+
     scope
   end
 

@@ -195,16 +195,30 @@ class UserFilterTest < ActiveSupport::TestCase
                                           causes_loss_of_service: true,
                                           completed: false,
                                           end_time: earliest,
-                                          name: "outage earliest latest",
+                                          name: "outage pre latest",
                                           start_time: pre)
 
-      outage_earliest_post = Outage.create(account: @account,
+      outage_latest_post = Outage.create(account: @account,
                                            active: true,
                                            causes_loss_of_service: true,
                                            completed: false,
                                            end_time: post,
-                                           name: "outage earliest latest",
+                                           name: "outage latest post",
                                            start_time: latest)
+
+       outage_nil_latest = Outage.create(account: @account,
+                                          active: true,
+                                          causes_loss_of_service: true,
+                                          completed: false,
+                                          end_time: latest - 1.second,
+                                          name: "outage nil latest")
+
+       outage_earliest_nil = Outage.create(account: @account,
+                                          active: true,
+                                          causes_loss_of_service: true,
+                                          completed: false,
+                                          name: "outage earliest nil",
+                                          start_time: earliest)
 
       # Both Earliest and latest date present
       # Set up array of exepected outages
@@ -212,9 +226,15 @@ class UserFilterTest < ActiveSupport::TestCase
       outages_in_filter << outage_pre_during
       outages_in_filter << outage_during_post
       outages_in_filter << outage_earliest_latest
+      outages_in_filter << outage_nil_latest
+      outages_in_filter << outage_earliest_nil
 
-      assert_equal outages_in_filter,
-        @user1.filter_outages(earliest: earliest, latest: latest),
+      actual = @user1.filter_outages(earliest: earliest, latest: latest).sort
+      puts "EXPECTED: #{outages_in_filter.map(&:name)}"
+      puts "ACTUAL SIZE: #{actual.size}"
+      puts "ACTUAL: #{actual.map(&:name)}"
+      assert_equal outages_in_filter.sort,
+        actual,
         "Unexpected outages from filter with both earliest and latest dates"
 
       # latest date only, present
@@ -224,9 +244,11 @@ class UserFilterTest < ActiveSupport::TestCase
       outages_in_filter << outage_during_post
       outages_in_filter << outage_earliest_latest
       outages_in_filter << outage_pre_earliest
+      outages_in_filter << outage_nil_latest
+      outages_in_filter << outage_earliest_nil
 
-      assert_equal outages_in_filter,
-        @user1.filter_outages(earliest: earliest, latest: latest),
+      assert_equal outages_in_filter.sort,
+        @user1.filter_outages(earliest: nil, latest: latest).sort,
         "Unexpected outages from filter with only latest date"
 
       # Earliest date only, present
@@ -236,12 +258,14 @@ class UserFilterTest < ActiveSupport::TestCase
       outages_in_filter << outage_during_post
       outages_in_filter << outage_earliest_latest
       outages_in_filter << outage_latest_post
+      outages_in_filter << outage_nil_latest
+      outages_in_filter << outage_earliest_nil
 
-      assert_equal outages_in_filter,
-        @user1.filter_outages(earliest: earliest, latest: latest),
+      assert_equal outages_in_filter.sort,
+        @user1.filter_outages(earliest: earliest, latest: nil).sort,
         "Unexpected outages from filter with only earliest date"
     end
-    flunk
+    # FIXME: Add outage without start time and outage without end time.
   end
 
   private
