@@ -220,6 +220,20 @@ class UserFilterTest < ActiveSupport::TestCase
                                           name: "outage earliest nil",
                                           start_time: earliest)
 
+       outage_latest_nil = Outage.create(account: @account,
+                                          active: true,
+                                          causes_loss_of_service: true,
+                                          completed: false,
+                                          name: "outage latest nil",
+                                          start_time: latest)
+
+       outage_nil_earliest = Outage.create(account: @account,
+                                          active: true,
+                                          causes_loss_of_service: true,
+                                          completed: false,
+                                          end_time: earliest,
+                                          name: "outage nil earliest")
+
       # Both Earliest and latest date present
       # Set up array of exepected outages
       outages_in_filter = [outage_pre_post]
@@ -244,6 +258,7 @@ class UserFilterTest < ActiveSupport::TestCase
       outages_in_filter << outage_earliest_latest
       outages_in_filter << outage_pre_earliest
       outages_in_filter << outage_earliest_nil
+      outages_in_filter << outage_nil_earliest
 
       # puts "EXPECTED (latest only): #{outages_in_filter.map(&:name)}"
       # puts "ACTUAL SIZE: #{actual.size}"
@@ -261,6 +276,7 @@ class UserFilterTest < ActiveSupport::TestCase
       outages_in_filter << outage_latest_post
       outages_in_filter << outage_nil_latest
       outages_in_filter << outage_earliest_nil
+      outages_in_filter << outage_latest_nil
 
       # puts "EXPECTED (earliest only): #{outages_in_filter.map(&:name)}"
       # puts "ACTUAL SIZE: #{actual.size}"
