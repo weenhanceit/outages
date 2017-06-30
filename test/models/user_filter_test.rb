@@ -210,7 +210,7 @@ class UserFilterTest < ActiveSupport::TestCase
                                           active: true,
                                           causes_loss_of_service: true,
                                           completed: false,
-                                          end_time: latest - 1.second,
+                                          end_time: latest,
                                           name: "outage nil latest")
 
        outage_earliest_nil = Outage.create(account: @account,
@@ -230,7 +230,7 @@ class UserFilterTest < ActiveSupport::TestCase
       outages_in_filter << outage_earliest_nil
 
       actual = @user1.filter_outages(earliest: earliest, latest: latest).sort
-      puts "EXPECTED: #{outages_in_filter.map(&:name)}"
+      puts "EXPECTED (earliest latest): #{outages_in_filter.map(&:name)}"
       puts "ACTUAL SIZE: #{actual.size}"
       puts "ACTUAL: #{actual.map(&:name)}"
       assert_equal outages_in_filter.sort,
@@ -247,6 +247,9 @@ class UserFilterTest < ActiveSupport::TestCase
       outages_in_filter << outage_nil_latest
       outages_in_filter << outage_earliest_nil
 
+      puts "EXPECTED (latest only): #{outages_in_filter.map(&:name)}"
+      puts "ACTUAL SIZE: #{actual.size}"
+      puts "ACTUAL: #{actual.map(&:name)}"
       assert_equal outages_in_filter.sort,
         @user1.filter_outages(earliest: nil, latest: latest).sort,
         "Unexpected outages from filter with only latest date"
@@ -261,6 +264,9 @@ class UserFilterTest < ActiveSupport::TestCase
       outages_in_filter << outage_nil_latest
       outages_in_filter << outage_earliest_nil
 
+      puts "EXPECTED (earliest only): #{outages_in_filter.map(&:name)}"
+      puts "ACTUAL SIZE: #{actual.size}"
+      puts "ACTUAL: #{actual.map(&:name)}"
       assert_equal outages_in_filter.sort,
         @user1.filter_outages(earliest: earliest, latest: nil).sort,
         "Unexpected outages from filter with only earliest date"

@@ -52,21 +52,21 @@ class User < ApplicationRecord
       scope = scope.watched_outages(self)
     end
 
-    # EXCLUDED: end < earliest || latest <= start
+    # EXCLUDED: end <= earliest || latest <= start
     # EXCLUDED: earliest <= end || start <= latest
     if params[:earliest].present?
       earliest = params[:earliest]
       earliest = Time.zone.parse(earliest) if earliest.is_a?(String)
-      scope = scope.where("coalesce(end_time, start_time) >= ?", earliest)
+      scope = scope.where("coalesce(end_time, 'infinity') > ?", earliest)
     end
 
     if params[:latest].present?
       latest = params[:latest]
       latest = Time.zone.parse(latest) if latest.is_a?(String)
-      scope = scope.where("? > coalesce(start_time, end_time)", latest)
+      scope = scope.where("? > coalesce(start_time, '-infinity')", latest)
     end
 
-    # puts "SCOPE.TO_SQL: #{scope.to_sql}"
+    puts "SCOPE.TO_SQL: #{scope.to_sql}"
 
     scope
   end
