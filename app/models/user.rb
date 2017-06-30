@@ -63,10 +63,10 @@ class User < ApplicationRecord
     if params[:latest].present?
       latest = params[:latest]
       latest = Time.zone.parse(latest) if latest.is_a?(String)
-      scope = scope.where("? > coalesce(start_time, '-infinity')", latest)
+      scope = scope.where("? > coalesce(start_time, end_time)", latest)
     end
 
-    puts "SCOPE.TO_SQL: #{scope.to_sql}"
+    # puts "SCOPE.TO_SQL: #{scope.to_sql}"
 
     scope
   end
