@@ -166,21 +166,21 @@ class UserFilterTest < ActiveSupport::TestCase
                                       name: "outage pre post",
                                       start_time: pre)
 
-       outage_pre_during = Outage.create(account: @account,
+      outage_pre_during = Outage.create(account: @account,
+                                        active: true,
+                                        causes_loss_of_service: true,
+                                        completed: false,
+                                        end_time: during,
+                                        name: "outage pre during",
+                                        start_time: pre)
+
+      outage_during_post = Outage.create(account: @account,
                                          active: true,
                                          causes_loss_of_service: true,
                                          completed: false,
-                                         end_time: during,
-                                         name: "outage pre during",
-                                         start_time: pre)
-
-       outage_during_post = Outage.create(account: @account,
-                                          active: true,
-                                          causes_loss_of_service: true,
-                                          completed: false,
-                                          end_time: post,
-                                          name: "outage during post",
-                                          start_time: during)
+                                         end_time: post,
+                                         name: "outage during post",
+                                         start_time: during)
 
       outage_earliest_latest = Outage.create(account: @account,
                                              active: true,
@@ -199,35 +199,35 @@ class UserFilterTest < ActiveSupport::TestCase
                                           start_time: pre)
 
       outage_latest_post = Outage.create(account: @account,
-                                           active: true,
-                                           causes_loss_of_service: true,
-                                           completed: false,
-                                           end_time: post,
-                                           name: "outage latest post",
-                                           start_time: latest)
+                                         active: true,
+                                         causes_loss_of_service: true,
+                                         completed: false,
+                                         end_time: post,
+                                         name: "outage latest post",
+                                         start_time: latest)
 
-       outage_nil_latest = Outage.create(account: @account,
-                                          active: true,
-                                          causes_loss_of_service: true,
-                                          completed: false,
-                                          end_time: latest,
-                                          name: "outage nil latest")
+      outage_nil_latest = Outage.create(account: @account,
+                                        active: true,
+                                        causes_loss_of_service: true,
+                                        completed: false,
+                                        end_time: latest,
+                                        name: "outage nil latest")
 
-       outage_earliest_nil = Outage.create(account: @account,
+      outage_earliest_nil = Outage.create(account: @account,
                                           active: true,
                                           causes_loss_of_service: true,
                                           completed: false,
                                           name: "outage earliest nil",
                                           start_time: earliest)
 
-       outage_latest_nil = Outage.create(account: @account,
-                                          active: true,
-                                          causes_loss_of_service: true,
-                                          completed: false,
-                                          name: "outage latest nil",
-                                          start_time: latest)
+      outage_latest_nil = Outage.create(account: @account,
+                                        active: true,
+                                        causes_loss_of_service: true,
+                                        completed: false,
+                                        name: "outage latest nil",
+                                        start_time: latest)
 
-       outage_nil_earliest = Outage.create(account: @account,
+      outage_nil_earliest = Outage.create(account: @account,
                                           active: true,
                                           causes_loss_of_service: true,
                                           completed: false,
@@ -321,5 +321,4 @@ class UserFilterTest < ActiveSupport::TestCase
              privilege_edit_outages: true,
              privilege_manage_users: false)
   end
-
 end
