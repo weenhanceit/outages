@@ -94,7 +94,26 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
   end
 
   test "end time only" do
-    skip "TODO: Implement suitable system test on times"
-    flunk
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      # NOTE: Change the following to 30 if we change filter to dates.
+      travel_to Time.zone.local(2017, 7, 31)
+      user = sign_in_for_system_tests(users(:basic))
+
+      visit outages_url
+      current_window.maximize
+
+      within(".test-outages-grid") do
+        assert_text "Outage A", count: 1
+        assert_selector "tbody tr", count: 1
+      end
+
+      fill_in "Outages After", with: ""
+      click_button "Refresh"
+      within(".test-outages-grid") do
+        assert_text "Outage A", count: 1
+        assert_text "Outage B", count: 1
+        assert_selector "tbody tr", count: 2
+      end
+    end
   end
 end
