@@ -46,12 +46,6 @@ class User < ApplicationRecord
       scope = scope.where("name like ?", "%#{params[:frag]}%")
     end
 
-    # puts params.inspect
-    if params[:watching].present? && params[:watching] == "Of interest to me"
-      # FIXME: Unfake this when we make this
-      scope = scope.watched_outages(self)
-    end
-
     # EXCLUDED: end <= earliest || latest <= start
     # EXCLUDED: earliest <= end || start <= latest
     if params[:earliest].present?
@@ -66,7 +60,16 @@ class User < ApplicationRecord
       scope = scope.where("? > coalesce(start_time, end_time)", latest)
     end
 
-    # puts "SCOPE.TO_SQL: #{scope.to_sql}"
+    # puts params.inspect
+    # Put this condition at the end of this method, because it is the one
+    # that will (may?) return an Array. 
+    if params[:watching].present? && params[:watching] == "Of interest to me"
+      # FIXME: Unfake this when we make this
+      scope = scope.watched_outages(self)
+    end
+
+    # puts scope.is_a?(Array) ?
+    #    "scope is an Array" : "SCOPE.TO_SQL: #{scope.to_sql}"
 
     scope
   end
