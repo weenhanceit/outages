@@ -38,7 +38,7 @@
         (Time.zone.now.beginning_of_day + 2.weeks).strftime("%Y-%m-%dT%H:%M"),
         class: "form-control" %>
     <% end %>
-    <div class="form-group">
+    <div class="col form-group">
       <div class="form-check">
         <%= label_tag :watching,
               value: "Interested",
@@ -107,7 +107,7 @@
     <%= yield :outages_view %>
   </div>
 
-  <div class="row border rounded">
+  <div class="row border rounded test-outages-grid">
     <%= render partial: "grid" %>
   </div>
 </div>

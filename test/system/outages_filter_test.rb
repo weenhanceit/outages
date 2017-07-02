@@ -2,15 +2,17 @@ require "application_system_test_case"
 
 class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
   test "fragment filter" do
-    skip "TODO: Fix this test for the 'grid on every view' model"
     sign_in_for_system_tests(users(:basic))
     visit outages_url
-    click_link "Grid"
+    current_window.maximize
+    # click_link "Grid"
     choose "watching_All"
 
     fill_in "Fragment", with: "Outage B"
+    fill_in "Outages Before", with: ""
+    fill_in "Outages After", with: ""
     click_button "Refresh"
-    within(".outages") do
+    within(".test-outages-grid") do
       assert_text "Outage B", count: 1
       assert_selector "tbody tr", count: 1
     end
