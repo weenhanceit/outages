@@ -95,15 +95,18 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
   test "end time only" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      # NOTE: Change the following to 30 if we change filter to dates.
+      # NOTE: Change 31 to 30 if we change filter to dates.
       travel_to Time.zone.local(2017, 7, 31)
       user = sign_in_for_system_tests(users(:basic))
 
       visit outages_url
       current_window.maximize
 
+      assert_checked_field "watching_Of_interest_to_me"
+
+      # NOTE: This appears to be the only test that the default filter is used.
       within(".test-outages-grid") do
-        assert_text "Outage A", count: 1
+        assert_text "Outage B", count: 1
         assert_selector "tbody tr", count: 1
       end
 

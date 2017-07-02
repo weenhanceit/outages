@@ -80,7 +80,7 @@ class OutagesController < ApplicationController
               .includes(:watches, :cis_outages, :cis)
               .find(params[:id])
 
-              #  puts "!!#{__LINE__}: Outage loaded: watches.size: #{@outage.watches.size} cis.size: #{@outage.cis.size} cis_outages.size: #{@outage.cis_outages.size}"
+    #  puts "!!#{__LINE__}: Outage loaded: watches.size: #{@outage.watches.size} cis.size: #{@outage.cis.size} cis_outages.size: #{@outage.cis_outages.size}"
   end
 
   # Some sources say the best way to do model defaults is in an
@@ -111,12 +111,17 @@ class OutagesController < ApplicationController
 
   ##
   # Set up the @outages instance variable for the "index-like" actions.
-  # Set up the @online_notifications instance variable, too.
+  # Must take into account what the default values for the filter fields are
+  # going to be.
   def outages
-    @outages = current_user.filter_outages(params)
+    @outages = current_user.filter_outages(
+      params.reverse_merge(
+        watching: "Of interest to me",
+        earliest: helpers.default_earliest.to_s(:browser),
+        latest: helpers.default_latest.to_s(:browser)))
   end
 
   def update_watches
-    @outage.update_watches(current_user, params[:outage][:watched].in?(["1", "true"]))
+    @outage.update_watches(current_user, params[:outage][:watched].in?(%w(1 true)))
   end
 end

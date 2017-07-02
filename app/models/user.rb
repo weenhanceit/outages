@@ -62,7 +62,7 @@ class User < ApplicationRecord
 
     # puts params.inspect
     # Put this condition at the end of this method, because it is the one
-    # that will (may?) return an Array. 
+    # that will (may?) return an Array.
     if params[:watching].present? && params[:watching] == "Of interest to me"
       # FIXME: Unfake this when we make this
       scope = scope.watched_outages(self)
