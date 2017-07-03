@@ -11,7 +11,8 @@ class Notification < ApplicationRecord
 
   default_scope { where.not(watch: nil) }
 
-  scope :unacknowledged, -> { where(notified: false )}
+  scope :unnotified, -> { where(notified: false) }
+  scope :unread, -> { where(notified: false, notification_type: :online) }
 
   # This method provides an english text description of the event type
   def event_info

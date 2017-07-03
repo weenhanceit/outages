@@ -83,7 +83,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     user = sign_in_for_system_tests(users(:basic))
 
     within ".notifications" do
-      assert_difference "user.notifications.unacknowledged.size", -1 do
+      assert_difference "user.notifications.unread.size", -1 do
         assert_text "Outage A", count: 1
         assert_unchecked_field "Read"
         check "Read"
@@ -104,7 +104,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     user = sign_in_for_system_tests(users(:basic))
 
     within ".notifications" do
-      assert_difference "user.notifications.unacknowledged.size", -1 do
+      assert_difference "user.notifications.unread.size", -1 do
         assert_text "Outage A", count: 1
         assert_unchecked_field "Read"
         check "Read"
@@ -112,7 +112,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         sleep 2
         assert_checked_field "Read"
       end
-      assert_difference "user.notifications.unacknowledged.size" do
+      assert_difference "user.notifications.unread.size" do
         uncheck "Read"
         assert_text "Outage A", count: 1
         sleep 2
