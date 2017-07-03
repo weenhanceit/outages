@@ -57,14 +57,13 @@ class User < ApplicationRecord
     if params[:latest].present?
       latest = params[:latest]
       latest = Time.zone.parse(latest) if latest.is_a?(String)
-      scope = scope.where("? > coalesce(start_time, end_time)", latest)
+      scope = scope.where("? > coalesce(start_time, '-infinity')", latest)
     end
 
     # puts params.inspect
     # Put this condition at the end of this method, because it is the one
     # that will (may?) return an Array.
     if params[:watching].present? && params[:watching] == "Of interest to me"
-      # FIXME: Unfake this when we make this
       scope = scope.watched_outages(self)
     end
 

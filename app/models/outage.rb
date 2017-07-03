@@ -100,8 +100,6 @@ class Outage < ApplicationRecord
   # The previous could be:
   # If the user is watching a CI that is an ancestor of a CI in an outage,
   # include that outage
-  # FIXME: Correct this when we implement that real deal.
-  # This just covers the first two cases.
   def self.watched_outages(user)
     directly_watched_outages(user) + watched_by_cis(user)
     # directly_watched_outages(user).or(directly_watched_by_cis(user))

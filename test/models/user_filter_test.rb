@@ -240,6 +240,7 @@ class UserFilterTest < ActiveSupport::TestCase
       outages_in_filter << outage_pre_during
       outages_in_filter << outage_during_post
       outages_in_filter << outage_earliest_latest
+      outages_in_filter << outage_nil_latest
       outages_in_filter << outage_earliest_nil
 
       actual = @user1.filter_outages(earliest: earliest, latest: latest).sort
@@ -250,23 +251,6 @@ class UserFilterTest < ActiveSupport::TestCase
         actual,
         "Unexpected outages from filter with both earliest and latest dates"
 
-      # latest date only, present
-      # Set up array of exepected outages
-      outages_in_filter = [outage_pre_post]
-      outages_in_filter << outage_pre_during
-      outages_in_filter << outage_during_post
-      outages_in_filter << outage_earliest_latest
-      outages_in_filter << outage_pre_earliest
-      outages_in_filter << outage_earliest_nil
-      outages_in_filter << outage_nil_earliest
-
-      # puts "EXPECTED (latest only): #{outages_in_filter.map(&:name)}"
-      # puts "ACTUAL SIZE: #{actual.size}"
-      # puts "ACTUAL: #{actual.map(&:name)}"
-      assert_equal outages_in_filter.sort,
-        @user1.filter_outages(earliest: nil, latest: latest).sort,
-        "Unexpected outages from filter with only latest date"
-
       # Earliest date only, present
       # Set up array of exepected outages
       outages_in_filter = [outage_pre_post]
@@ -274,8 +258,8 @@ class UserFilterTest < ActiveSupport::TestCase
       outages_in_filter << outage_during_post
       outages_in_filter << outage_earliest_latest
       outages_in_filter << outage_latest_post
-      outages_in_filter << outage_nil_latest
       outages_in_filter << outage_earliest_nil
+      outages_in_filter << outage_nil_latest
       outages_in_filter << outage_latest_nil
 
       # puts "EXPECTED (earliest only): #{outages_in_filter.map(&:name)}"
@@ -284,8 +268,25 @@ class UserFilterTest < ActiveSupport::TestCase
       assert_equal outages_in_filter.sort,
         @user1.filter_outages(earliest: earliest, latest: nil).sort,
         "Unexpected outages from filter with only earliest date"
+
+      # latest date only, present
+      # Set up array of exepected outages
+      outages_in_filter = [outage_pre_post]
+      outages_in_filter << outage_pre_during
+      outages_in_filter << outage_during_post
+      outages_in_filter << outage_earliest_latest
+      outages_in_filter << outage_pre_earliest
+      outages_in_filter << outage_earliest_nil
+      outages_in_filter << outage_nil_latest
+      outages_in_filter << outage_nil_earliest
+
+      # puts "EXPECTED (latest only): #{outages_in_filter.map(&:name)}"
+      # puts "ACTUAL SIZE: #{actual.size}"
+      # puts "ACTUAL: #{actual.map(&:name)}"
+      assert_equal outages_in_filter.sort,
+        @user1.filter_outages(earliest: nil, latest: latest).sort,
+        "Unexpected outages from filter with only latest date"
     end
-    # FIXME: Add outage without start time and outage without end time.
   end
 
   private
