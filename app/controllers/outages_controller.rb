@@ -117,11 +117,25 @@ class OutagesController < ApplicationController
   # example, when showing a month view, show the whole month's outages, even
   # if the earliest and latest are only a couple of days apart.
   def outages
+    if action_name == "index" && params[:latest].blank?
+      params[:latest] = if params[:earliest].blank?
+                          helpers.default_latest.to_s(:browser)
+                        else
+                          helpers.default_latest(Time
+                          .zone
+                          .parse(params[:earliest]))
+                                 .to_s(:browser)
+                        end
+      puts "SET latest TO #{params[:latest]}"
+    end
+
+    puts "PARAMS after reverse merge: #{params.reverse_merge(
+      watching: 'Of interest to me',
+      earliest: helpers.default_earliest.to_s(:browser)).inspect}"
     @outages = current_user.filter_outages(
       params.reverse_merge(
         watching: "Of interest to me",
-        earliest: helpers.default_earliest.to_s(:browser),
-        latest: helpers.default_latest.to_s(:browser)))
+        earliest: helpers.default_earliest.to_s(:browser)))
   end
 
   def update_watches

@@ -7,8 +7,8 @@ module OutagesHelper
 
   ##
   # Default latest time for outages filtering.
-  def default_latest
-    default_earliest + 2.weeks
+  def default_latest(earliest = default_earliest)
+    earliest + 2.weeks
   end
 
   ##

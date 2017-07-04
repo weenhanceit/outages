@@ -21,7 +21,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
   test "of interest filter off and on" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to Time.zone.local(2017, 07, 28, 10, 17, 21)
+      travel_to test_now = Time.zone.local(2017, 07, 28, 10, 17, 21)
       user = sign_in_for_system_tests(users(:basic))
 
       visit outages_url
@@ -71,7 +71,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
   test "start time only" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to Time.zone.local(2017, 7, 28, 10, 17, 21)
+      travel_to test_now = Time.zone.local(2017, 8, 17, 10, 17, 21)
       user = sign_in_for_system_tests(users(:basic))
 
       visit outages_url
@@ -85,10 +85,11 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
       choose "watching_All"
       fill_in "Outages Before", with: ""
+      # fill_in "Outages After", with: (test_now + 2.weeks).to_s(:browser)
       click_button "Refresh"
       within(".test-outages-grid") do
         assert_text "Outage Watched by Edit", count: 1
-        assert_selector "tbody tr", count: 4
+        assert_selector "tbody tr", count: 1
       end
     end
   end
@@ -125,12 +126,12 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       travel_to Time.zone.local(2017, 5, 31)
       user = sign_in_for_system_tests(users(:edit_ci_outages_d))
       visit outages_url
-      fill_in "Outages After", with: Time.zone.local(2017, 8, 1)
+      fill_in "Outages After", with: Time.zone.local(2017, 8, 1).to_s(:browser)
       click_button "Refresh"
 
       within(".test-outages-grid") do
         assert_text "Outage C", count: 1
-        assert_selector "tbody tr", count: 4
+        assert_selector "tbody tr", count: 3
       end
 
       click_link "Day"

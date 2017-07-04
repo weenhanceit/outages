@@ -29,14 +29,12 @@
     <%= label_tag "earliest", class: "col col-form-label" do %>
       Outages After
       <%= datetime_field_tag "earliest",
-        Time.zone.now.beginning_of_day.strftime("%Y-%m-%dT%H:%M"),
+        default_earliest.to_s(:browser),
         class: "form-control" %>
     <% end %>
     <%= label_tag "latest", class: "col col-form-label" do %>
       Outages Before
-      <%= datetime_field_tag "latest",
-        (Time.zone.now.beginning_of_day + 2.weeks).strftime("%Y-%m-%dT%H:%M"),
-        class: "form-control" %>
+      <%= datetime_field_tag "latest", nil, class: "form-control" %>
     <% end %>
     <div class="col form-group">
       <div class="form-check">
