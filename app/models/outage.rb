@@ -42,6 +42,31 @@ class Outage < ApplicationRecord
   end
 
   ##
+  # true if active has changed and it is now true
+  def became_active?
+    active_changed? && active
+  end
+
+  ##
+  # true if active has changed and it is now false
+  def became_inactive?
+    active_changed? && !active
+  end
+
+  ##
+  # true if complete has changed and it is now true
+  def became_completed?
+    completed_changed? && completed
+  end
+
+  ##
+  # true if complete has changed and it is now true
+  def became_incompleted?
+    completed_changed? && !completed
+  end
+
+
+  ##
   # If end time is on the date, return end time.
   # If end time is after the date, but start time is on the date or before,
   # return the start of the next day.
@@ -65,6 +90,12 @@ class Outage < ApplicationRecord
     else
       raise ArgumentError
     end
+  end
+
+  ##
+  # true complete has changed and is the only attribute changed
+  def only_completed_changed?
+    changed == ["completed"]
   end
 
   ##
