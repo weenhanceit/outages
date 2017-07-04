@@ -9,3 +9,28 @@ company_a_outage_b_ci_a:
 company_a_outage_c_ci_b:
   ci: company_a_ci_b
   outage: company_a_outage_c
+
+# Company D
+company_d_outage_a_ci_a:
+  ci: company_d_ci_a
+  outage: company_d_outage_a
+
+company_d_outage_b_ci_a:
+  ci: company_d_ci_a
+  outage: company_d_outage_b
+
+company_d_outage_c_ci_a:
+  ci: company_d_ci_a
+  outage: company_d_outage_c
+
+company_d_outage_d_ci_a:
+  ci: company_d_ci_a
+  outage: company_d_outage_d
+
+company_d_outage_e_ci_a:
+  ci: company_d_ci_a
+  outage: company_d_outage_e
+
+company_d_outage_f_ci_a:
+  ci: company_d_ci_a
+  outage: company_d_outage_f

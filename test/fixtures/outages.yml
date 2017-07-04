@@ -87,3 +87,63 @@ company_b_outage_inactive:
   end_time: <%= Time.find_zone('Samoa').parse('2017-07-30T15:00:00') %>
   name: Outage Inactive
   start_time: <%= Time.find_zone('Samoa').parse('2017-07-30T14:00:00') %>
+
+company_d_outage_a:
+  account: company_d
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company D Outage A
+  end_time: <%= Time.find_zone('Samoa').parse('2017-07-30T12:00:00') %>
+  name: Outage A
+  start_time: <%= Time.find_zone('Samoa').parse('2017-07-30T11:00:00') %>
+
+company_d_outage_b:
+  account: company_d
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company D Outage B
+  end_time: <%= Time.find_zone('Samoa').parse('2017-07-31T12:00:00') %>
+  name: Outage B
+  start_time: <%= Time.find_zone('Samoa').parse('2017-07-31T11:00:00') %>
+
+company_d_outage_c:
+  account: company_d
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company D Outage C
+  end_time: <%= Time.find_zone('Samoa').parse('2017-08-01T15:00:00') %>
+  name: Outage C
+  start_time: <%= Time.find_zone('Samoa').parse('2017-08-01T14:00:00') %>
+
+company_d_outage_d:
+  account: company_d
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company D Outage D
+  end_time: <%= Time.find_zone('Samoa').parse('2017-08-03T15:00:00') %>
+  name: Outage D
+  start_time: <%= Time.find_zone('Samoa').parse('2017-08-03T14:00:00') %>
+
+company_d_outage_e:
+  account: company_d
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company D outage E
+  end_time: <%= Time.find_zone('Samoa').parse('2017-08-06T15:00:00') %>
+  name: Outage E
+  start_time: <%= Time.find_zone('Samoa').parse('2017-08-06T14:00:00') %>
+
+company_d_outage_f:
+  account: company_d
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company D outage F
+  end_time: <%= Time.find_zone('Samoa').parse('2017-08-31T15:00:00') %>
+  name: Outage F
+  start_time: <%= Time.find_zone('Samoa').parse('2017-08-31T14:00:00') %>

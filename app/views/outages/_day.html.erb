@@ -1,6 +1,6 @@
 <%= calendar(number_of_days: 1, events: @outages, open_closed: true) do |date, outages| %>
   <%= date %>
-  <ul class="list-unstyled">
+  <ul class="list-unstyled test-outages-day">
     <% outages.each do |outage| %>
       <li>
         <%= detailed_calendar_outage(outage, date) %>

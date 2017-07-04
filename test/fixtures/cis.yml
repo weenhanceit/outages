@@ -120,3 +120,12 @@ company_c_012:
   active: true
   description: Great grand child
   name: "012"
+
+# Company D
+company_d_ci_a:
+  account: company_d
+  active: true
+  description: Server AA Company D
+  name: Server AA
+  maximum_unavailable_children_with_service_maintained:
+  minimum_children_to_maintain_service:

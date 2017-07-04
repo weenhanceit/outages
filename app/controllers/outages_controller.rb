@@ -113,6 +113,9 @@ class OutagesController < ApplicationController
   # Set up the @outages instance variable for the "index-like" actions.
   # Must take into account what the default values for the filter fields are
   # going to be.
+  # Also implements the rules to keep the right outages on the page, for
+  # example, when showing a month view, show the whole month's outages, even
+  # if the earliest and latest are only a couple of days apart.
   def outages
     @outages = current_user.filter_outages(
       params.reverse_merge(

@@ -12,3 +12,8 @@ edit_watching_company_a_ci_watched_by_edit:
   active: true
   user: edit_ci_outages
   watched: company_a_ci_watched_by_edit (Ci)
+
+edit_watching_company_d_ci_a:
+  active: true
+  user: edit_ci_outages_d
+  watched: company_d_ci_a (Ci)
