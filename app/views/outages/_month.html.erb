@@ -4,7 +4,9 @@
   open_closed: true) do |date, outages| %>
   <%= date %>
   <% outages.each do |outage| %>
-  <%= outage.name %>
+  <div class="">
+    <%= outage.name %>
+  </div>
   <% end %>
   <% end %>
 </div>

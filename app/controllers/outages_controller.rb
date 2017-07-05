@@ -3,7 +3,7 @@ class OutagesController < ApplicationController
     :update, :edit, :show, :destroy
   ]
   before_action :outages, only: [
-    :day, :fourday, :index, :month, :week
+    :fourday
   ]
 
   def create
@@ -19,10 +19,14 @@ class OutagesController < ApplicationController
     end
   end
 
-  def edit
-    #  puts "IN EDIT"
-    @outage.watched_by(current_user)
-  end
+  def day
+    # puts "DAY PARAMS: #{params.inspect}"
+    start_date = normalize_start_date
+    params[:earliest] = start_date.to_s(:browser)
+    params[:latest] = (start_date + 1.day).to_s(:browser)
+    params[:start_date] = start_date.to_s(:ymd)
+    outages
+end
 
   def destroy
     # puts "IN DESTROY"
@@ -35,8 +39,54 @@ class OutagesController < ApplicationController
     end
   end
 
+  def edit
+    #  puts "IN EDIT"
+    @outage.watched_by(current_user)
+  end
+
+  def fourday
+    # puts "FOURDAY PARAMS: #{params.inspect}"
+    start_date = normalize_start_date
+    params[:earliest] = start_date.to_s(:browser)
+    params[:latest] = (start_date + 4.days).to_s(:browser)
+    params[:start_date] = start_date.to_s(:ymd)
+    outages
+  end
+
   def index
-    # puts "IN INDEX"
+    # puts "INDEX PARAMS: #{params.inspect}"
+    start_date = normalize_start_date
+
+    if params[:earliest].blank? && params[:latest].blank?
+      params[:earliest] = session[:earliest] ||
+                          helpers.default_earliest.to_s(:browser)
+    end
+
+    if params[:latest].blank?
+      params[:latest] = helpers.default_latest(Time
+      .zone
+      .parse(params[:earliest]))
+                               .to_s(:browser)
+      # puts "SET latest TO #{params[:latest]}"
+    end
+
+    params[:start_date] = start_date.to_s(:ymd)
+    outages
+  end
+
+  def month
+    # puts "MONTH PARAMS: #{params.inspect}"
+    start_date = normalize_start_date
+    params[:earliest] = start_date
+                        .beginning_of_month
+                        .beginning_of_week
+                        .to_s(:browser)
+    params[:latest] = start_date
+                      .end_of_month
+                      .end_of_week
+                      .to_s(:browser)
+    params[:start_date] = start_date.to_s(:ymd)
+    outages
   end
 
   def new
@@ -69,7 +119,38 @@ class OutagesController < ApplicationController
     end
   end
 
+  def week
+    # puts "WEEK PARAMS: #{params.inspect}"
+    start_date = normalize_start_date
+    params[:earliest] = start_date.beginning_of_week.to_s(:browser)
+    params[:latest] = start_date.end_of_week.to_s(:browser)
+    params[:start_date] = start_date.to_s(:ymd)
+    outages
+  end
+
   private
+
+  def normalize_start_date
+    start_date ||= if params[:start_date].present?
+                    #  puts "Set from start_date param"
+                     Time.zone.parse(params[:start_date])
+                   elsif params[:earliest].present?
+                    #  puts "Set from earliest param"
+                     Time.zone.parse(params[:earliest])
+                   elsif session[:earliest].present?
+                    #  puts "Set from session"
+                     Time.zone.parse(session[:earliest])
+                   else
+                    #  puts "Set from default"
+                     params[:start_date] = helpers.default_earliest
+                    end
+
+    session[:earliest] = start_date.to_s(:ymd)
+    # puts "Set session to #{session[:earliest]}"
+
+    # puts "start_date: #{start_date}"
+    start_date
+  end
 
   ##
   # Set up the @outage instance variable for the single-instance actions.
@@ -119,28 +200,9 @@ class OutagesController < ApplicationController
   # NOTE: This implementation is evolving.
   def outages
     # puts "PARAMS: #{params.inspect}"
-    if params[:earliest].present? &&
-      params[:earliest] != helpers.default_earliest
-      session[:earliest] = params[:earliest]
-      # puts "Set session to #{session[:earliest]}"
-    end
-
-    if params[:earliest].blank? && params[:latest].blank?
-      params[:earliest] = session[:earliest] ||
-                          helpers.default_earliest.to_s(:browser)
-    end
-
-    if params[:latest].blank?
-      params[:latest] = helpers.default_latest(Time
-                          .zone
-                          .parse(params[:earliest]))
-                               .to_s(:browser)
-      # puts "SET latest TO #{params[:latest]}"
-    end
-
-    puts "PARAMS after reverse merge: #{params.reverse_merge(
-      watching: 'Of interest to me',
-      earliest: helpers.default_earliest.to_s(:browser)).inspect}"
+    # puts "PARAMS after reverse merge: #{params.reverse_merge(
+    #   watching: 'Of interest to me',
+    #   earliest: helpers.default_earliest.to_s(:browser)).inspect}"
     @outages = current_user.filter_outages(
       params.reverse_merge(
         watching: "Of interest to me",

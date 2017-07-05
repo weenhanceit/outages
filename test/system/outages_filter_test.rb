@@ -111,8 +111,8 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         assert_selector "tbody tr", count: 1
       end
 
-      o = Outage.find_by(account: Account.find_by(name: "Company D"), name: "Outage A")
-      puts "o.start_time: #{o.start_time}"
+      # o = Outage.find_by(account: Account.find_by(name: "Company D"), name: "Outage A")
+      # puts "o.start_time: #{o.start_time}"
       fill_in "Outages After", with: ""
       fill_in "Outages Before", with: "2017-08-14T00:00"
       click_button "Refresh"
@@ -127,12 +127,9 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
   test "calendar views by earliest date" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 5, 31)
-      puts "Signing in..."
       user = sign_in_for_system_tests(users(:edit_ci_outages_d))
-      # puts "Visiting home..."
-      # visit outages_url
+
       fill_in "Outages After", with: Time.zone.local(2017, 8, 1).to_s(:browser)
-      puts "Clicking Refresh..."
       click_button "Refresh"
 
       within(".test-outages-grid") do
@@ -140,7 +137,6 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         assert_selector "tbody tr", count: 3
       end
 
-      puts "Clicking Day link..."
       click_link "Day"
       within(".test-outages-day") do
         assert_text "Outage C", count: 1
@@ -153,6 +149,9 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         assert_text "Outage", count: 2
       end
 
+      # o = Outage.find_by(account: Account.find_by(name: "Company D"), name: "Outage B")
+      # puts "o.start_time: #{o.start_time}"
+      # puts "o.inspect: #{o.inspect}"
       click_link "Week"
       within(".test-outages-week") do
         assert_text "Outage B", count: 1
@@ -162,6 +161,9 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         assert_text "Outage", count: 4
       end
 
+      # The week is at the July/August boundary, so push a week into August
+      # before we ask for the month view.
+      click_link "Next"
       click_link "Month"
       within(".test-outages-month") do
         assert_text "Outage B", count: 1
@@ -176,7 +178,10 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       within(".test-outages-month") do
         assert_text "Outage A", count: 1
         assert_text "Outage B", count: 1
-        assert_text "Outage", count: 2
+        assert_text "Outage C", count: 1
+        assert_text "Outage D", count: 1
+        assert_text "Outage E", count: 1
+        assert_text "Outage", count: 5
       end
     end
   end

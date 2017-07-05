@@ -25,9 +25,12 @@ module OutagesHelper
 
   ##
   # Provide a start date for the calendar views based on the params.
-  # When this is called, at least one of earliest or latest must be present.
+  # When this is called, at least one of start_date, earliest, or latest
+  # must be present.
   def start_date
-    if params[:earliest].present?
+    if params[:start_date].present?
+      Time.zone.parse(params[:start_date])
+    elsif params[:earliest].present?
       Time.zone.parse(params[:earliest])
     else
       Time.zone.parse(params[:latest])
