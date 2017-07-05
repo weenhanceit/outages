@@ -159,8 +159,10 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
 
     assert_difference "Event.count" do
       outage.active = false
-      cancelled_event = Services::SaveOutage.call(outage)
+      events = Services::SaveOutage.call(outage)
 
+      assert_equal 1, events.size, "Should only see an outage event on cancel"
+      cancelled_event = events[0]
       assert_equal "outage", cancelled_event.event_type
 
       assert_equal "Outage Cancelled", cancelled_event.text
