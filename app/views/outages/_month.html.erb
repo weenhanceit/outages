@@ -1,8 +1,10 @@
-<%= month_calendar(events: @outages, open_closed: true) do |date, outages| %>
+<div class="test-outages-month">
+  <%= month_calendar(events: @outages,
+  start_date: Time.zone.parse(params[:earliest]),
+  open_closed: true) do |date, outages| %>
   <%= date %>
   <% outages.each do |outage| %>
-    <div class="test-outages-month">
-      <%= outage.name %>
-    </div>
+  <%= outage.name %>
   <% end %>
-<% end %>
+  <% end %>
+</div>

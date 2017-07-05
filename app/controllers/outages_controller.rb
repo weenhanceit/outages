@@ -116,16 +116,24 @@ class OutagesController < ApplicationController
   # Also implements the rules to keep the right outages on the page, for
   # example, when showing a month view, show the whole month's outages, even
   # if the earliest and latest are only a couple of days apart.
+  # NOTE: This implementation is evolving.
   def outages
-    if action_name == "index" && params[:latest].blank?
-      params[:latest] = if params[:earliest].blank?
-                          helpers.default_latest.to_s(:browser)
-                        else
-                          helpers.default_latest(Time
+    puts "PARAMS: #{params.inspect}"
+    if params[:earliest] && params[:earliest] != helpers.default_earliest
+      session[:earliest] = params[:earliest]
+      puts "Set session to #{session[:earliest]}"
+    end
+
+    if params[:earliest].blank?
+      params[:earliest] = session[:earliest] ||
+                          helpers.default_earliest.to_s(:browser)
+    end
+
+    if params[:latest].blank?
+      params[:latest] = helpers.default_latest(Time
                           .zone
                           .parse(params[:earliest]))
-                                 .to_s(:browser)
-                        end
+                               .to_s(:browser)
       puts "SET latest TO #{params[:latest]}"
     end
 
