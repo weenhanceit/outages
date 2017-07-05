@@ -111,7 +111,10 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         assert_selector "tbody tr", count: 1
       end
 
+      o = Outage.find_by(account: Account.find_by(name: "Company D"), name: "Outage A")
+      puts "o.start_time: #{o.start_time}"
       fill_in "Outages After", with: ""
+      fill_in "Outages Before", with: "2017-08-14T00:00"
       click_button "Refresh"
       within(".test-outages-grid") do
         assert_text "Outage A", count: 1
@@ -152,21 +155,21 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
       click_link "Week"
       within(".test-outages-week") do
-        # assert_text "Outage B", count: 1
+        assert_text "Outage B", count: 1
         assert_text "Outage C", count: 1
         assert_text "Outage D", count: 1
         assert_text "Outage E", count: 1
-        assert_text "Outage", count: 3
+        assert_text "Outage", count: 4
       end
 
       click_link "Month"
       within(".test-outages-month") do
-        # assert_text "Outage B", count: 1
+        assert_text "Outage B", count: 1
         assert_text "Outage C", count: 1
         assert_text "Outage D", count: 1
         assert_text "Outage E", count: 1
-        # assert_text "Outage F", count: 1
-        assert_text "Outage", count: 3
+        assert_text "Outage F", count: 1
+        assert_text "Outage", count: 5
       end
 
       click_link "Previous"
@@ -176,5 +179,13 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         assert_text "Outage", count: 2
       end
     end
+  end
+
+  test "watching carried through refreshes" do
+    flunk
+  end
+
+  test "fragment carries through refreshes" do
+    flunk
   end
 end

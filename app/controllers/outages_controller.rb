@@ -6,24 +6,6 @@ class OutagesController < ApplicationController
     :day, :fourday, :index, :month, :week
   ]
 
-  def index
-    # puts "IN INDEX"
-  end
-
-  def show
-    # puts "IN SHOW"
-  end
-
-  def new
-    # puts "IN NEW"
-    @outage = Outage.new(outage_defaults.merge(account: current_account))
-  end
-
-  def edit
-    #  puts "IN EDIT"
-    @outage.watched_by(current_user)
-  end
-
   def create
     # puts "IN CREATE"
     @outage = Outage.new(outage_params)
@@ -35,6 +17,35 @@ class OutagesController < ApplicationController
       logger.warn @outage.errors.full_messages
       render :new
     end
+  end
+
+  def edit
+    #  puts "IN EDIT"
+    @outage.watched_by(current_user)
+  end
+
+  def destroy
+    # puts "IN DESTROY"
+    @outage.active = false
+    if Services::SaveOutage.call(@outage)
+      redirect_to outages_path
+    else
+      logger.warn @outage.errors.full_messages
+      render :edit
+    end
+  end
+
+  def index
+    # puts "IN INDEX"
+  end
+
+  def new
+    # puts "IN NEW"
+    @outage = Outage.new(outage_defaults.merge(account: current_account))
+  end
+
+  def show
+    # puts "IN SHOW"
   end
 
   def update
@@ -50,17 +61,6 @@ class OutagesController < ApplicationController
     # o = Outage.find(@outage.id)
     # puts "outages_controller.rb TP_#{__LINE__} #{o.inspect}"
     # puts "outages_controller.rb TP_#{__LINE__} #{@outage.inspect} changed: #{@outage.changed?}"
-    if Services::SaveOutage.call(@outage)
-      redirect_to outages_path
-    else
-      logger.warn @outage.errors.full_messages
-      render :edit
-    end
-  end
-
-  def destroy
-    # puts "IN DESTROY"
-    @outage.active = false
     if Services::SaveOutage.call(@outage)
       redirect_to outages_path
     else
@@ -118,13 +118,14 @@ class OutagesController < ApplicationController
   # if the earliest and latest are only a couple of days apart.
   # NOTE: This implementation is evolving.
   def outages
-    puts "PARAMS: #{params.inspect}"
-    if params[:earliest] && params[:earliest] != helpers.default_earliest
+    # puts "PARAMS: #{params.inspect}"
+    if params[:earliest].present? &&
+      params[:earliest] != helpers.default_earliest
       session[:earliest] = params[:earliest]
-      puts "Set session to #{session[:earliest]}"
+      # puts "Set session to #{session[:earliest]}"
     end
 
-    if params[:earliest].blank?
+    if params[:earliest].blank? && params[:latest].blank?
       params[:earliest] = session[:earliest] ||
                           helpers.default_earliest.to_s(:browser)
     end
@@ -134,7 +135,7 @@ class OutagesController < ApplicationController
                           .zone
                           .parse(params[:earliest]))
                                .to_s(:browser)
-      puts "SET latest TO #{params[:latest]}"
+      # puts "SET latest TO #{params[:latest]}"
     end
 
     puts "PARAMS after reverse merge: #{params.reverse_merge(

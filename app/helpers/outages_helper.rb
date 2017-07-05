@@ -22,4 +22,15 @@ module OutagesHelper
       " " +
       link_to(outage.name, edit_or_show_outage_path(outage))
   end
+
+  ##
+  # Provide a start date for the calendar views based on the params.
+  # When this is called, at least one of earliest or latest must be present.
+  def start_date
+    if params[:earliest].present?
+      Time.zone.parse(params[:earliest])
+    else
+      Time.zone.parse(params[:latest])
+    end
+  end
 end

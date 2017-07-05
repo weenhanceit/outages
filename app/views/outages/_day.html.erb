@@ -1,7 +1,7 @@
 <div class="test-outages-day">
   <%= calendar(number_of_days: 1,
       events: @outages,
-      start_date: Time.zone.parse(params[:earliest]),
+      start_date: start_date,
       open_closed: true) do |date, outages| %>
   <%= date %>
   <ul class="list-unstyled">

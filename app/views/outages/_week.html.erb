@@ -1,6 +1,6 @@
 <div class="test-outages-week">
   <%= week_calendar(events: @outages,
-      start_date: Time.zone.parse(params[:earliest]),
+      start_date: start_date,
       open_closed: true) do |date, outages| %>
   <%= date %>
   <ul class="list-unstyled">
