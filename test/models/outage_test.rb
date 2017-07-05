@@ -123,4 +123,52 @@ class OutageTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test "became_complete" do
+    outage = outages(:company_a_outage_a)
+    # Ensure that completed is in the state we expect
+    outage.completed = false
+    outage.save
+
+    outage.completed = true
+    assert outage.became_completed?
+    assert_not outage.became_incompleted?
+
+    outage.save
+    outage.completed = false
+    assert_not outage.became_completed?
+    assert outage.became_incompleted?
+  end
+
+  test "became_active" do
+    outage = outages(:company_a_outage_a)
+    # Ensure that completed is in the state we expect
+    outage.active = false
+    outage.save
+
+    outage.active = true
+    assert outage.became_active?
+    assert_not outage.became_inactive?
+
+    outage.save
+    outage.active = false
+    assert_not outage.became_active?
+    assert outage.became_inactive?
+  end
+
+  test "only completed changed" do
+    outage = outages(:company_a_outage_a)
+    # Ensure that completed is in the state we expect
+    outage.completed = false
+    outage.save
+
+    outage.completed = true
+    assert outage.only_completed_changed?
+
+    outage.save
+    outage.completed = false
+    outage.name = "#{outage.name} changed!"
+    assert_not outage.only_completed_changed?
+  end
+
 end
