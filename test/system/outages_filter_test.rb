@@ -186,11 +186,79 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     end
   end
 
-  test "watching carried through refreshes" do
-    flunk
+  test "fragment carried through refreshes" do
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      travel_to Time.zone.local(2017, 7, 21, 10, 17, 21)
+      sign_in_for_system_tests(users(:basic))
+      current_window.maximize
+
+      fill_in "Fragment", with: "Outage B"
+      click_button "Refresh"
+
+      # Currently seems to default to month, so this gets one hit.
+      within(".test-outages-grid") do
+        assert_selector "tbody tr", count: 1
+      end
+
+      click_link "Week"
+
+      within(".test-outages-grid") do
+        assert_selector "tbody tr", count: 0
+      end
+
+      click_link "Next"
+
+      within(".test-outages-grid") do
+        assert_text "Outage A", count: 0
+        assert_selector "tbody tr", count: 1
+      end
+      within(".test-outages-week") do
+        assert_text "Outage A", count: 0
+        assert_selector "tbody tr", count: 1
+      end
+    end
   end
 
-  test "fragment carries through refreshes" do
-    flunk
+  test "watching carries through refreshes" do
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      travel_to Time.zone.local(2017, 6, 28, 10, 17, 21)
+      sign_in_for_system_tests(users(:basic))
+      visit outages_url
+      current_window.maximize
+
+      choose "watching_All"
+      click_button "Refresh"
+
+      within(".test-outages-grid") do
+        assert_selector "tbody tr", count: 0
+      end
+
+      # FIXME: This hack is required because the default view is also
+      # the month calendar, so there's nothing on the page we can look for
+      # to make Capybara wait until the right link is in place.
+      puts "Clicking Month..."
+      click_link "Month"
+      sleep 5
+      within(".test-outages-month") { assert_text "June 2017" }
+      within(".test-outages-grid") do
+        assert_selector "tbody tr", count: 0
+      end
+
+      puts "Clicking Next..."
+      click_link "Next"
+      within(".test-outages-month") { assert_text "July 2017" }
+      within(".test-outages-month") do
+        assert_text "July 2017"
+        assert_text "Outage A", count: 1
+        assert_text "Outage B", count: 1
+        assert_text "Outage C", count: 1
+      end
+      within(".test-outages-grid") do
+        assert_text "Outage A", count: 1
+        assert_text "Outage B", count: 1
+        assert_text "Outage C", count: 1
+        assert_selector "tbody tr", count: 3
+      end
+    end
   end
 end

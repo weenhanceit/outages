@@ -2,9 +2,6 @@ class OutagesController < ApplicationController
   before_action :outage, only: [
     :update, :edit, :show, :destroy
   ]
-  before_action :outages, only: [
-    :fourday
-  ]
 
   def create
     # puts "IN CREATE"
@@ -22,8 +19,8 @@ class OutagesController < ApplicationController
   def day
     # puts "DAY PARAMS: #{params.inspect}"
     start_date = normalize_start_date
-    params[:earliest] = start_date.to_s(:browser)
-    params[:latest] = (start_date + 1.day).to_s(:browser)
+    params[:earliest] = start_date.to_date.to_s(:browser)
+    params[:latest] = (start_date + 1.day).to_date.to_s(:browser)
     params[:start_date] = start_date.to_s(:ymd)
     outages
 end
@@ -47,8 +44,8 @@ end
   def fourday
     # puts "FOURDAY PARAMS: #{params.inspect}"
     start_date = normalize_start_date
-    params[:earliest] = start_date.to_s(:browser)
-    params[:latest] = (start_date + 4.days).to_s(:browser)
+    params[:earliest] = start_date.to_date.to_s(:browser)
+    params[:latest] = (start_date + 4.days).to_date.to_s(:browser)
     params[:start_date] = start_date.to_s(:ymd)
     outages
   end
@@ -122,8 +119,8 @@ end
   def week
     # puts "WEEK PARAMS: #{params.inspect}"
     start_date = normalize_start_date
-    params[:earliest] = start_date.beginning_of_week.to_s(:browser)
-    params[:latest] = start_date.end_of_week.to_s(:browser)
+    params[:earliest] = start_date.beginning_of_week.to_date.to_s(:browser)
+    params[:latest] = (start_date.end_of_week + 1.day).to_date.to_s(:browser)
     params[:start_date] = start_date.to_s(:ymd)
     outages
   end
@@ -199,7 +196,6 @@ end
   # if the earliest and latest are only a couple of days apart.
   # NOTE: This implementation is evolving.
   def outages
-    # puts "PARAMS: #{params.inspect}"
     # puts "PARAMS after reverse merge: #{params.reverse_merge(
     #   watching: 'Of interest to me',
     #   earliest: helpers.default_earliest.to_s(:browser)).inspect}"
