@@ -188,7 +188,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
   test "fragment carried through refreshes" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to Time.zone.local(2017, 7, 21, 10, 17, 21)
+      travel_to Time.zone.local(2017, 7, 25, 10, 17, 21)
       sign_in_for_system_tests(users(:basic))
       current_window.maximize
 
@@ -200,7 +200,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         assert_selector "tbody tr", count: 1
       end
 
-      click_link "Week"
+      click_link "4-Day"
 
       within(".test-outages-grid") do
         assert_selector "tbody tr", count: 0
@@ -210,10 +210,12 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
       within(".test-outages-grid") do
         assert_text "Outage A", count: 0
+        assert_text "Outage B", count: 1
         assert_selector "tbody tr", count: 1
       end
-      within(".test-outages-week") do
+      within(".test-outages-fourday") do
         assert_text "Outage A", count: 0
+        assert_text "Outage B", count: 1
         assert_selector "tbody tr", count: 1
       end
     end
@@ -223,7 +225,6 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 6, 28, 10, 17, 21)
       sign_in_for_system_tests(users(:basic))
-      visit outages_url
       current_window.maximize
 
       choose "watching_All"
@@ -236,7 +237,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       # FIXME: This hack is required because the default view is also
       # the month calendar, so there's nothing on the page we can look for
       # to make Capybara wait until the right link is in place.
-      puts "Clicking Month..."
+      # puts "Clicking Month..."
       click_link "Month"
       sleep 5
       within(".test-outages-month") { assert_text "June 2017" }
@@ -244,7 +245,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         assert_selector "tbody tr", count: 0
       end
 
-      puts "Clicking Next..."
+      # puts "Clicking Next..."
       click_link "Next"
       within(".test-outages-month") { assert_text "July 2017" }
       within(".test-outages-month") do

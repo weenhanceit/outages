@@ -24,7 +24,9 @@
   <div class="row form-group">
     <%= label_tag "frag", class: "col col-form-label" do %>
       Fragment
-      <%= text_field_tag "frag", nil, class: "form-control" %>
+      <%= text_field_tag "frag",
+            params.fetch(:frag, session[:frag]),
+            class: "form-control" %>
     <% end %>
     <%= label_tag "earliest", class: "col col-form-label" do %>
       Outages After
@@ -43,7 +45,8 @@
               class: "col-form-label form-check-label" do %>
           <%= radio_button_tag :watching,
                 "Of interest to me",
-                true,
+                params[:watching].blank? ||
+                  params[:watching] == "Of interest to me",
                 class: "form-check-input" %> Of interest to me
         <% end %>
       </div>
@@ -53,7 +56,7 @@
               class: "col-form-label form-check-label" do %>
           <%= radio_button_tag :watching,
                 "All",
-                false,
+                params[:watching] == "All",
                 class: "form-check-input" %> All
         <% end %>
       </div>

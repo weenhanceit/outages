@@ -18,7 +18,7 @@ class OutagesController < ApplicationController
 
   def day
     # puts "DAY PARAMS: #{params.inspect}"
-    start_date = normalize_start_date
+    start_date = normalize_params
     params[:earliest] = start_date.to_date.to_s(:browser)
     params[:latest] = (start_date + 1.day).to_date.to_s(:browser)
     params[:start_date] = start_date.to_s(:ymd)
@@ -43,7 +43,7 @@ end
 
   def fourday
     # puts "FOURDAY PARAMS: #{params.inspect}"
-    start_date = normalize_start_date
+    start_date = normalize_params
     params[:earliest] = start_date.to_date.to_s(:browser)
     params[:latest] = (start_date + 4.days).to_date.to_s(:browser)
     params[:start_date] = start_date.to_s(:ymd)
@@ -52,7 +52,7 @@ end
 
   def index
     # puts "INDEX PARAMS: #{params.inspect}"
-    start_date = normalize_start_date
+    start_date = normalize_params
 
     if params[:earliest].blank? && params[:latest].blank?
       params[:earliest] = session[:earliest] ||
@@ -73,7 +73,7 @@ end
 
   def month
     # puts "MONTH PARAMS: #{params.inspect}"
-    start_date = normalize_start_date
+    start_date = normalize_params
     params[:earliest] = start_date
                         .beginning_of_month
                         .beginning_of_week
@@ -118,7 +118,7 @@ end
 
   def week
     # puts "WEEK PARAMS: #{params.inspect}"
-    start_date = normalize_start_date
+    start_date = normalize_params
     params[:earliest] = start_date.beginning_of_week.to_date.to_s(:browser)
     params[:latest] = (start_date.end_of_week + 1.day).to_date.to_s(:browser)
     params[:start_date] = start_date.to_s(:ymd)
@@ -127,20 +127,26 @@ end
 
   private
 
+  def normalize_params
+    session[:frag] = params[:frag] if params[:frag].present?
+    session[:watching] = params[:watching] if params[:watching].present?
+    normalize_start_date # Has to be the last line in the method.
+  end
+
   def normalize_start_date
     start_date ||= if params[:start_date].present?
-                    #  puts "Set from start_date param"
+                     #  puts "Set from start_date param"
                      Time.zone.parse(params[:start_date])
                    elsif params[:earliest].present?
-                    #  puts "Set from earliest param"
+                     #  puts "Set from earliest param"
                      Time.zone.parse(params[:earliest])
                    elsif session[:earliest].present?
-                    #  puts "Set from session"
+                     #  puts "Set from session"
                      Time.zone.parse(session[:earliest])
                    else
-                    #  puts "Set from default"
+                     #  puts "Set from default"
                      params[:start_date] = helpers.default_earliest
-                    end
+                   end
 
     session[:earliest] = start_date.to_s(:ymd)
     # puts "Set session to #{session[:earliest]}"
@@ -196,12 +202,15 @@ end
   # if the earliest and latest are only a couple of days apart.
   # NOTE: This implementation is evolving.
   def outages
+    # puts "PARAMS before reverse merge: #{params.inspect}"
     # puts "PARAMS after reverse merge: #{params.reverse_merge(
-    #   watching: 'Of interest to me',
+    #   watching: session.fetch(:watching, 'Of interest to me'),
+    #   frag: session[:frag],
     #   earliest: helpers.default_earliest.to_s(:browser)).inspect}"
     @outages = current_user.filter_outages(
       params.reverse_merge(
-        watching: "Of interest to me",
+        watching: session.fetch(:watching, "Of interest to me"),
+        frag: session[:frag],
         earliest: helpers.default_earliest.to_s(:browser)))
   end
 
