@@ -1,4 +1,6 @@
 class OutagesController < ApplicationController
+  layout "application", except: [:day, :fourday, :index, :month, :week]
+
   before_action :outage, only: [
     :update, :edit, :show, :destroy
   ]
