@@ -148,7 +148,7 @@ end
                      params[:start_date] = helpers.default_earliest
                    end
 
-    session[:earliest] = start_date.to_s(:ymd)
+    session[:earliest] = start_date.to_s(:browser)
     # puts "Set session to #{session[:earliest]}"
 
     # puts "start_date: #{start_date}"
