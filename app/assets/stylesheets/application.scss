@@ -13,6 +13,7 @@
  */
 @import "styles";
 @import "base";
+@import "feature_toggles";  // After base since it extends styles in base.
 @import "layout";
 @import "notifications";
 @import "browser_filter";
