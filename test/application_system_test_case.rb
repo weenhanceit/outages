@@ -13,7 +13,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     within('.test-sign-in') { click_link "Sign In" }
     fill_in "Email", with: user.email
     fill_in "Password", with: "password"
-    click_button "Log in"
+    click_button "Sign in"
     user
   end
 
