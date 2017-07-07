@@ -5,7 +5,7 @@
   <%= date.day %>
   <% outages.each do |outage| %>
   <div class="">
-    <%= outage.name %>
+    <%= brief_calendar_outage(outage, date) %>
   </div>
   <% end %>
   <% end %>

@@ -12,6 +12,13 @@ module OutagesHelper
   end
 
   ##
+  # Format the calendar view content for an outage, when there is little room
+  # for the outage.
+  def brief_calendar_outage(outage, date)
+    link_to(outage.name, edit_or_show_outage_path(outage))
+  end
+
+  ##
   # Format the calendar view content for an outage, when the calendar view
   # can show more detail, e.g. the day, four-day, and week views.
   def detailed_calendar_outage(outage, date)
