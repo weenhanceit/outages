@@ -8,3 +8,7 @@ company_b:
 # hierarchies of CIs.
 company_c:
   name: Company C
+
+# Outages to test calendar filtering.
+company_d:
+  name: Company D

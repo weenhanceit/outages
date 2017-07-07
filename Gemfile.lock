@@ -7,9 +7,9 @@ GIT
 
 GIT
   remote: https://github.com/lcreid/simple_calendar.git
-  revision: 96f3edf83f6edcf482e4a07509b6729b4ad02d96
+  revision: ab8c2d701f532d4fb36d5a86a4d077937dd8f218
   specs:
-    simple_calendar (2.3.0)
+    simple_calendar (2.2.5)
       rails (>= 3.0)
 
 GEM

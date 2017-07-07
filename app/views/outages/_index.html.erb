@@ -24,19 +24,19 @@
   <div class="row form-group">
     <%= label_tag "frag", class: "col col-form-label" do %>
       Fragment
-      <%= text_field_tag "frag", nil, class: "form-control" %>
+      <%= text_field_tag "frag",
+            params.fetch(:frag, session[:frag]),
+            class: "form-control" %>
     <% end %>
     <%= label_tag "earliest", class: "col col-form-label" do %>
       Outages After
-      <%= datetime_field_tag "earliest",
-        Time.zone.now.beginning_of_day.strftime("%Y-%m-%dT%H:%M"),
+      <%= date_field_tag "earliest",
+        session[:earliest] || default_earliest.to_s(:browser),
         class: "form-control" %>
     <% end %>
     <%= label_tag "latest", class: "col col-form-label" do %>
       Outages Before
-      <%= datetime_field_tag "latest",
-        (Time.zone.now.beginning_of_day + 2.weeks).strftime("%Y-%m-%dT%H:%M"),
-        class: "form-control" %>
+      <%= date_field_tag "latest", nil, class: "form-control" %>
     <% end %>
     <div class="col form-group">
       <div class="form-check">
@@ -45,7 +45,8 @@
               class: "col-form-label form-check-label" do %>
           <%= radio_button_tag :watching,
                 "Of interest to me",
-                true,
+                params[:watching].blank? ||
+                  params[:watching] == "Of interest to me",
                 class: "form-check-input" %> Of interest to me
         <% end %>
       </div>
@@ -55,7 +56,7 @@
               class: "col-form-label form-check-label" do %>
           <%= radio_button_tag :watching,
                 "All",
-                false,
+                params[:watching] == "All",
                 class: "form-check-input" %> All
         <% end %>
       </div>

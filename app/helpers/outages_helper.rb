@@ -7,8 +7,8 @@ module OutagesHelper
 
   ##
   # Default latest time for outages filtering.
-  def default_latest
-    default_earliest + 2.weeks
+  def default_latest(earliest = default_earliest)
+    earliest + 2.weeks
   end
 
   ##
@@ -21,5 +21,19 @@ module OutagesHelper
       outage.end_time_on_date(date).to_s(:hms) +
       " " +
       link_to(outage.name, edit_or_show_outage_path(outage))
+  end
+
+  ##
+  # Provide a start date for the calendar views based on the params.
+  # When this is called, at least one of start_date, earliest, or latest
+  # must be present.
+  def start_date
+    if params[:start_date].present?
+      Time.zone.parse(params[:start_date])
+    elsif params[:earliest].present?
+      Time.zone.parse(params[:earliest])
+    else
+      Time.zone.parse(params[:latest])
+    end
   end
 end

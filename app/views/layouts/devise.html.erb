@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= render "head" %>
+  </head>
+
+  <body>
+    <%= render "site_nav" %>
+    <%= render "flash" %>
+
+    <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-4">
+            <%= yield %>
+          </div>
+        </div>
+    </div>
+
+    <%= render "footer" %>
+  </body>
+</html>

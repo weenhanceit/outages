@@ -1,0 +1,7 @@
+// File of classes or IDs that implement feature toggles, where something
+// about the UI is appropriately handled in CSS.
+
+// Remove this class when we implement the feature.
+.ft-min-max-service-disruption {
+  @extend .hidden;
+}

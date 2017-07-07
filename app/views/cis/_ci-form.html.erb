@@ -3,8 +3,10 @@
   <div class="row">
     <%= f.text_field :name, column_width: 6 %>
     <%= f.number_field :maximum_unavailable_children_with_service_maintained,
+          wrapper: { class: "ft-min-max-service-disruption" },
           column_width: 2 %>
     <%= f.number_field :minimum_children_to_maintain_service,
+          wrapper: { class: "ft-min-max-service-disruption" },
           column_width: 2 %>
     <%= f.check_box :watched,
           column_width: 2 %>
