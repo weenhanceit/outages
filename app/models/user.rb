@@ -39,7 +39,10 @@ class User < ApplicationRecord
 
   ##
   # Filter outages based on criteria specified by the user, passed in the
-  # params hash.
+  # params hash. If the earliest and latest are strings, they're now
+  # considered to be dates, and are forced to dates if they're not.
+  # Also, one day is added if the date is a string.
+  # FIXME: We should really change the test cases.
   def filter_outages(params)
     scope = account.outages.where(active: true)
     if params[:frag].present?
@@ -56,7 +59,8 @@ class User < ApplicationRecord
 
     if params[:latest].present?
       latest = params[:latest]
-      latest = Time.zone.parse(latest) if latest.is_a?(String)
+      # Add one day when coming from params because end time is excluded.
+      latest = Time.zone.parse(latest) + 1.day if latest.is_a?(String)
       scope = scope.where("? > coalesce(start_time, '-infinity')", latest)
     end
 

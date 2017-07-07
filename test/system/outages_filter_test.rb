@@ -270,4 +270,24 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       end
     end
   end
+
+  test 'find outage on end date of filter' do
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      travel_to Time.zone.local(2017, 7, 28, 10, 17, 21) do
+        user = sign_in_for_system_tests(users(:basic))
+
+        visit outages_url
+        current_window.maximize
+
+        fill_in "Outages Before", with: Time.zone.local(2017, 3, 31, 00, 00)
+        click_button "Refresh"
+        click_link "4-Day"
+        within(".test-outages-grid") do
+          assert_text "Outage A", count: 1
+          assert_text "Outage B", count: 1
+          assert_selector "tbody tr", count: 2
+        end
+      end
+    end
+  end
 end
