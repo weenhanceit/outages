@@ -3,7 +3,7 @@
   events: @outages,
   start_date: start_date,
   open_closed: true) do |date, outages| %>
-  <%= date %>
+  <%= date.day %>
   <ul class="list-unstyled">
     <% outages.each do |outage| %>
     <li>

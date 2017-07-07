@@ -2,7 +2,7 @@
   <%= month_calendar(events: @outages,
   start_date: start_date,
   open_closed: true) do |date, outages| %>
-  <%= date %>
+  <%= date.day %>
   <% outages.each do |outage| %>
   <div class="">
     <%= outage.name %>
