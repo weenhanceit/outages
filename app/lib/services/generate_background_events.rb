@@ -22,10 +22,10 @@ module Services
       # TODO: This will exclude all outages in the past - is this a good idea
       # ----------- IMPORTANT --------------------------------------------------
 
-      puts "generate_background_events.rb TP_#{__LINE__}:SQL: #{outages.to_sql}"
+      # puts "generate_background_events.rb TP_#{__LINE__}:SQL: #{outages.to_sql}"
 
       outages.each do |o|
-        puts "TP_#{__LINE__}: START: #{o.start_time}"
+        # puts "TP_#{__LINE__}: START: #{o.start_time}"
         last_reminder_event = o.events.where(event_type: :reminder)
                               .order(created_at: :desc).first
 
@@ -52,7 +52,7 @@ module Services
       # we can do date comparisons using database functions such as now()
       # ----------- IMPORTANT --------------------------------------------------
 
-      puts "generate_background_events.rb TP_#{__LINE__}:SQL: #{outages.to_sql}"
+      # puts "generate_background_events.rb TP_#{__LINE__}:SQL: #{outages.to_sql}"
       outages.each do |o|
         last_overdue_event = o.events.where(event_type: :overdue)
                               .order(created_at: :desc).first
