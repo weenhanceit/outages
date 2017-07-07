@@ -30,13 +30,13 @@
     <% end %>
     <%= label_tag "earliest", class: "col col-form-label" do %>
       Outages After
-      <%= datetime_field_tag "earliest",
+      <%= date_field_tag "earliest",
         session[:earliest] || default_earliest.to_s(:browser),
         class: "form-control" %>
     <% end %>
     <%= label_tag "latest", class: "col col-form-label" do %>
       Outages Before
-      <%= datetime_field_tag "latest", nil, class: "form-control" %>
+      <%= date_field_tag "latest", nil, class: "form-control" %>
     <% end %>
     <div class="col form-group">
       <div class="form-check">
