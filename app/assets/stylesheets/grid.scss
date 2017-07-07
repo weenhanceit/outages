@@ -1,0 +1,9 @@
+.outages-grid {
+  width: 100%;
+  table, thead, tbody, tfoot, tr {
+    width: 100%;
+  }
+  td {
+    width: (100%)/(7);
+  }
+}

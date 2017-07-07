@@ -12,7 +12,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         fill_in "Fragment", with: "Outage B"
         click_button "Refresh"
 
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_text "Outage B", count: 1
           assert_selector "tbody tr", count: 1
         end
@@ -31,7 +31,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         choose "watching_Of_interest_to_me"
         click_button "Refresh"
 
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_text "Outage A", count: 1
           assert_text "Outage B", count: 1
           assert_selector "tbody tr", count: 2
@@ -39,7 +39,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
         choose "watching_All"
         click_button "Refresh"
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_text "Outage A", count: 1
           assert_selector "tbody tr", count: 3
         end
@@ -55,7 +55,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         visit outages_url
         current_window.maximize
 
-        # within(".test-outages-grid") do
+        # within(".outages-grid") do
         #   assert_text "Outage A", count: 1
         #   assert_text "Outage B", count: 1
         #   assert_selector "tbody tr", count: 2
@@ -64,7 +64,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         choose "watching_All"
         fill_in "Outages Before", with: Time.zone.local(2017, 9, 01, 00, 00)
         click_button "Refresh"
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_text "Outage Watched by Edit", count: 1
           assert_selector "tbody tr", count: 4
         end
@@ -80,7 +80,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         visit outages_url
         current_window.maximize
 
-        # within(".test-outages-grid") do
+        # within(".outages-grid") do
         #   assert_text "Outage A", count: 1
         #   assert_text "Outage B", count: 1
         #   assert_selector "tbody tr", count: 2
@@ -90,7 +90,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         fill_in "Outages Before", with: ""
         # fill_in "Outages After", with: (test_now + 2.weeks).to_s(:browser)
         click_button "Refresh"
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_text "Outage Watched by Edit", count: 1
           assert_selector "tbody tr", count: 1
         end
@@ -110,7 +110,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         assert_checked_field "watching_Of_interest_to_me"
 
         # NOTE: This appears to be the only test that the default filter is used.
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_text "Outage B", count: 1
           assert_selector "tbody tr", count: 1
         end
@@ -120,7 +120,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         fill_in "Outages After", with: ""
         fill_in "Outages Before", with: "2017-08-14T00:00"
         click_button "Refresh"
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_text "Outage A", count: 1
           assert_text "Outage B", count: 1
           assert_selector "tbody tr", count: 2
@@ -137,7 +137,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         fill_in "Outages After", with: Time.zone.local(2017, 8, 1).to_s(:browser)
         click_button "Refresh"
 
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_text "Outage C", count: 1
           assert_selector "tbody tr", count: 3
         end
@@ -202,19 +202,19 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         click_button "Refresh"
 
         # Currently seems to default to month, so this gets one hit.
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_selector "tbody tr", count: 1
         end
 
         click_link "4-Day"
 
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_selector "tbody tr", count: 0
         end
 
         click_link "Next"
 
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_text "Outage A", count: 0
           assert_text "Outage B", count: 1
           assert_selector "tbody tr", count: 1
@@ -237,7 +237,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         choose "watching_All"
         click_button "Refresh"
 
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_selector "tbody tr", count: 0
         end
 
@@ -248,7 +248,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         click_link "Month"
         sleep 5
         within(".test-outages-month") { assert_text "June 2017" }
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_selector "tbody tr", count: 0
         end
 
@@ -261,7 +261,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_text "Outage B", count: 1
           assert_text "Outage C", count: 1
         end
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_text "Outage A", count: 1
           assert_text "Outage B", count: 1
           assert_text "Outage C", count: 1
@@ -282,7 +282,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         fill_in "Outages Before", with: Time.zone.local(2017, 3, 31, 00, 00)
         click_button "Refresh"
         click_link "4-Day"
-        within(".test-outages-grid") do
+        within(".outages-grid") do
           assert_text "Outage A", count: 1
           assert_text "Outage B", count: 1
           assert_selector "tbody tr", count: 2
