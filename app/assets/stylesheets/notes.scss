@@ -1,0 +1,12 @@
+.note {
+  margin-bottom: .5rem;
+  padding: .5rem;
+  @extend .border;
+  @extend .rounded;
+
+  .note-header {
+    width: 100%;
+    @extend .bg-info;
+    @extend .text-white;
+  }
+}

@@ -61,6 +61,16 @@ class WeitFormBuilder < BootstrapForm::FormBuilder
   end
 
   ##
+  # Format a datetime field.
+  # If column_width: n or :col_width: n is given as an option, wrap in a
+  # Bootstrap grid column.
+  def datetime_field(method, options = {})
+    process_width(options) { super }
+  end
+
+  alias datetime_local_field datetime_field
+
+  ##
   # Format a form group.
   # If column_width: n or :col_width: n is given as an option, wrap in a
   # Bootstrap grid column.
