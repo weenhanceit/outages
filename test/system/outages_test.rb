@@ -7,7 +7,7 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
         sign_in_for_system_tests(users(:basic))
 
         visit outages_url
-        assert_selector "h1", text: "Outages"
+        assert_selector ".test-home-page"
 
         within("tr.test-#{outages(:company_a_outage_a).id}") do
           assert_unchecked_field "Watched"

@@ -9,7 +9,8 @@ class NavigationTest < ApplicationSystemTestCase
   test "sign in as editor" do
     user = sign_in_for_system_tests(users(:edit_ci_outages))
 
-    assert_text "List of Outages"
+    # assert_text "List of Outages"
+    assert_selector ".test-home-page"
     assert_link "Can Edit CIs/Outages"
     click_link "Services"
     assert_link "Can Edit CIs/Outages"
