@@ -1,4 +1,7 @@
 <% content_for :outages_view do %>
   <%= render partial: "month" %>
 <% end %>
+<% content_for :filter do %>
+  <%= render partial: "filters" %>
+<% end %>
 <%= render partial: "index" %>
