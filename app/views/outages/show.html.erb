@@ -15,17 +15,41 @@
 <%= bootstrap_form_for(@outage, builder: WeitFormBuilder) do |f| %>
   <%= f.hidden_field :active %>
   <div class="row">
-    <%= f.datetime_local_field :start_time, column_width: 5 %>
-    <%= f.datetime_local_field :end_time, column_width: 5 %>
+    <div class="col-sm-8">
+      <div class="row">
+        <div class="col-4">
+          Start Time:
+        </div>
+        <div class="col">
+          <%= f.object.start_time %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          End Time:
+        </div>
+        <div class="col">
+          <%= f.object.end_time %>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <ul class="list-unstyled">
+        <li>
+          <%= f.check_box :completed %>
+        </li>
+        <li>
+          <%= f.check_box :causes_loss_of_service, disabled: "disabled" %>
+        </li>
+        <li>
+          <%= f.check_box :watched %>
+        </li>
+      </ul>
+    </div>
   </div>
   <div class="row">
-    <%= f.check_box :completed, column_width: 4 %>
-    <%= f.check_box :causes_loss_of_service, column_width: 4 %>
-    <%= f.check_box :watched, column_width: 4 %>
-  </div>
-  <div class="row">
-    <%= f.text_area :description, column_width: 6 %>
-    <div class="col-sm-6">
+    <%= f.text_area :description, column_width: 8 %>
+    <div class="col-sm-4">
       <h4>Affected Services</h4>
       <div class="border rounded">
         <ul class="list-unstyled">
@@ -61,23 +85,7 @@
   </div>
 
   <ul class="list-unstyled">
-    <li class="note">
-      <p class="note-header">
-        Larry Reid, 1 hour ago.
-        <%= link_to "Edit (only if current user is original author)", "#" %>
-      </p>
-      <p class="note-body">
-        Note 1. Some text.
-      </p>
-    </li>
-    <li class="note">
-      <p class="note-header">
-        Phil Carrillo, 1 day ago.
-      </p>
-      <p>
-        Note 2. Some other text.
-      </p>
-    </li>
+    <%= render @outage.histories %>
     <li class="event">
       Start time changed by Phil Carrillo 2 days ago.
     </li>
@@ -86,14 +94,6 @@
     </li>
     <li class="event">
       And we may actually want to show events that we don't currently generate events for.
-    </li>
-    <li class="note">
-      <p class="note-header">
-        Phil Carrillo, 2017-07-02.
-      </p>
-      <p>
-        Note 3. Some other text.
-      </p>
     </li>
   </ul>
 <% end %>

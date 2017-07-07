@@ -93,6 +93,18 @@ class Outage < ApplicationRecord
   end
 
   ##
+  # Return the combination of notes and events for an outage.
+  # Some events are not relevant for histories.
+  # Default is to return in reverse chronological order of creation.
+  def histories(order = :dsc)
+    (notes + events).sort do |a, b|
+      order == :dsc ?
+                a.created_at <=> b.created_at :
+                b.created_at <=> a.created_at
+    end
+  end
+
+  ##
   # true complete has changed and is the only attribute changed
   def only_completed_changed?
     changed == ["completed"]
