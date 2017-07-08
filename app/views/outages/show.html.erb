@@ -90,14 +90,5 @@
 
   <ul class="list-unstyled">
     <%= render @outage.histories(params[:sort_order]) %>
-    <li class="event">
-      Start time changed by Phil Carrillo 2 days ago.
-    </li>
-    <li class="event">
-      Not all events would show up, e.g. reminder events wouldn't be shown.
-    </li>
-    <li class="event">
-      And we may actually want to show events that we don't currently generate events for.
-    </li>
   </ul>
 <% end %>
