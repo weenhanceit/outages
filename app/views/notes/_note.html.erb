@@ -1,9 +1,14 @@
 <li class="note">
   <p class="note-header">
-    Larry Reid, 1 hour ago.
-    <%= link_to "Edit (only if current user is original author)", "#" %>
+    <%= note.user.name %>
+    commented
+    <%=  %>
+    <%= distance_of_time_in_words(note.created_at,
+          Time.zone.now,
+          options = {include_seconds: true }) %> ago
+    <%= link_to("Edit", "#") if note.user == current_user %>
   </p>
   <p class="note-body">
-    Note 1. Some text.
+    <%= note.note %>
   </p>
 </li>

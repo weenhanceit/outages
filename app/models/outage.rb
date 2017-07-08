@@ -99,8 +99,8 @@ class Outage < ApplicationRecord
   def histories(order = :dsc)
     (notes + events).sort do |a, b|
       order == :dsc ?
-                a.created_at <=> b.created_at :
-                b.created_at <=> a.created_at
+                b.created_at <=> a.created_at :
+                a.created_at <=> b.created_at
     end
   end
 
