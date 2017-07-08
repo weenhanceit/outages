@@ -80,7 +80,39 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
   end
 
   test "add a note ascending order" do
-    flunk
+    sign_in_for_system_tests(users(:basic))
+    visit outage_url(@outage)
+    click_link "Oldest First"
+    # TODO: I see no other way than to wait for some time here.
+    sleep 2
+
+    fill_in "New Note", with: "Note C."
+    assert_difference "Note.count" do
+      click_button "Save Note"
+    end
+
+    notes = all("li.note")
+    within(notes[2]) do
+      assert_text "Note C"
+      assert_text "less than 5 seconds ago"
+      assert_link "Edit"
+      # TODO: Make a link to user profile show.
+      assert_text "Basic"
+    end
+    within(notes[1]) do
+      assert_text "Note A"
+      assert_text "1 hour ago"
+      assert_link "Edit"
+      # TODO: Make a link to user profile show.
+      assert_text "Basic"
+    end
+    within(notes[0]) do
+      assert_text "Note B"
+      assert_text "1 day ago"
+      assert_no_link "Edit"
+      # TODO: Make a link to user profile show.
+      assert_text "Can Edit CIs/Outages"
+    end
   end
 
   test "edit a note" do

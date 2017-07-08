@@ -93,6 +93,7 @@ end
 
   def show
     # puts "IN SHOW"
+    session[:sort_order] = params[:sort_order] if params[:sort_order].present?
   end
 
   def update
