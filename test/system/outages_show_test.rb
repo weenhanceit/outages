@@ -46,7 +46,40 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     end
   end
 
-  test "add a note" do
+  test "add a note default order" do
+    sign_in_for_system_tests(users(:basic))
+    visit outage_url(@outage)
+
+    fill_in "New Note", with: "Note C."
+    assert_difference "Note.count" do
+      click_button "Save Note"
+    end
+
+    notes = all("li.note")
+    within(notes[0]) do
+      assert_text "Note C"
+      assert_text "Noew"
+      assert_link "Edit"
+      # TODO: Make a link to user profile show.
+      assert_text "Basic"
+    end
+    within(notes[1]) do
+      assert_text "Note B"
+      assert_text "1 day ago"
+      assert_no_link "Edit"
+      # TODO: Make a link to user profile show.
+      assert_text "Can Edit CIs/Outages"
+    end
+    within(notes[2]) do
+      assert_text "Note A"
+      assert_text "1 hour ago"
+      assert_link "Edit"
+      # TODO: Make a link to user profile show.
+      assert_text "Basic"
+    end
+  end
+
+  test "add a note ascending order" do
     flunk
   end
 

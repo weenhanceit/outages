@@ -76,7 +76,9 @@
             class: "btn btn-secondary btn-sm" %>
   </h2>
 
-  <div class="note">
+  <% @note = Note.new %>
+  <%= render partial: "notes/new" %>
+  <!-- <div class="note">
     <p class="note-header">
       New Note
     </p>
@@ -86,7 +88,7 @@
       <br/>
       <%= n.button "Save Note", class: "btn btn-primary btn-sm" %>
     <% end %>
-  </div>
+  </div> -->
 
   <ul class="list-unstyled">
     <%= render @outage.histories(params[:sort_order]) %>
