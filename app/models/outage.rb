@@ -96,9 +96,9 @@ class Outage < ApplicationRecord
   # Return the combination of notes and events for an outage.
   # Some events are not relevant for histories.
   # Default is to return in reverse chronological order of creation.
-  def histories(order = :dsc)
+  def histories(order = "descending")
     (notes + events).sort do |a, b|
-      order == :dsc ?
+      order != "ascending" ?
                 b.created_at <=> a.created_at :
                 a.created_at <=> b.created_at
     end

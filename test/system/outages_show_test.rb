@@ -1,7 +1,7 @@
 require "application_system_test_case"
 
 class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
-  test "show two notes" do
+  test "show two notes default order" do
     sign_in_for_system_tests(users(:basic))
     visit outage_url(@outage)
     notes = all("li.note")
@@ -19,6 +19,30 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       assert_no_link "Edit"
       # TODO: Make a link to user profile show.
       assert_text "Can Edit CIs/Outages"
+    end
+  end
+
+  test "show two notes ascending order" do
+    sign_in_for_system_tests(users(:basic))
+    visit outage_url(@outage)
+    click_link "Oldest First"
+    # TODO: I see no other way than to wait for some time here.
+    sleep 2
+
+    notes = all("li.note")
+    within(notes[0]) do
+      assert_text "Note B"
+      assert_text "1 day ago"
+      assert_no_link "Edit"
+      # TODO: Make a link to user profile show.
+      assert_text "Can Edit CIs/Outages"
+    end
+    within(notes[1]) do
+      assert_text "Note A"
+      assert_text "1 hour ago"
+      assert_link "Edit"
+      # TODO: Make a link to user profile show.
+      assert_text "Basic"
     end
   end
 
