@@ -78,11 +78,28 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
   end
 
   test "edit a note" do
-    flunk
+    sign_in_for_system_tests(users(:basic))
+    visit outage_url(@outage)
+
+    assert_no_difference "Note.count" do
+      within(all("li.note")[0]) { click_link "Edit" }
+      fill_in "Edit Note", with: "Note B Prime"
+    end
+
+    assert_selector("li.note", count: 2)
+    assert_note_b(0)
   end
 
   test "delete a note" do
-    flunk
+    sign_in_for_system_tests(users(:basic))
+    visit outage_url(@outage)
+
+    assert_difference "Note.count", -1 do
+      within(all("li.note")[0]) { click_link "Delete" }
+    end
+
+    assert_selector("li.note", count: 1)
+    assert_note_b_prime(0)
   end
 
   def setup
@@ -117,6 +134,17 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
   def assert_note_b(index)
     within(all("li.note")[index]) do
       assert_text "Note B"
+      assert_text "1 day ago"
+      assert_no_link "Edit"
+      assert_no_link "Delete"
+      # TODO: Make a link to user profile show.
+      assert_text "Can Edit CIs/Outages"
+    end
+  end
+
+  def assert_note_b_prime(index)
+    within(all("li.note")[index]) do
+      assert_text "Note B Prime"
       assert_text "1 day ago"
       assert_no_link "Edit"
       assert_no_link "Delete"
