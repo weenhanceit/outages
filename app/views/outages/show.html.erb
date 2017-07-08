@@ -65,32 +65,32 @@
       <%= f.primary "Save" %>
     </div>
   </div> -->
-
-  <h2>
-    History
-      <%= link_to "Newest First",
-            "#",
-            class: "btn btn-secondary btn-sm" %>
-      <%= link_to "Oldest First",
-            url_for(sort_order: "ascending"),
-            class: "btn btn-secondary btn-sm" %>
-  </h2>
-
-  <% @note = Note.new %>
-  <%= render partial: "notes/new" %>
-  <!-- <div class="note">
-    <p class="note-header">
-      New Note
-    </p>
-    <% @note = Note.new %>
-    <%= fields_for @note do |n| %>
-      <%= n.text_area :note, size: "60x6", class: "form-control" %>
-      <br/>
-      <%= n.button "Save Note", class: "btn btn-primary btn-sm" %>
-    <% end %>
-  </div> -->
-
-  <ul class="list-unstyled">
-    <%= render @outage.histories(params[:sort_order]) %>
-  </ul>
 <% end %>
+
+<h2>
+  History
+    <%= link_to "Newest First",
+          "#",
+          class: "btn btn-secondary btn-sm" %>
+    <%= link_to "Oldest First",
+          url_for(sort_order: "ascending"),
+          class: "btn btn-secondary btn-sm" %>
+</h2>
+
+<% @note = Note.new %>
+<%= render partial: "notes/new" %>
+<!-- <div class="note">
+  <p class="note-header">
+    New Note
+  </p>
+  <% @note = Note.new %>
+  <%= fields_for @note do |n| %>
+    <%= n.text_area :note, size: "60x6", class: "form-control" %>
+    <br/>
+    <%= n.button "Save Note", class: "btn btn-primary btn-sm" %>
+  <% end %>
+</div> -->
+
+<ul class="list-unstyled">
+  <%= render @outage.histories(params[:sort_order]) %>
+</ul>

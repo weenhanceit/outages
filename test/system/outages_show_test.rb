@@ -58,24 +58,24 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     notes = all("li.note")
     within(notes[0]) do
       assert_text "Note C"
-      assert_text "Noew"
+      assert_text "less than 5 seconds ago"
       assert_link "Edit"
       # TODO: Make a link to user profile show.
       assert_text "Basic"
     end
     within(notes[1]) do
-      assert_text "Note B"
-      assert_text "1 day ago"
-      assert_no_link "Edit"
-      # TODO: Make a link to user profile show.
-      assert_text "Can Edit CIs/Outages"
-    end
-    within(notes[2]) do
       assert_text "Note A"
       assert_text "1 hour ago"
       assert_link "Edit"
       # TODO: Make a link to user profile show.
       assert_text "Basic"
+    end
+    within(notes[2]) do
+      assert_text "Note B"
+      assert_text "1 day ago"
+      assert_no_link "Edit"
+      # TODO: Make a link to user profile show.
+      assert_text "Can Edit CIs/Outages"
     end
   end
 
@@ -102,17 +102,17 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
   def setup
     @outage = Outage.find_by(account: accounts(:company_a), name: "Outage A")
     @outage.notes.create([
-      {
-        note: "Note A",
-        user: users(:basic),
-        created_at: Time.zone.now - 1.hour
-      },
-      {
-        note: "Note B",
-        user: users(:edit_ci_outages),
-        created_at: Time.zone.now - 1.day
-      }
-    ])
+                           {
+                             note: "Note A",
+                             user: users(:basic),
+                             created_at: Time.zone.now - 1.hour
+                           },
+                           {
+                             note: "Note B",
+                             user: users(:edit_ci_outages),
+                             created_at: Time.zone.now - 1.day
+                           }
+                         ])
     assert @outage.save, "Save of notes failed #{@outage.errors.full_messages}"
   end
 end
