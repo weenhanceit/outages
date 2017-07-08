@@ -84,10 +84,11 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     assert_no_difference "Note.count" do
       within(all("li.note")[0]) { click_link "Edit" }
       fill_in "Edit Note", with: "Note B Prime"
+      click_link "Save Note"
     end
 
     assert_selector("li.note", count: 2)
-    assert_note_b(0)
+    assert_note_b_prime(0)
   end
 
   test "delete a note" do
@@ -96,10 +97,11 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
 
     assert_difference "Note.count", -1 do
       within(all("li.note")[0]) { click_link "Delete" }
+      assert_no_text "Note A"
     end
 
     assert_selector("li.note", count: 1)
-    assert_note_b_prime(0)
+    assert_note_b(0)
   end
 
   def setup

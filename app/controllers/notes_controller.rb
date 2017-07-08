@@ -11,6 +11,21 @@ class NotesController < ApplicationController
     redirect_to outage_path(@outage)
   end
 
+  def destroy
+    puts "DESTROY PARAMS: #{params.inspect}"
+    @note = current_user.notes.find(params[:id])
+    if @note.destroy
+      puts "ABOUT TO RESPOND..."
+      respond_to do |format|
+        puts "...WITH JAVASCRIPT"
+        format.js
+      end
+    else
+      puts "DESTROY FAILED #{@note.errors.full_messages}"
+      logger.warn @note.errors.full_messages
+    end
+  end
+
   private
 
   def notes_params

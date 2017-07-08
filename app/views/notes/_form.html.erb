@@ -1,0 +1,9 @@
+<%= bootstrap_form_for([@outage, @note], builder: WeitFormBuilder) do |f| %>
+  <%= f.text_area :note,
+        rows: "6",
+        wrapper: { class: "note note-#{@note.id}" },
+        label: "New Note",
+        label_class: "note-header" %>
+  <%= f.primary "Save Note",
+        class: "btn btn-primary btn-sm" %>
+<% end %>
