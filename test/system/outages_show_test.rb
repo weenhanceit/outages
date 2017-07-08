@@ -55,28 +55,9 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       click_button "Save Note"
     end
 
-    notes = all("li.note")
-    within(notes[0]) do
-      assert_text "Note C"
-      assert_text "less than 5 seconds ago"
-      assert_link "Edit"
-      # TODO: Make a link to user profile show.
-      assert_text "Basic"
-    end
-    within(notes[1]) do
-      assert_text "Note A"
-      assert_text "1 hour ago"
-      assert_link "Edit"
-      # TODO: Make a link to user profile show.
-      assert_text "Basic"
-    end
-    within(notes[2]) do
-      assert_text "Note B"
-      assert_text "1 day ago"
-      assert_no_link "Edit"
-      # TODO: Make a link to user profile show.
-      assert_text "Can Edit CIs/Outages"
-    end
+    assert_note_b(2)
+    assert_note_a(1)
+    assert_note_c(0)
   end
 
   test "add a note ascending order" do
@@ -91,28 +72,9 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       click_button "Save Note"
     end
 
-    notes = all("li.note")
-    within(notes[2]) do
-      assert_text "Note C"
-      assert_text "less than 5 seconds ago"
-      assert_link "Edit"
-      # TODO: Make a link to user profile show.
-      assert_text "Basic"
-    end
-    within(notes[1]) do
-      assert_text "Note A"
-      assert_text "1 hour ago"
-      assert_link "Edit"
-      # TODO: Make a link to user profile show.
-      assert_text "Basic"
-    end
-    within(notes[0]) do
-      assert_text "Note B"
-      assert_text "1 day ago"
-      assert_no_link "Edit"
-      # TODO: Make a link to user profile show.
-      assert_text "Can Edit CIs/Outages"
-    end
+    assert_note_b(0)
+    assert_note_a(1)
+    assert_note_c(2)
   end
 
   test "edit a note" do
@@ -120,14 +82,6 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
   end
 
   test "delete a note" do
-    flunk
-  end
-
-  test "can't edit a note if you're not the original author" do
-    flunk
-  end
-
-  test "can't delete a note if you're not the original author" do
     flunk
   end
 
@@ -146,5 +100,39 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
                            }
                          ])
     assert @outage.save, "Save of notes failed #{@outage.errors.full_messages}"
+  end
+
+  # These also test that only the original author can edit or delete notes.
+  def assert_note_a(index)
+    within(all("li.note")[index]) do
+      assert_text "Note A"
+      assert_text "1 hour ago"
+      assert_link "Edit"
+      assert_link "Delete"
+      # TODO: Make a link to user profile show.
+      assert_text "Basic"
+    end
+  end
+
+  def assert_note_b(index)
+    within(all("li.note")[index]) do
+      assert_text "Note B"
+      assert_text "1 day ago"
+      assert_no_link "Edit"
+      assert_no_link "Delete"
+      # TODO: Make a link to user profile show.
+      assert_text "Can Edit CIs/Outages"
+    end
+  end
+
+  def assert_note_c(index)
+    within(all("li.note")[index]) do
+      assert_text "Note C"
+      assert_text "less than 5 seconds ago"
+      assert_link "Edit"
+      assert_link "Delete"
+      # TODO: Make a link to user profile show.
+      assert_text "Basic"
+    end
   end
 end

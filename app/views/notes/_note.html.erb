@@ -7,6 +7,7 @@
           Time.zone.now,
           options = {include_seconds: true }) %> ago
     <%= link_to("Edit", "#") if note.user == current_user %>
+    <%= link_to("Delete", "#") if note.user == current_user %>
   </p>
   <p class="note-body">
     <%= note.note %>
