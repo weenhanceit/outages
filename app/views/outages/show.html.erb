@@ -70,7 +70,7 @@
 <h2>
   History
   <%= link_to "Newest First",
-          "#",
+          url_for(sort_order: "descending"),
           class: "btn btn-secondary btn-sm" %>
   <%= link_to "Oldest First",
           url_for(sort_order: "ascending"),

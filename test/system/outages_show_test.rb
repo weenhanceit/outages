@@ -44,6 +44,12 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       # TODO: Make a link to user profile show.
       assert_text "Basic"
     end
+
+    click_link "Newest First"
+    # TODO: I see no other way than to wait for some time here.
+    sleep 2
+    assert_note_a(0)
+    assert_note_b(1)
   end
 
   test "add a note default order" do
@@ -95,9 +101,10 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     sign_in_for_system_tests(users(:basic))
     visit outage_url(@outage)
 
+    assert_selector("li.note", count: 2)
     assert_difference "Note.count", -1 do
       within(all("li.note")[0]) { click_link "Delete" }
-      assert_no_text "Note A"
+      assert_selector("li.note", count: 1)
     end
 
     assert_selector("li.note", count: 1)
