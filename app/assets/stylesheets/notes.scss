@@ -1,6 +1,6 @@
 .note {
-  margin-bottom: .5rem;
-  padding: .5rem;
+  @extend .mb-2;
+  @extend .p-1;
   @extend .border;
   @extend .rounded;
 
@@ -8,5 +8,10 @@
     width: 100%;
     @extend .bg-info;
     @extend .text-white;
+    padding: inherit;
+  }
+
+  .note-body {
+    padding: inherit;
   }
 }
