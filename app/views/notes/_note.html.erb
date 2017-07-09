@@ -6,7 +6,10 @@
     <%= distance_of_time_in_words(note.created_at,
           Time.zone.now,
           options = {include_seconds: true }) %> ago
-    <%= link_to("Edit", "#") if note.user == current_user %>
+    <%= link_to("Edit",
+          edit_note_path(note),
+          format: :js,
+          remote: true) if note.user == current_user %>
     <%= link_to("Delete",
           note,
           data: { confirm: "Are you sure you want to delete this note?" },
