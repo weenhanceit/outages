@@ -209,7 +209,8 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         click_link "4-Day"
 
         within(".outages-grid") do
-          assert_selector "tbody tr", count: 0
+          assert_selector "tbody tr", count: 1
+          assert_text "No outages in specified date range"
         end
 
         click_link "Next"
@@ -238,18 +239,16 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         click_button "Refresh"
 
         within(".outages-grid") do
-          assert_selector "tbody tr", count: 0
+          assert_selector "tbody tr", count: 1
+          assert_text "No outages in specified date range"
         end
 
-        # FIXME: This hack is required because the default view is also
-        # the month calendar, so there's nothing on the page we can look for
-        # to make Capybara wait until the right link is in place.
         # puts "Clicking Month..."
         click_link "Month"
-        sleep 5
         within(".test-outages-month") { assert_text "June 2017" }
         within(".outages-grid") do
-          assert_selector "tbody tr", count: 0
+          assert_selector "tbody tr", count: 1
+          assert_text "No outages in specified date range"
         end
 
         # puts "Clicking Next..."
