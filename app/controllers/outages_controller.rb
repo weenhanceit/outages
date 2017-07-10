@@ -2,6 +2,9 @@ class OutagesController < ApplicationController
   before_action :outage, only: [
     :update, :edit, :show, :destroy
   ]
+  after_action :set_view, only: [
+    :day, :fourday, :index, :month, :week
+  ]
 
   def create
     # puts "IN CREATE"
@@ -23,7 +26,7 @@ class OutagesController < ApplicationController
     params[:latest] = (start_date + 1.day).to_date.to_s(:browser)
     params[:start_date] = start_date.to_s(:ymd)
     outages
-end
+  end
 
   def destroy
     # puts "IN DESTROY"
@@ -52,6 +55,11 @@ end
 
   def index
     # puts "INDEX PARAMS: #{params.inspect}"
+    if params[:view] != "index" &&
+       cookies.signed[:default_view] != "index"
+      redirect_to action: cookies.signed[:default_view]
+    end
+
     start_date = normalize_params
 
     if params[:earliest].blank? && params[:latest].blank?
@@ -157,6 +165,17 @@ end
   end
 
   ##
+  # Set the default view in a cookie.
+  def set_view
+    if params[:view].present?
+      # puts "Setting default view to grid"
+      cookies.signed[:default_view] = params[:view]
+    else
+      cookies.signed[:default_view] = action_name
+    end
+  end
+
+  ##
   # Set up the @outage instance variable for the single-instance actions.
   def outage
     @outage = current_user
@@ -164,8 +183,6 @@ end
               .outages
               .includes(:watches, :cis_outages, :cis)
               .find(params[:id])
-
-    #  puts "!!#{__LINE__}: Outage loaded: watches.size: #{@outage.watches.size} cis.size: #{@outage.cis.size} cis_outages.size: #{@outage.cis_outages.size}"
   end
 
   # Some sources say the best way to do model defaults is in an
@@ -216,6 +233,7 @@ end
   end
 
   def update_watches
-    @outage.update_watches(current_user, params[:outage][:watched].in?(%w(1 true)))
+    @outage.update_watches(current_user,
+      params[:outage][:watched].in?(%w(1 true)))
   end
 end
