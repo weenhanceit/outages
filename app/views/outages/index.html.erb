@@ -1,3 +1,9 @@
+<% content_for :latest do %>
+  <%= label_tag "latest", class: "col col-form-label" do %>
+    Outages Before
+    <%= date_field_tag "latest", nil, class: "form-control" %>
+  <% end %>
+<% end %>
 <% content_for :filter do %>
   <%= render partial: "filters" %>
 <% end %>

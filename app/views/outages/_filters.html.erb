@@ -14,10 +14,7 @@
         session[:earliest] || default_earliest.to_s(:browser),
         class: "form-control" %>
     <% end %>
-    <%= label_tag "latest", class: "col col-form-label" do %>
-      Outages Before
-      <%= date_field_tag "latest", nil, class: "form-control" %>
-    <% end %>
+    <%= yield :latest %>
     <div class="col form-group">
       <div class="form-check">
         <%= label_tag :watching,
