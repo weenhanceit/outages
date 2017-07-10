@@ -1,9 +1,16 @@
 <!-- The trick seems to be, if you want colour that goes all the way across
     the viewport, just use a div, not a container. Doh! -->
-<div class="bg-primary">
-  <nav class="navbar navbar-toggleable-md navbar-inverse">
+<div class="bg-primary menu-wrap">
+  <%# bg-primary needed also on nav for fixed manu to show up. %>
+  <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary fixed-top">
     <!-- Don't put this in the container -->
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler collapsed"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -68,4 +75,7 @@
       </div>
     </div>
   </nav>
+</div>
+<div class="mb-2">
+
 </div>
