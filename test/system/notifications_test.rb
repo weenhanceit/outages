@@ -94,10 +94,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     end
 
     visit cis_path
-    assert_no_selector ".notifications"
-    # within ".notifications" do
-    #   assert_no_text "Outage A"
-    # end
+    assert_text "You have 0 un-read notifications."
   end
 
   test "mark a notification read then mark it unread" do

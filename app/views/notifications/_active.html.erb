@@ -1,34 +1,33 @@
-<% if @online_notifications && @online_notifications.size > 0  %>
-<%# puts "_active.html.erb #{__LINE__}: Hi There! @notification class: #{@notifications.class}" %>
-  <div class="notifications">
-    <h2>Notifications</h2>
-    <p>
-      <%= "You have #{@online_notifications.size} un-read " \
+<div class="notifications">
+  <h2>Notifications</h2>
+  <p>
+    <%= "You have #{@online_notifications.size} un-read " \
             "#{"notification".pluralize(@online_notifications.size)}." %>
-    </p>
-    <% @online_notifications.each do |n| %>
-      <div class="row notification-spacer">
-        <div class="col-sm-4">
-            <%= form_with model: n,
+  </p>
+  <% @online_notifications.each do |n| %>
+  <div class="row notification-spacer">
+    <div class="col-sm-4">
+      <%= form_with model: n,
                   builder: WeitFormBuilder,
                   class: "js-submit-on-change" do |f| %>
-              <% f.check_box :notified, label: "Read" %>
-            <% end %>
-          </div>
-          <div class="col-sm-8">
-            <div class="notification-item">
-              <%= link_to n.event.outage.name, outage_url(n.event.outage_id) %>
-            </div>
-            <div class="notification-interval">
-              <%= distance_of_time_in_words(n.event.created_at,
-                    Time.zone.now,
-                    options = {include_seconds: true }) %> ago
-            </div>
-          </div>
+      <% f.check_box :notified, label: "Read" %>
+      <% end %>
+    </div>
+    <div class="col-sm-8">
+      <div class="notification-item">
+        <%= link_to n.event.outage.name, outage_url(n.event.outage_id) %>
       </div>
-    <% end %>
+      <div class="notification-interval">
+        <%= distance_of_time_in_words(n.event.created_at,
+                    Time.zone.now,
+                    options = {include_seconds: true }) %>
+        ago
+      </div>
+    </div>
+  </div>
+  <% end %>
 
-    <!-- <table>
+  <!-- <table>
       <thead>
         <tr>
           <td>
@@ -89,5 +88,4 @@
         <% end %>
       </tbody>
     </table> -->
-  </div>
-<% end %>
+</div>
