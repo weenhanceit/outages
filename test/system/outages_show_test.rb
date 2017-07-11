@@ -59,6 +59,7 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     fill_in "New Note", with: "Note C."
     assert_difference "Note.count" do
       click_button "Save Note"
+      assert_text "Note C."
     end
 
     assert_note_b(2)
@@ -76,6 +77,7 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     fill_in "New Note", with: "Note C."
     assert_difference "Note.count" do
       click_button "Save Note"
+      assert_text "Note C."
     end
 
     assert_note_b(0)

@@ -1,15 +1,17 @@
 class NotesController < ApplicationController
   def create
     # puts "PARAMS: #{params.inspect}"
-    # NOTE: How will this work when we have notes on CIs?
-    # TODO: Make this ajaxy.
     @outage = current_account.outages.find(params[:outage_id])
-    unless @outage.notes.create(notes_params.merge(user: current_user))
+    @note = @outage.notes.create(notes_params.merge(user: current_user))
+    if @note
+      respond_to do |format|
+        format.js
+      end
+    else
       # puts "NOTE SAVE FAILED"
       logger.warn @outage.errors.full_messages
+      redirect_to outage_path(@outage)
     end
-
-    redirect_to outage_path(@outage)
   end
 
   def destroy
@@ -34,13 +36,15 @@ class NotesController < ApplicationController
 
   def update
     # puts "UPDATE PARAMS: #{params.inspect}"
-    # TODO: Make this ajaxy.
     @note = current_user.notes.find(params[:id])
-    unless @note.update(notes_params)
+    if @note.update(notes_params)
+      respond_to do |format|
+        format.js
+      end
+    else
       logger.warn @note.errors.full_messages
+      redirect_to outage_path(@note.notable)
     end
-
-    redirect_to outage_path(@note.notable)
   end
 
   private

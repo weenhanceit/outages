@@ -1,5 +1,7 @@
 <%= bootstrap_form_for([@outage, @note],
       builder: WeitFormBuilder,
+      format: :js,
+      remote: true,
       html: { class: "note" }) do |f| %>
   <%= f.text_area :note,
         rows: "6",
