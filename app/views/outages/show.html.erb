@@ -21,7 +21,7 @@
         Start Time:
       </div>
       <div class="col">
-        <%= f.object.start_time %>
+        <%= f.object.start_time.to_s(:db) %>
       </div>
     </div>
     <div class="row">
@@ -29,7 +29,7 @@
         End Time:
       </div>
       <div class="col">
-        <%= f.object.end_time %>
+        <%= f.object.end_time.to_s(:db) %>
       </div>
     </div>
   </div>
@@ -48,7 +48,14 @@
   </div>
 </div>
 <div class="row">
-  <%= f.text_area :description, column_width: 8 %>
+  <div class="col-sm-8">
+    <h4>Description</h4>
+    <div class="border rounded">
+      <p>
+        <%= @outage.description %>
+      </p>
+    </div>
+  </div>
   <div class="col-sm-4">
     <h4>Affected Services</h4>
     <div class="border rounded">
@@ -68,7 +75,7 @@
 <% end %>
 
 <h2>
-  History
+  Outage History
   <%= link_to "Newest First",
           url_for(sort_order: "descending"),
           class: "btn btn-secondary btn-sm" %>
