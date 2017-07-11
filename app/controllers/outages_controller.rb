@@ -139,6 +139,7 @@ class OutagesController < ApplicationController
   def normalize_params
     session[:frag] = params[:frag] if params[:frag].present?
     session[:watching] = params[:watching] if params[:watching].present?
+    session[:completed] = params[:completed] if params[:completed].present?
     normalize_start_date # Has to be the last line in the method.
   end
 
@@ -224,11 +225,13 @@ class OutagesController < ApplicationController
     # puts "PARAMS after reverse merge: #{params.reverse_merge(
     #   watching: session.fetch(:watching, 'Of interest to me'),
     #   frag: session[:frag],
+    #   completed: session[:completed],
     #   earliest: helpers.default_earliest.to_s(:browser)).inspect}"
     @outages = current_user.filter_outages(
       params.reverse_merge(
         watching: session.fetch(:watching, "Of interest to me"),
         frag: session[:frag],
+        completed: session[:completed],
         earliest: helpers.default_earliest.to_s(:browser)))
   end
 

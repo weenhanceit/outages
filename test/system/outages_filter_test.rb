@@ -270,7 +270,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     end
   end
 
-  test 'find outage on end date of filter' do
+  test "find outage on end date of filter" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 7, 28, 10, 17, 21) do
         user = sign_in_for_system_tests(users(:basic))
@@ -285,6 +285,42 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_text "Outage A", count: 1
           assert_text "Outage B", count: 1
           assert_selector "tbody tr", count: 2
+        end
+      end
+    end
+  end
+
+  test "completed filter" do
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      travel_to Time.zone.local(2017, 7, 28, 15, 14, 21) do
+        sign_in_for_system_tests(users(:edit_ci_outages_d))
+        current_window.maximize
+
+        within(".outages-grid") do
+          assert_selector "tbody tr", count: 5
+        end
+
+        check "Show Completed Outages"
+        click_button "Refresh"
+
+        within(".outages-grid") do
+          assert_selector "tbody tr", count: 6
+          assert_text "Outage G"
+        end
+
+        # puts "Clicking Month..."
+        click_link "Month"
+        within(".test-outages-month") { assert_text "July 2017" }
+        within(".outages-grid") do
+          assert_selector "tbody tr", count: 6
+          assert_text "Outage G"
+        end
+
+        uncheck("Show Completed Outages")
+        click_button "Refresh"
+        within(".outages-grid") do
+          assert_selector "tbody tr", count: 5
+          assert_no_text "Outage G"
         end
       end
     end

@@ -38,6 +38,14 @@
         <% end %>
       </div>
     </div>
+    <div class="form-check">
+      <%= label_tag :completed,
+            class: "col-form-label form-check-label" do %>
+        <%= hidden_field_tag :completed, false %>
+        <%= check_box_tag :completed, true, session[:completed] %>
+        Show Completed Outages
+      <% end %>
+    </div>
   </div>
 
   <div class="content-note">
