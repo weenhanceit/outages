@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       get "month"
       get "week"
     end
+    resources :notes, shallow: true, only: [:create, :destroy, :edit, :update]
   end
   resources :notifications, only: [:update]
   resources :preferences, only: [:edit, :update]

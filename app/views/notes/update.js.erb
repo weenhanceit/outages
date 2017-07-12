@@ -1,0 +1,2 @@
+$('.note-<%= @note.id -%>')
+  .replaceWith('<%= j(render partial: "notes/note", object: @note) -%>');

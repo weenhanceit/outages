@@ -44,9 +44,13 @@ class User < ApplicationRecord
   # Also, one day is added if the date is a string.
   # FIXME: We should really change the test cases.
   def filter_outages(params)
-    scope = account.outages.where(active: true)
+    scope = account.outages.where(active: true, completed: false)
     if params[:frag].present?
       scope = scope.where("name like ?", "%#{params[:frag]}%")
+    end
+
+    if params[:completed] == "true"
+      scope = scope.unscope(where: :completed)
     end
 
     # EXCLUDED: end <= earliest || latest <= start

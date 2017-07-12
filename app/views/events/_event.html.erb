@@ -1,0 +1,8 @@
+<li class="event event-<%= event.id -%>">
+  <%= event.text %>
+  <small>
+    <%= distance_of_time_in_words(event.created_at,
+          Time.zone.now,
+          options = {include_seconds: true }) %> ago
+  </small>
+</li>

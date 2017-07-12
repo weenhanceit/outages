@@ -1,0 +1,22 @@
+<li class="note note-<%= note.id -%>">
+  <p class="note-header">
+    <%= note.user.name %>
+    commented
+    <%= distance_of_time_in_words(note.created_at,
+          Time.zone.now,
+          options = {include_seconds: true }) %> ago
+    <%= link_to("Edit",
+          edit_note_path(note),
+          format: :js,
+          remote: true) if note.user == current_user %>
+    <%= link_to("Delete",
+          note,
+          data: { confirm: "Are you sure you want to delete this note?" },
+          format: :js,
+          remote: true,
+          method: :delete) if note.user == current_user %>
+  </p>
+  <p class="note-body">
+    <%= note.note %>
+  </p>
+</li>

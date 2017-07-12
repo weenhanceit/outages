@@ -34,3 +34,7 @@ company_d_outage_e_ci_a:
 company_d_outage_f_ci_a:
   ci: company_d_ci_a
   outage: company_d_outage_f
+
+company_d_outage_g_ci_a:
+  ci: company_d_ci_a
+  outage: company_d_outage_g_completed

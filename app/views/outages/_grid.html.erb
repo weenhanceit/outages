@@ -84,5 +84,13 @@
       </td>
     </tr>
     <% end %>
+    <%= content_tag(:tr,
+          content_tag(:td,
+            "No outages in specified date range.",
+            colspan: 7)) unless 0 < @outages.size %>
   </tbody>
 </table>
+
+<div class="border rounded">
+  <h4>Selected Outage</h4>
+</div>

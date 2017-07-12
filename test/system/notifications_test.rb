@@ -39,7 +39,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
     # After save we should be on the Outage index page
     # There should be a single notification and the outage name show be listed
-    assert_selector "h1", text: "List of Outages of Interest to the User"
+    assert_selector ".test-home-page"
     assert_not Outage.where(name: outage_name).empty?
     assert_selector "h2", text: "Notifications"
   end
@@ -73,7 +73,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     end
     # After save we should be on the Outage index page
     # There should be a single notification and the outage name show be listed
-    assert_selector "h1", text: "List of Outages of Interest to the User"
+    assert_selector ".test-home-page"
     assert_selector "h2", text: "Notifications"
     assert_not Outage.where(name: outage.name).empty?
 
@@ -94,10 +94,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     end
 
     visit cis_path
-    assert_no_selector ".notifications"
-    # within ".notifications" do
-    #   assert_no_text "Outage A"
-    # end
+    assert_text "You have 0 un-read notifications."
   end
 
   test "mark a notification read then mark it unread" do

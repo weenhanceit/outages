@@ -1,0 +1,7 @@
+<% if session[:sort_order] == "ascending" %>
+  $('.js-note-list')
+    .append('<%= j(render partial: "notes/note", object: @note) -%>');
+<% else %>
+  $('.js-note-list')
+    .prepend('<%= j(render partial: "notes/note", object: @note) -%>');
+<% end %>

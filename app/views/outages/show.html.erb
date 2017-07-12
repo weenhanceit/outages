@@ -1,77 +1,104 @@
-<h1> <%= @outage.name %> </h1>
-<br/>
-<table>
-  <tbody>
-    <tr>
-      <td colspan="2">
-        <%= @outage.description %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-          Start Time
-      </td>
-      <td>
-        <%= @outage.start_time.strftime("%a, %d %b %Y %H:%M") %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-          End Time
-      </td>
-      <td>
-        <%= @outage.end_time.strftime("%a, %d %b %Y %H:%M") %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-          Completed?
-      </td>
-      <td>
-        <%= @outage.completed %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-          Services
-      </td>
-      <td>
-        <% if @outage.cis.size == 0 %>
-          none
-        <% else %>
-          <% @outage.cis.each do |ci| %>
-            <p>
-              <%= link_to ci.name, ci_path(ci.id) %>
-            </p>
-          <% end %>
-        <% end %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-          Notes
-      </td>
-      <td>
-        <% if @outage.notes.size == 0 %>
-          none
-        <% else %>
-          <% @outage.notes.each do |n| %>
-            <p>
-              <small>
-                <%= n.created_at %>
-                <br />
-                by
-                <%= n.user.name %>
-              </small>
-              <br/>
-              <%= n.note %>
-            </p>
-          <% end %>
-        <% end %>
-      </td>
-    </tr>
-  <tbody>
-</table>
-<div class="content-note">
-  Notes should be presented in a scrollable box in reverse order of date
+<%#
+  This is not a traditional Rails show page. It is a form that allows the
+  user to modify aspects of the data.
+%>
+
+<h1>
+  <%# FIXME: Make into in-line with edit button right-justified. %>
+  <%= @outage.name %>
+  <small>
+    <%= link_to "Edit Outage Information",
+          edit_outage_path(@outage),
+          class: "btn btn-sm btn-secondary" %>
+  </small>
+</h1>
+<%= bootstrap_form_for(@outage, builder: WeitFormBuilder) do |f| %>
+<%= f.hidden_field :active %>
+<div class="row">
+  <div class="col-sm-8">
+    <div class="row">
+      <div class="col-4">
+        Start Time:
+      </div>
+      <div class="col">
+        <%= f.object.start_time.to_s(:db) %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        End Time:
+      </div>
+      <div class="col">
+        <%= f.object.end_time.to_s(:db) %>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <ul class="list-unstyled">
+      <li>
+        <%= f.check_box :completed %>
+      </li>
+      <li>
+        <%= f.check_box :causes_loss_of_service, disabled: "disabled" %>
+      </li>
+      <li>
+        <%= f.check_box :watched %>
+      </li>
+    </ul>
+  </div>
 </div>
+<div class="row">
+  <div class="col-sm-8">
+    <h4>Description</h4>
+    <div class="border rounded">
+      <p>
+        <%= @outage.description %>
+      </p>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <h4>Affected Services</h4>
+    <div class="border rounded">
+      <ul class="list-unstyled">
+        <% @outage.cis_outages.each do |ci| %>
+        <li><%= ci.name %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- <div class="row">
+    <div class="col">
+      <%= f.primary "Save" %>
+    </div>
+  </div> -->
+<% end %>
+
+<h2>
+  Outage History
+  <%= link_to "Newest First",
+          url_for(sort_order: "descending"),
+          class: "btn btn-secondary btn-sm" %>
+  <%= link_to "Oldest First",
+          url_for(sort_order: "ascending"),
+          class: "btn btn-secondary btn-sm" %>
+</h2>
+
+<% @note = Note.new %>
+<%= render partial: "notes/new" %>
+<!-- <div class="note">
+  <p class="note-header">
+    New Note
+  </p>
+  <% @note = Note.new %>
+  <%= fields_for @note do |n| %>
+    <%= n.text_area :note, size: "60x6", class: "form-control" %>
+    <br/>
+    <%= n.button "Save Note", class: "btn btn-primary btn-sm" %>
+  <% end %>
+</div> -->
+
+<ul class="list-unstyled js-note-list">
+  <%= render @outage.histories(params.fetch(:sort_order,
+                                        session[:sort_order])) %>
+</ul>

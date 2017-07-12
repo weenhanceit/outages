@@ -147,3 +147,13 @@ company_d_outage_f:
   end_time: <%= Time.find_zone('Samoa').parse('2017-08-31T15:00:00') %>
   name: Outage F
   start_time: <%= Time.find_zone('Samoa').parse('2017-08-31T14:00:00') %>
+
+company_d_outage_g_completed:
+  account: company_d
+  active: true
+  causes_loss_of_service: true
+  completed: true
+  description: Company D outage G
+  end_time: <%= Time.find_zone('Samoa').parse('2017-07-31T12:00:00') %>
+  name: Outage G
+  start_time: <%= Time.find_zone('Samoa').parse('2017-07-31T12:30:00') %>

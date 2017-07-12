@@ -1,10 +1,3 @@
-<h1>
-  List of Outages of Interest to the User
-  <br/>
-  <small>
-    User's home Page
-  </small>
-</h1>
 <div class="content-note">
   <p>Calendar of outages, or spreadsheet-like view of outages.</p>
   <p>
@@ -18,80 +11,14 @@
   The page will be refreshed when any of the following are changed
 </div>
 
-<%= form_with url: "#",
-      local: true,
-      method: :get do |f| %>
-  <div class="row form-group">
-    <%= label_tag "frag", class: "col col-form-label" do %>
-      Fragment
-      <%= text_field_tag "frag",
-            params.fetch(:frag, session[:frag]),
-            class: "form-control" %>
-    <% end %>
-    <%= label_tag "earliest", class: "col col-form-label" do %>
-      Outages After
-      <%= date_field_tag "earliest",
-        session[:earliest] || default_earliest.to_s(:browser),
-        class: "form-control" %>
-    <% end %>
-    <%= label_tag "latest", class: "col col-form-label" do %>
-      Outages Before
-      <%= date_field_tag "latest", nil, class: "form-control" %>
-    <% end %>
-    <div class="col form-group">
-      <div class="form-check">
-        <%= label_tag :watching,
-              value: "Interested",
-              class: "col-form-label form-check-label" do %>
-          <%= radio_button_tag :watching,
-                "Of interest to me",
-                params[:watching].blank? ||
-                  params[:watching] == "Of interest to me",
-                class: "form-check-input" %> Of interest to me
-        <% end %>
-      </div>
-      <div class="form-check">
-        <%= label_tag :watching,
-              value: "All",
-              class: "col-form-label form-check-label" do %>
-          <%= radio_button_tag :watching,
-                "All",
-                params[:watching] == "All",
-                class: "form-check-input" %> All
-        <% end %>
-      </div>
-    </div>
-  </div>
-
-  <div class="content-note">
-    Still not sure that this would be "logically" clear to users (because it is a bit of an "AND/OR". Wondering if this should simply be 'all' or 'watched/edited by me' radio button)
-  </div>
-
-
-  <%= button_tag "Refresh", class: "btn btn-primary" %>
-
-  <div class="content-note">
-    <p>
-      If an earliest time is provided, show outages that don't end before the earliest time. If the earliest time is blank, outage end time is a don't care.
-    </p>
-    <p>
-      If a latest time is provided, show outages that don't start after the end_time. If the latest time is blank, the outage start time is a don't care.
-    </p>
-    <p>
-      If both times are provided, show the intersection of the above, or actually, do both of the above tests in the same query.
-    </p>
-    <p>
-      Or to put it another way, show all outages that overlap the filter's start and end times.
-    </p>
-  </div>
-
-<% end %>
-
 <div role="tabpanel" class="outages">
   <div class="border rounded">
     <div>
       <ul class="nav nav-pills">
         <%# FIXME: how to set the active pill for each page? %>
+        <li class="nav-item">
+          <%= link_to "Grid", outages_path(view: "index"), class: "nav-link" %>
+        </li>
         <li class="nav-item">
           <%= link_to "Day", day_outages_path, class: "nav-link" %>
         </li>
