@@ -20,7 +20,9 @@
 
   <div class="field">
     <%#= f.label :password_confirmation, "Confirm new password" %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off" %>
+    <%= f.password_field :password_confirmation,
+          autocomplete: "off",
+          label: "Confirm new password" %>
   </div>
 
   <div class="actions">
