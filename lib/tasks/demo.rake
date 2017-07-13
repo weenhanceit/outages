@@ -4,7 +4,7 @@ namespace :demo do
   desc "Create a demonstration account"
   task create: [:destroy] do
 
-    puts "ARGC: #{ARGV.size} ARGV: #{ARGV}"
+    # puts "ARGC: #{ARGV.size} ARGV: #{ARGV}"
     # ARGV.shift(2)
 
     options = {}
@@ -24,10 +24,10 @@ namespace :demo do
     end
 
     args = o.order!(ARGV) {}
-    puts "ARGC: #{ARGV.size} ARGV: #{ARGV}"
+    # puts "ARGC: #{ARGV.size} ARGV: #{ARGV}"
     o.parse!
 
-    puts "OPTIONS: #{options.inspect}"
+    # puts "OPTIONS: #{options.inspect}"
     puts "Creating..."
 
     Time.use_zone(options[:time_zone].present? ?
