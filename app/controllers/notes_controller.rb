@@ -1,16 +1,19 @@
 class NotesController < ApplicationController
   def create
-    # puts "PARAMS: #{params.inspect}"
-    @outage = current_account.outages.find(params[:outage_id])
-    @note = @outage.notes.create(notes_params.merge(user: current_user))
+    # puts "CREATE PARAMS: #{params.inspect}"
+    @notable = if params[:outage_id].present?
+      current_account.outages.find(params[:outage_id])
+    else
+      current_account.cis.find(params[:ci_id])
+    end
+    @note = @notable.notes.create(notes_params.merge(user: current_user))
     if @note
       respond_to do |format|
         format.js
       end
     else
       # puts "NOTE SAVE FAILED"
-      logger.warn @outage.errors.full_messages
-      redirect_to outage_path(@outage)
+      logger.warn @notable.errors.full_messages
     end
   end
 
@@ -43,7 +46,6 @@ class NotesController < ApplicationController
       end
     else
       logger.warn @note.errors.full_messages
-      redirect_to outage_path(@note.notable)
     end
   end
 

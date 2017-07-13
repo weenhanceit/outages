@@ -59,3 +59,20 @@
   </div>
 </div>
 <% end %>
+
+<h2>
+  Service Notes
+  <%= link_to "Newest First",
+          url_for(sort_order: "desc"),
+          class: "btn btn-secondary btn-sm" %>
+  <%= link_to "Oldest First",
+          url_for(sort_order: "asc"),
+          class: "btn btn-secondary btn-sm" %>
+</h2>
+
+<% @note = Note.new %>
+<%= render partial: "notes/new" %>
+
+<ul class="list-unstyled js-note-list">
+  <%= render @ci.notes.order(created_at: notes_sort_order) %>
+</ul>

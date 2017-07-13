@@ -47,7 +47,8 @@ class CisController < ApplicationController
   end
 
   def show
-    @ci = current_user.account.cis.find_by(id: params[:id])
+    @notable = @ci = current_user.account.cis.find_by(id: params[:id])
+    session[:sort_order] = params[:sort_order] if params[:sort_order].present?
   end
 
   def update
