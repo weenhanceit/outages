@@ -63,7 +63,7 @@
     <div class="border rounded">
       <ul class="list-unstyled">
         <% @outage.cis_outages.each do |ci| %>
-        <li><%= ci.name %></li>
+        <li><%= link_to ci.name, ci_path(ci) %></li>
         <% end %>
       </ul>
     </div>
