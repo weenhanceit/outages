@@ -1,2 +1,2 @@
-$('.note-<%= @note.id -%>')
+$('.<%= css_note_id(@note) -%>')
   .replaceWith('<%= j(render partial: "notes/note", object: @note) -%>');

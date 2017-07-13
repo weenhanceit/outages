@@ -2,13 +2,13 @@
       builder: WeitFormBuilder,
       format: :js,
       remote: true,
-      html: { class: "note note-#{@note.id || "new"}" }) do |f| %>
+      html: { class: "note " + css_note_id(@note) }) do |f| %>
   <%= f.text_area :note,
         rows: "6",
         label: "#{@note.new_record? ? "New" : "Edit"} Note",
         label_class: "note-header",
         # TODO: Figure out why I had to do this.
-        id: "note-#{@note.id || "new"}" %>
+        id: css_note_id(@note) %>
   <%= f.primary "#{@note.new_record? ? "Save" : "Update"} Note",
         class: "btn btn-primary btn-sm" %>
 <% end %>

@@ -1,4 +1,4 @@
-<li class="note note-<%= note.id || "new"-%>">
+<li class="note <%= css_note_id(note) -%>">
   <p class="note-header">
     <%= note.user.name %>
     commented
