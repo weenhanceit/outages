@@ -101,6 +101,5 @@
 </div> -->
 
 <ul class="list-unstyled js-note-list">
-  <%= render @outage.histories(params.fetch(:sort_order,
-                                        session[:sort_order])) %>
+  <%= render @outage.histories(notes_sort_order) %>
 </ul>
