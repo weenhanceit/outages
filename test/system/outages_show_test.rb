@@ -65,6 +65,9 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     assert_note_b(2)
     assert_note_a(1)
     assert_note_c(0)
+
+    # TODO: Put this in, make it fail, then make it pass:
+    within("form#new_note") { assert_no_text "Note C." }
   end
 
   test "add a note ascending order" do
@@ -111,6 +114,16 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
 
     assert_selector("li.note", count: 1)
     assert_note_b(0)
+  end
+
+  test "note save failure" do
+    # TODO: Add this test. Show the message and don't change pages.
+    skip "Failed to save note"
+  end
+
+  test "note destroy failure" do
+    # TODO: Add this test. Show the message and don't change pages.
+    skip "Failed to destroy note"
   end
 
   def setup
