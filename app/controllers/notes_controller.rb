@@ -6,14 +6,18 @@ class NotesController < ApplicationController
     else
       current_account.cis.find(params[:ci_id])
     end
-    @note = @notable.notes.create(notes_params.merge(user: current_user))
-    if @note
+    @note = @notable.notes.build(notes_params.merge(user: current_user))
+    if @note.save
       respond_to do |format|
         format.js
       end
     else
-      # puts "NOTE SAVE FAILED"
       logger.warn @notable.errors.full_messages
+      respond_to do |format|
+        format.js do
+          render "edit"
+        end
+      end
     end
   end
 

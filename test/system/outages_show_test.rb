@@ -10,14 +10,12 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       assert_text "Note A"
       assert_text "1 hour ago"
       assert_link "Edit"
-      # TODO: Make a link to user profile show.
       assert_text "Basic"
     end
     within(notes[1]) do
       assert_text "Note B"
       assert_text "1 day ago"
       assert_no_link "Edit"
-      # TODO: Make a link to user profile show.
       assert_text "Can Edit CIs/Outages"
     end
   end
@@ -34,14 +32,12 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       assert_text "Note B"
       assert_text "1 day ago"
       assert_no_link "Edit"
-      # TODO: Make a link to user profile show.
       assert_text "Can Edit CIs/Outages"
     end
     within(notes[1]) do
       assert_text "Note A"
       assert_text "1 hour ago"
       assert_link "Edit"
-      # TODO: Make a link to user profile show.
       assert_text "Basic"
     end
 
@@ -66,8 +62,7 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     assert_note_a(1)
     assert_note_c(0)
 
-    # TODO: Put this in, make it fail, then make it pass:
-    within("form#new_note") { assert_no_text "Note C." }
+    assert_no_field "New Note", with: "Note C."
   end
 
   test "add a note ascending order" do
@@ -117,8 +112,26 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
   end
 
   test "note save failure" do
+    class Note < ApplicationRecord
+      validate :no_swearing
+
+      def no_swearing
+        puts "VALIDATING NOTE"
+        if /fuck/i =~ note
+          puts "FOUND A SWEAR WORD"
+          errors.add(:note, "can't have swear words in it")
+        end
+      end
+    end
     # TODO: Add this test. Show the message and don't change pages.
-    skip "Failed to save note"
+    sign_in_for_system_tests(users(:basic))
+    visit outage_url(@outage)
+
+    assert_no_difference "Note.count" do
+      click_button "Save Note"
+      # assert_text "Note can't have swear words in it"
+      assert_text "is too short (minimum is 1 character)"
+    end
   end
 
   test "note destroy failure" do
@@ -161,7 +174,6 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       assert_text "1 day ago"
       assert_no_link "Edit"
       assert_no_link "Delete"
-      # TODO: Make a link to user profile show.
       assert_text "Can Edit CIs/Outages"
     end
   end
@@ -173,7 +185,6 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       assert_text "1 day ago"
       assert_link "Edit"
       assert_link "Delete"
-      # TODO: Make a link to user profile show.
       assert_text "Can Edit CIs/Outages"
     end
   end
@@ -184,7 +195,6 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       assert_text "less than 5 seconds ago"
       assert_link "Edit"
       assert_link "Delete"
-      # TODO: Make a link to user profile show.
       assert_text "Basic"
     end
   end
