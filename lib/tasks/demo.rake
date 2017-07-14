@@ -185,8 +185,6 @@ namespace :demo do
           causes_loss_of_service: true,
           completed: false
         }
-        # FIXME: Get the demo start time from the command line.
-        demo_start_time = Time.zone.now
         web_outage_start = demo_start_time + 10.minutes
         web_outage = account.outages.create!({
           name: "Web Outage",
