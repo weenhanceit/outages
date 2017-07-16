@@ -1,25 +1,26 @@
 <div class="container">
   <hr/>
-  <p>Footer</p>
-  <p>Params</p>
-  <%= params.inspect %>
-  <p>
-    Current User:
-    <%= current_user ? current_user.name : "Nil"  %>
-  </p>
-  <p>
-    Time Zone Cookie:
-    <%= cookies["tz"].inspect %>
-  </p>
-  <p>
-    <% if current_user %>
-    Time Zone:
-    <span class="js-user-time-zone-rails">
-      <%= current_user.time_zone %>
-    </span>
-    <span class="js-user-time-zone-iana hidden">
-      <%= ActiveSupport::TimeZone[current_user.time_zone].tzinfo.name %>
-    </span>
-    <% end %>
-  </p>
+  <small>
+    <p>
+      Params
+      <%= params.inspect %>
+    </p>
+    <p>
+      Current User:
+      <%= current_user ? current_user.name : "Nil"  %>
+    </p>
+    <p>
+      Time Zone Cookie:
+      <%= cookies["tz"].inspect %>
+      <% if current_user %>
+      Time Zone:
+      <span class="js-user-time-zone-rails">
+        <%= current_user.time_zone %>
+      </span>
+      <span class="js-user-time-zone-iana hidden">
+        <%= ActiveSupport::TimeZone[current_user.time_zone].tzinfo.name %>
+      </span>
+      <% end %>
+    </p>
+  </small>
 </div>
