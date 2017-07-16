@@ -2,63 +2,64 @@
   This is not a traditional Rails show page. It is a form that allows the
   user to modify aspects of the data.
 %>
+<div class="mb-3">
+  <h1>
+    <%= @ci.name %>
+    <small>
+      <%= link_to "Edit Service Information",
+            edit_ci_path(@ci),
+            class: "btn btn-sm btn-secondary" %>
+    </small>
+  </h1>
 
-<h1>
-  <%= @ci.name %>
-  <small>
-    <%= link_to "Edit Service Information",
-          edit_ci_path(@ci),
-          class: "btn btn-sm btn-secondary" %>
-  </small>
-</h1>
+  <%= bootstrap_form_for(@ci, builder: WeitFormBuilder) do |f| %>
+  <%= f.hidden_field :active %>
+  <div class="row">
+    <div class="col">
+      <h4>Description</h4>
+      <%= @ci.description %>
+    </div>
+    <div class="col">
+      <%= f.check_box :watched %>
+    </div>
+    <div class="col">
+      <% if @ci.maximum_unavailable_children_with_service_maintained.present? %>
+      <p>
+        This service is unavailable if more than
+        <%= @ci.maximum_unavailable_children_with_service_maintained %>
+        of its pre-requisite services are unavailable.
+      </p>
+      <% end %>
+      <% if @ci.minimum_children_to_maintain_service.present? %>
+      <p>
+        This service is unavailable if fewer than
+        <%= @ci.minimum_children_to_maintain_service %>
+        of its pre-requisite services are available.
+      </p>
+      <% end %>
+    </div>
+  </div>
 
-<%= bootstrap_form_for(@ci, builder: WeitFormBuilder) do |f| %>
-<%= f.hidden_field :active %>
-<div class="row">
-  <div class="col">
-    <h4>Description</h4>
-    <%= @ci.description %>
+  <div class="row">
+    <div class="col">
+      <h4>Pre-Requisite Services</h4>
+      <ul class="list-unstyled">
+      <% @ci.children.each do |ci| %>
+        <li><%= link_to ci.name, ci_path(ci) %></li>
+      <% end %>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Directly Dependent Services</h4>
+      <ul class="list-unstyled">
+      <% @ci.parents.each do |ci| %>
+        <li><%= link_to ci.name, ci_path(ci) %></li>
+      <% end %>
+      </ul>
+    </div>
   </div>
-  <div class="col">
-    <%= f.check_box :watched %>
-  </div>
-  <div class="col">
-    <% if @ci.maximum_unavailable_children_with_service_maintained.present? %>
-    <p>
-      This service is unavailable if more than
-      <%= @ci.maximum_unavailable_children_with_service_maintained %>
-      of its pre-requisite services are unavailable.
-    </p>
-    <% end %>
-    <% if @ci.minimum_children_to_maintain_service.present? %>
-    <p>
-      This service is unavailable if fewer than
-      <%= @ci.minimum_children_to_maintain_service %>
-      of its pre-requisite services are available.
-    </p>
-    <% end %>
-  </div>
+  <% end %>
 </div>
-
-<div class="row">
-  <div class="col">
-    <h4>Pre-Requisite Services</h4>
-    <ul class="list-unstyled">
-    <% @ci.children.each do |ci| %>
-      <li><%= link_to ci.name, ci_path(ci) %></li>
-    <% end %>
-    </ul>
-  </div>
-  <div class="col">
-    <h4>Directly Dependent Services</h4>
-    <ul class="list-unstyled">
-    <% @ci.parents.each do |ci| %>
-      <li><%= link_to ci.name, ci_path(ci) %></li>
-    <% end %>
-    </ul>
-  </div>
-</div>
-<% end %>
 
 <h2>
   Service Notes
