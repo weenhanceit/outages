@@ -56,13 +56,20 @@
 
   <div class="row">
     <div class="col-sm-1"></div>
-    <%= f.check_box :notify_me_before_outage, label: "", column_width: 1  %>
+    <%= f.check_box :notify_me_before_outage,
+          layout: :horizontal,
+          label: ""  %>
     <%= f.number_field :notification_periods_before_outage,
           label: "Notify me",
-          column_width: 2  %>
+          layout: :horizontal,
+          label_col: "col",
+          control_col: "col" %>
     <%= f.select :notification_period_interval,
           [ "hours", "days", "weeks", "months" ],
-          label: "Before outage starts" %>
+          label: "before outage starts.",
+          layout: :horizontal,
+          label_col: "col",
+          control_col: "col" %>
   </div>
 </div>
 
@@ -78,14 +85,22 @@
   </div>
   <div class="row">
     <div class="col-sm-1"></div>
-    <%= f.radio_button :preference_individual_email_notifications,
-          1,
-          label: " Individual e-mail for each outage "%>
-    <%= f.radio_button :preference_individual_email_notifications,
-          0,
-          label: " One e-mail per day ", column_width: 10  %>
-    <%= f.time_field :preference_email_time, label: "at", column_width: 3  %>
-
+    <%= f.form_group :preference_individual_email_notifications do %>
+      <%= f.radio_button :preference_individual_email_notifications,
+            1,
+            label: " Individual e-mail for each outage "%>
+      <%= f.radio_button :preference_individual_email_notifications,
+            0,
+            label: " One e-mail per day ",
+            layout: :horizontal,
+            label_col: "col",
+            control_col: "col" %>
+      <%= f.time_field :preference_email_time,
+            label: "at",
+            layout: :horizontal,
+            label_col: "col",
+            control_col: "col" %>
+  <% end %>
   </div>
     <%= f.primary "Save" %>
 </div>
