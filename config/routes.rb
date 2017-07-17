@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   resources :notifications, only: [:update]
   resources :preferences, only: [:edit, :update]
   resources :searches, only: [:index]
+  resource :user, only: [:edit, :update]
   resources :watches, only: [:create, :edit, :update]
   resources :welcome, only: [:index]
 end
