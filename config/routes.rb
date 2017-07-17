@@ -21,7 +21,6 @@ Rails.application.routes.draw do
     resources :notes, shallow: true, only: [:create, :destroy, :edit, :update]
   end
   resources :notifications, only: [:update]
-  resources :preferences, only: [:edit, :update]
   resources :searches, only: [:index]
   resource :user, only: [:edit, :update]
   resources :watches, only: [:create, :edit, :update]
