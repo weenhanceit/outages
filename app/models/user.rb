@@ -87,6 +87,8 @@ class User < ApplicationRecord
     ## TODO: This class method generates notifications.  It is anticipated
     ## this will be run as a background task.  It is places here during
     ## development and NEED to re-evaluate where this should wind up
+    logger.debug "HERE !!!!"
+    Services::GenerateBackgroundEvents.call
     Services::GenerateNotifications.call
     notifications.where(notified: false,
                         notification_type: "online")

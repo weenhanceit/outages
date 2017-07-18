@@ -2,11 +2,12 @@ module Services
   # Class with methods for background handling of events and notifications
   class GenerateBackgroundEvents
     def self.call
+      Rails.logger.debug "EVENT like now"
       events = []
 
       events += check_for_overdue_outages
 
-      events +=  check_for_outage_reminders
+      events += check_for_outage_reminders
 
       events
     end
@@ -14,8 +15,10 @@ module Services
     def self.check_for_outage_reminders
       reminder_events = []
       outages = Outage.where(active: true, completed: false)
-      outages = outages.where("end_time > now()")
-      outages = outages.where("(start_time - interval '1 hour' ) <= now()")
+      outages = outages.where("end_time > ?", Time.zone.now)
+      outages = outages.where("(start_time - interval '1 hour' ) <= ?", Time.zone.now)
+      # outages = outages.where("end_time > now()")
+      # outages = outages.where("(start_time - interval '1 hour' ) <= now()")
       # TODO: Confirm this works
       # We need to understand how Postgres/Rails handles dates and whether
       # we can do date comparisons using database functions such as now()
@@ -27,7 +30,7 @@ module Services
       outages.each do |o|
         # puts "TP_#{__LINE__}: START: #{o.start_time}"
         last_reminder_event = o.events.where(event_type: :reminder)
-                              .order(created_at: :desc).first
+                               .order(created_at: :desc).first
 
         if last_reminder_event.nil?
           # TODO: This will only generate 1 reminder event per outage,
@@ -47,27 +50,35 @@ module Services
     def self.check_for_overdue_outages
       overdue_events = []
       outages = Outage.where(active: true, completed: false)
-      outages = outages.where("end_time < now()") # TODO: Confirm this works
+      outages = outages.where("end_time < ?", Time.zone.now)
+      # outages = outages.where("end_time < now()") # TODO: Confirm this works
       # We need to understand how Postgres/Rails handles dates and whether
       # we can do date comparisons using database functions such as now()
       # ----------- IMPORTANT --------------------------------------------------
 
       # puts "generate_background_events.rb TP_#{__LINE__}:SQL: #{outages.to_sql}"
+      # Rails.logger.debug "#{__LINE__} EVENTS: #{Event.all.size} NOTIFICATIONS: #{Notification.all.size}"
       outages.each do |o|
+        # Rails.logger.debug "#{__LINE__} EVENTS: #{Event.all.size} NOTIFICATIONS: #{Notification.all.size}"
+        # Rails.logger.debug "__HERE: Outage: #{o.id} #{o.name}"
         last_overdue_event = o.events.where(event_type: :overdue)
                               .order(created_at: :desc).first
         last_completed_event = o.events.where(event_type: :completed)
                                 .order(created_at: :desc).first
 
+        # Rails.logger.debug "OUTAGE: #{o.name} Ending: #{o.end_time}"
+        # Rails.logger.debug "LAST COMPLETED: #{last_completed_event.inspect}"
+        # Rails.logger.debug "LAST OVERDUE: #{last_overdue_event.inspect}"
         if last_overdue_event.nil? ||
            (!last_completed_event.nil? &&
              last_overdue_event.created_at < last_completed_event.created_at)
 
           overdue_events << o.events.create(event_type: "overdue",
-                                          text: "Outage Not Completed As Scheduled",
-                                          handled: false)
+                                            text: "Outage Not Completed As Scheduled",
+                                            handled: false)
         end
       end
+      # Rails.logger.debug "#{__LINE__} EVENTS: #{Event.all.size} NOTIFICATIONS: #{Notification.all.size}"
       overdue_events
     end
   end
