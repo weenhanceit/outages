@@ -10,7 +10,7 @@ class Outage < ApplicationRecord
   accepts_nested_attributes_for :cis
   # has_many :affected_cis, through: :cis_outages, source: :affected_cis
   has_many :contributors, inverse_of: :outage
-  has_many :events, inverse_of: :outage
+  has_many :events, inverse_of: :outage, dependent: :destroy
   has_many :notes, as: :notable
   has_many :tags, as: :taggable
   has_many :watches, as: :watched, autosave: true, dependent: :destroy
