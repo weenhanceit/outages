@@ -40,4 +40,12 @@ class TimeZoneTest < ApplicationSystemTestCase
     assert_text user.time_zone
     assert_no_text "You appear to be in "
   end
+
+  test "user has no time zone -- use browser time zone" do
+    user = users(:no_time_zone)
+    sign_in_for_system_tests(user)
+    execute_script "delete_cookie('tz');"
+    visit root_url
+    assert_text "Using the Etc/UTC time zone"
+  end
 end
