@@ -8,12 +8,18 @@ class GenerateBackgroundEventsTest < ActiveSupport::TestCase
       # Set up outage to start and end before now
       start_time = Time.zone.now - 2.hours
       end_time = Time.zone.now + 10.seconds
-      # This outage should generate an event
+      # This outage should not generate an event
       setup_outage start_time, end_time
 
-      assert_no_difference "Event.all.size" do
+      # This test condition will generate a reminder (because it has not ended)
+      # So we need to check no overdue events where generated
+      # puts "TP_#{__LINE__}: #{Event.where(event_type: :overdue).size}"
+      assert_no_difference "Event.where(event_type: :overdue).size" do
         events = Services::GenerateBackgroundEvents.call
-        assert_equal 0, events.size, "Unexpected number of events generated"
+        # puts "TP_#{__LINE__} EVENTS: #{events.inspect}"
+        assert_equal 1, events.size, "Unexpected number of events generated"
+        assert_equal "reminder", events.first.event_type
+        # puts "TP_#{__LINE__}: #{Event.where(event_type: :overdue).size}"
       end
     end
   end
@@ -96,6 +102,38 @@ class GenerateBackgroundEventsTest < ActiveSupport::TestCase
         assert_equal 1, events.size, "Unexpected number of events generated"
         assert_equal "overdue", events.first.event_type,
           "Should be an overdue event"
+      end
+    end
+  end
+
+  test "single reminder generated" do
+    # Make sure other fixtures do not create events
+    mark_all_existing_outages_inactive
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      # This outage should generate an event
+      setup_outage Time.zone.now + 59.minutes, Time.zone.now + 4.hours
+
+      # This outage should not generate an event
+      setup_outage Time.zone.now + 2.hours, Time.zone.now + 4.hours
+
+      # This outage will have start and end time that would generate an event
+      # but is inactive
+      inactive_outage = setup_outage Time.zone.now - 1.hour,
+        Time.zone.now + 2.hours
+      inactive_outage.active = false
+      inactive_outage.save
+
+      assert_difference "Event.all.size" do
+        events = Services::GenerateBackgroundEvents.call
+        # puts "TP_#{__LINE__} EVENTS: #{events.inspect}"
+        assert_equal 1, events.size, "Unexpected number of events generated"
+        assert_equal "reminder", events.first.event_type,
+          "Should be a reminder"
+
+        # Next call should not generate any events
+        events = Services::GenerateBackgroundEvents.call
+        # puts "TP_#{__LINE__} EVENTS: #{events.inspect}"
+        assert_equal 0, events.size, "No new events should be generated"
       end
     end
   end

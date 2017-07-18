@@ -26,6 +26,7 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
       assert_equal 1, notifications.size, "Wrong number of notifications generated"
       notification = notifications.first
       assert_equal "online", notification.notification_type
+      assert_equal "outage", notification.event.event_type
     end
   end
 
@@ -56,6 +57,107 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
       assert_equal 1, notifications.size, "Wrong number of notifications generated"
       notification = notifications.first
       assert_equal "online", notification.notification_type
+      assert_equal "completed", notification.event.event_type
+    end
+  end
+
+  test "online notification, outage event, outage watched, overdue" do
+    # Prepare a user who wants outage complete notifications,
+    # online only
+    user = users(:basic)
+    user.notify_me_before_outage = false
+    user.notify_me_on_outage_changes = false
+    user.notify_me_on_outage_complete = false
+    user.notify_me_on_overdue_outage = true
+    user.preference_notify_me_by_email = false
+    user.save
+
+    # Create an outage, and a watch on that outage
+    outage = Outage.create(test_outage_defaults.merge(account_id: user.account_id))
+    watch = Watch.create(active: true, user: user, watched: outage)
+
+    mark_all_existing_events_handled
+
+    # Generate an :outage event
+    event = Event.create(handled: false,
+                         outage_id: outage.id,
+                         text: "A test event - overdue",
+                         event_type: :overdue)
+
+    assert_difference "Notification.all.size" do
+      Services::GenerateNotifications.call
+      notifications = Notification.where(watch_id: watch.id)
+      assert_equal 1, notifications.size, "Wrong number of notifications generated"
+      notification = notifications.first
+      assert_equal "online", notification.notification_type
+      assert_equal "overdue", notification.event.event_type
+    end
+  end
+
+  test "no online notification, outage event, outage watched, overdue, outage complete" do
+    # Prepare a user who wants outage complete notifications,
+    # online only
+    user = users(:basic)
+    user.notify_me_before_outage = false
+    user.notify_me_on_outage_changes = false
+    user.notify_me_on_outage_complete = false
+    user.notify_me_on_overdue_outage = true
+    user.preference_notify_me_by_email = false
+    user.save
+
+    # Create an outage, and a watch on that outage
+    outage = Outage.create(test_outage_defaults.merge(account_id: user.account_id))
+    watch = Watch.create(active: true, user: user, watched: outage)
+
+    mark_all_existing_events_handled
+
+    # Generate an :outage event
+    event = Event.create(handled: false,
+                         outage_id: outage.id,
+                         text: "A test event - overdue",
+                         event_type: :overdue)
+
+   outage.completed = true
+   outage.save
+
+    assert_no_difference "Notification.all.size" do
+      Services::GenerateNotifications.call
+      notifications = Notification.where(watch_id: watch.id)
+
+      assert_equal 0, notifications.size, "Wrong number of notifications generated"
+    end
+  end
+
+  test "online notification, outage event, outage watched, reminder" do
+    # Prepare a user who wants outage complete notifications,
+    # online only
+    user = users(:basic)
+    user.notify_me_before_outage = true
+    user.notify_me_on_outage_changes = false
+    user.notify_me_on_outage_complete = false
+    user.notify_me_on_overdue_outage = false
+    user.preference_notify_me_by_email = false
+    user.save
+
+    # Create an outage, and a watch on that outage
+    outage = Outage.create(test_outage_defaults.merge(account_id: user.account_id))
+    watch = Watch.create(active: true, user: user, watched: outage)
+
+    mark_all_existing_events_handled
+
+    # Generate an :outage event
+    event = Event.create(handled: false,
+                         outage_id: outage.id,
+                         text: "A test event - reminder",
+                         event_type: :reminder)
+
+    assert_difference "Notification.all.size" do
+      Services::GenerateNotifications.call
+      notifications = Notification.where(watch_id: watch.id)
+      assert_equal 1, notifications.size, "Wrong number of notifications generated"
+      notification = notifications.first
+      assert_equal "online", notification.notification_type
+      assert_equal "reminder", notification.event.event_type
     end
   end
 
@@ -125,6 +227,52 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
     assert_difference "Notification.all.size" do
       Services::GenerateNotifications.call
       notifications = Notification.where(watch_id: watch.id)
+      assert_equal 1, notifications.size,
+        "Wrong number of notifications generated"
+      notification = notifications.first
+      assert_equal "online", notification.notification_type
+    end
+  end
+
+  test "only 1 online generated, outage, ci and ci parent watched" do
+    # Prepare a user who wants outage change notifications,
+    # online only
+    user = users(:basic)
+    user.notify_me_on_outage_changes = true
+    user.preference_notify_me_by_email = false
+    user.save
+
+    # Create an outage
+    outage = Outage.create(test_outage_defaults.merge(account_id: user.account_id))
+    # Create a ci and associate it with the outage
+    ci = outage.cis.create(account_id: user.account_id,
+                           active: true,
+                           description: "Server Test C",
+                           name: "Server Test Child")
+
+    # Create a parent for the ci, that will actually be watched by the user
+    ci_parent = Ci.create(account_id: user.account_id,
+                          active: true,
+                          description: "Server Test P",
+                          name: "Server Test Parent")
+
+    watch_indirect = ci_parent.watches.create(active: true, user: user)
+    watch_direct_thru_service = ci.watches.create(active: true, user: user)
+    watch_direct = outage.watches.create(active: true, user: user)
+
+    ci.parent_links.create(parent: ci_parent)
+
+    mark_all_existing_events_handled
+
+    # Generate an :outage event
+    event = Event.create(handled: false,
+                         outage_id: outage.id,
+                         text: "A test event",
+                         event_type: :outage)
+
+    assert_difference "Notification.all.size" do
+      Services::GenerateNotifications.call
+      notifications = Notification.where(event_id: event.id)
       assert_equal 1, notifications.size,
         "Wrong number of notifications generated"
       notification = notifications.first

@@ -4,6 +4,8 @@ module Services
     # Method to exam outstanding (handeled: false) events and generate required
     # notifications
     def self.call
+      # TODO: Review this code and review whether this needs DRYing or
+      # improving the performance
       # puts "-xxyeh-: TP_#{__LINE__}"
       # puts "generate_notification #{__LINE__}: - -xxyeh- -"
       # puts "generate_notification.rb #{__LINE__}: -- IN the Loop!!!!!!!!!!!!!!!!!! -xxyeh-"
@@ -51,16 +53,29 @@ module Services
 
         # puts "-xxyeh-: generate_notification.rb #{__LINE__}: Notify Me!: #{watch.user.notify_me_on_outage_changes}"
         create_notification(event, watch, "online") if watch.user.notify_me_on_outage_complete
+      when "overdue"
+        # puts "generate_notifications.rb TP_#{__LINE__}: "
+        if watch.user.notify_me_on_overdue_outage && !event.outage.completed
+          create_notification(event, watch, "online")
+          # puts "generate_notifications.rb TP_#{__LINE__}: "
+        end
+      when "reminder"
+        create_notification(event, watch, "online") if watch.user.notify_me_before_outage
       else
         puts "-xxyeh-: WTF! #{event.event_type}"
       end
     end
 
     def self.create_notification(event, watch, notification_type)
-      Notification.create(watch: watch,
-        event: event,
-        notification_type: notification_type,
-        notified: false)
+      if Notification.all
+                     .where(event: event, notification_type: notification_type)
+                     .size.zero?
+
+        Notification.create(watch: watch,
+                            event: event,
+                            notification_type: notification_type,
+                            notified: false)
+      end
     end
   end
 end
