@@ -22,6 +22,12 @@ namespace :demo do
       String) do |tz|
       options[:time_zone] = tz
     end
+    o.on("-p PASSWORD",
+      "--password PASSWORD",
+      "Use PASSWORD for all users.",
+      String) do |password|
+      options[:password] = password
+    end
 
     args = o.order!(ARGV) {}
     # puts "ARGC: #{ARGV.size} ARGV: #{ARGV}"
@@ -60,7 +66,7 @@ namespace :demo do
           privilege_edit_outages: false,
           privilege_manage_users: false,
           time_zone: options[:time_zone],
-          password: "password",
+          password: options.fetch(:password, "password"),
           # encrypted_password: User.new.send(:password_digest, "password"),
           # reset_password_token:,
           # reset_password_sent_at:,
