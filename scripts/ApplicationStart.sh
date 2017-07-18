@@ -1,2 +1,2 @@
 #!/bin/bash
-systemctl restart plazachapina.ca
+systemctl restart outages.weenhanceit.com
