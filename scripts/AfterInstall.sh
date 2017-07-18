@@ -1,7 +1,7 @@
 #!/bin/bash
 # Thanks to: http://sfviapgh.com/blog/2016/2/18/how-to-deploy-rails-with-aws-codedeploy
 
-export RAILS_ENV=production
+. /home/ubuntu/outages.secret
 cd /var/www/outages.weenhanceit.com/html
 sudo chmod 750 bin/*
 logs="log/production.log log/puma-production.stdout.log log/puma-production.stderr.log"
