@@ -1,7 +1,8 @@
-<% if session[:sort_order] == "ascending" %>
+<% if notes_sort_order == "asc" %>
   $('.js-note-list')
     .append('<%= j(render partial: "notes/note", object: @note) -%>');
 <% else %>
   $('.js-note-list')
     .prepend('<%= j(render partial: "notes/note", object: @note) -%>');
 <% end %>
+$('#note-new').val('');

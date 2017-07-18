@@ -1,10 +1,10 @@
-<li class="note note-<%= note.id -%>">
+<li class="note <%= css_note_id(note) -%>">
   <p class="note-header">
     <%= note.user.name %>
     commented
     <%= distance_of_time_in_words(note.created_at,
           Time.zone.now,
-          options = {include_seconds: true }) %> ago
+          options = { include_seconds: true }) %> ago
     <%= link_to("Edit",
           edit_note_path(note),
           format: :js,

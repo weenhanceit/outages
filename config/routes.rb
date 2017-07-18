@@ -8,7 +8,9 @@ Rails.application.routes.draw do
 
   # get "/outages", to: "outages#index", as: "outages_index"
   # resources :cis, only: [:index, :edit, :update, :destroy, :show, :new]
-  resources :cis
+  resources :cis do
+    resources :notes, shallow: true, only: [:create, :destroy, :edit, :update]
+  end
   resources :outages do
     collection do
       get "day"
@@ -19,8 +21,8 @@ Rails.application.routes.draw do
     resources :notes, shallow: true, only: [:create, :destroy, :edit, :update]
   end
   resources :notifications, only: [:update]
-  resources :preferences, only: [:edit, :update]
   resources :searches, only: [:index]
+  resource :user, only: [:edit, :update]
   resources :watches, only: [:create, :edit, :update]
   resources :welcome, only: [:index]
 end

@@ -21,19 +21,23 @@ class ApplicationController < ActionController::Base
   helper_method :current_account
 
   ##
-  # Return the path to the CI edit page if the current user has CI edit
-  # privileges. Otherwise return the path to the CI show page.
+  # Return the path to the CI show page. It used to
+  # return the path to the CI edit page if the current user had CI edit
+  # privileges. Otherwise returned the path to the CI show page.
   def edit_or_show_ci_path(id)
-    current_user.can_edit_cis? ? edit_ci_path(id) : ci_path(id)
+    # current_user.can_edit_cis? ? edit_ci_path(id) : ci_path(id)
+    ci_path(id)
   end
 
   helper_method :edit_or_show_ci_path
 
   ##
-  # Return the path to the Outage edit page if the current user has Outage edit
-  # privileges. Otherwise return the path to the Outage show page.
+  # Return the path to the Outage show page. It used to
+  # return the path to the Outage edit page if the current user had Outage edit
+  # privileges. Otherwise returned the path to the Outage show page.
   def edit_or_show_outage_path(id)
-    current_user.can_edit_outages? ? edit_outage_path(id) : outage_path(id)
+    # current_user.can_edit_outages? ? edit_outage_path(id) : outage_path(id)
+    outage_path(id)
   end
 
   helper_method :edit_or_show_outage_path

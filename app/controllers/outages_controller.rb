@@ -101,6 +101,7 @@ class OutagesController < ApplicationController
 
   def show
     # puts "IN SHOW"
+    @notable = @outage
     session[:sort_order] = params[:sort_order] if params[:sort_order].present?
   end
 

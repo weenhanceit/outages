@@ -4,7 +4,7 @@ class Outage < ApplicationRecord
   include Watched
 
   belongs_to :account
-  has_many :cis_outages, inverse_of: :outage
+  has_many :cis_outages, inverse_of: :outage, dependent: :destroy
   accepts_nested_attributes_for :cis_outages, allow_destroy: true
   has_many :cis, through: :cis_outages
   accepts_nested_attributes_for :cis
@@ -13,7 +13,7 @@ class Outage < ApplicationRecord
   has_many :events, inverse_of: :outage
   has_many :notes, as: :notable
   has_many :tags, as: :taggable
-  has_many :watches, as: :watched, autosave: true
+  has_many :watches, as: :watched, autosave: true, dependent: :destroy
 
   validates :active,
     :causes_loss_of_service,
@@ -96,9 +96,9 @@ class Outage < ApplicationRecord
   # Return the combination of notes and events for an outage.
   # Some events are not relevant for histories.
   # Default is to return in reverse chronological order of creation.
-  def histories(order = "descending")
+  def histories(order = "desc")
     (notes + events).sort do |a, b|
-      order != "ascending" ?
+      order != "asc" ?
                 b.created_at <=> a.created_at :
                 a.created_at <=> b.created_at
     end
