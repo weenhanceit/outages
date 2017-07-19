@@ -1,2 +1,2 @@
 #!/bin/bash
-systemctl stop plazachapina.ca
+systemctl stop outages.weenhanceit.com

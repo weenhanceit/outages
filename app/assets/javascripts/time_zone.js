@@ -33,7 +33,13 @@ $(document).on('turbolinks:load', function() {
     // console.log('Browser time zone: ' + browser_tz);
 
     // FIXME: Better check of browser timezone, AKA the Havana problem
-    if (browser_tz !== current_user_tz && current_user_tz !== "") {
+    if (current_user_tz === "") {
+      msg = '<p>Using the ' +
+        browser_tz +
+        ' time zone. ' +
+        '. If you want to change your time zone, ' +
+        'go to the preferences page.</p>';
+    } else if (browser_tz !== current_user_tz) {
       msg = '<p>You appear to be in ' +
         browser_tz +
         ' time zone, but your preference is set to ' +
@@ -41,7 +47,9 @@ $(document).on('turbolinks:load', function() {
         '. If you want to change to ' +
         browser_tz +
         ', go to the preferences page.</p>';
+    }
 
+    if (typeof msg !== 'undefined') {
       // alert(msg);
       $('.js-time-zone-warning').append(msg);
 

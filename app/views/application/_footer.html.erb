@@ -18,7 +18,7 @@
         <%= current_user.time_zone %>
       </span>
       <span class="js-user-time-zone-iana hidden">
-        <%= ActiveSupport::TimeZone[current_user.time_zone].tzinfo.name %>
+        <%= Time.find_zone(current_user.time_zone).tzinfo.name if current_user.time_zone.present? %>
       </span>
       <% end %>
     </p>
