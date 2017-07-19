@@ -5,7 +5,6 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 07, 28, 10, 17, 21) do
         sign_in_for_system_tests(users(:basic))
-        visit outages_url
         current_window.maximize
 
         choose "watching_All"
@@ -280,7 +279,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_selector "tbody tr", count: 1
           assert_text "No outages in specified date range"
         end
-        assert_field "Fragment", with: "Outage B"
+        assert_checked_field "watching_All"
 
         # puts "Clicking Month..."
         click_link "Month"
@@ -289,7 +288,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_selector "tbody tr", count: 1
           assert_text "No outages in specified date range"
         end
-        assert_field "Fragment", with: "Outage B"
+        assert_checked_field "watching_All"
 
         # puts "Clicking Next..."
         click_link "Next"
@@ -306,7 +305,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_text "Outage C", count: 1
           assert_selector "tbody tr", count: 3
         end
-        assert_field "Fragment", with: "Outage B"
+        assert_checked_field "watching_All"
       end
     end
   end
