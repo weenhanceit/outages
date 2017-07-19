@@ -157,9 +157,11 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       travel_to Time.zone.local(2017, 5, 31) do
         user = sign_in_for_system_tests(users(:edit_ci_outages_d))
 
-        puts Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
+        # puts Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
         fill_in "Outages After",
           with: Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
+        fill_in "Outages Before",
+          with: (Time.zone.local(2017, 8, 1) + 2.weeks).to_s(:to_browser_date)
         click_button "Refresh"
         assert_field "Outages After", with: "2017-08-01"
 
@@ -190,7 +192,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         # puts "o.start_time: #{o.start_time}"
         # puts "o.inspect: #{o.inspect}"
         click_link "Week"
-        assert_field "Outages After", with: "2017/08/01"
+        assert_field "Outages After", with: "2017-08-01"
         within(".test-outages-week") do
           assert_text "Outage B", count: 1
           assert_text "Outage C", count: 1
@@ -202,9 +204,9 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         # The week is at the July/August boundary, so push a week into August
         # before we ask for the month view.
         click_link "Next"
-        assert_field "Outages After", with: "2017/08/01"
+        assert_field "Outages After", with: "2017-08-01"
         click_link "Month"
-        assert_field "Outages After", with: "2017/08/01"
+        assert_field "Outages After", with: "2017-08-01"
         within(".test-outages-month") do
           assert_text "Outage B", count: 1
           assert_text "Outage C", count: 1
@@ -215,7 +217,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         end
 
         click_link "Previous"
-        assert_field "Outages After", with: "2017/08/01"
+        assert_field "Outages After", with: "2017-08-01"
         within(".test-outages-month") do
           assert_text "Outage A", count: 1
           assert_text "Outage B", count: 1
