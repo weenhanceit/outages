@@ -31,6 +31,13 @@ module OutagesHelper
   end
 
   ##
+  # True when the user wants to get completed outages too.
+  # TODO: Duplicated code between user.rb and here.
+  def get_completed_too?
+    session.fetch(:completed, params.fetch(:completed, "0")) == "1"
+  end
+
+  ##
   # For grid view when it's by itself, defaul to showing only two weeks.
   def outages_before
     puts "outages_before: #{params.fetch(:latest, session.fetch(:latest, default_latest.to_s(:browser)))}"

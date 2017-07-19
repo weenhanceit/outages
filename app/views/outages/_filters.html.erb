@@ -42,8 +42,10 @@
     <div class="form-check">
       <%= label_tag :completed,
             class: "col-form-label form-check-label" do %>
-        <%= hidden_field_tag :completed, false %>
-        <%= check_box_tag :completed, true, session[:completed] %>
+        <%= hidden_field_tag :completed, "0" %>
+        <%= check_box_tag :completed,
+              "1",
+              get_completed_too? %>
         Show Completed Outages
       <% end %>
     </div>

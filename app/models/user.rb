@@ -49,7 +49,7 @@ class User < ApplicationRecord
       scope = scope.where("name like ?", "%#{params[:frag]}%")
     end
 
-    if params[:completed] == "true"
+    if get_completed_too?(params)
       scope = scope.unscope(where: :completed)
     end
 
@@ -79,6 +79,13 @@ class User < ApplicationRecord
     #    "scope is an Array" : "SCOPE.TO_SQL: #{scope.to_sql}"
 
     scope
+  end
+
+  ##
+  # Figure out if the user wants to get completed outages as well as
+  # pending outages.
+  def get_completed_too?(params)
+    params.fetch(:completed, "0") == "1"
   end
 
   # Provide an array of outstanding (notified false) online notifications
