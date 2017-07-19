@@ -32,6 +32,7 @@ $(document).on('turbolinks:load', function() {
     browser_tz = $().get_timezone();
     // console.log('Browser time zone: ' + browser_tz);
 
+    // FIXME: Better check of browser timezone, AKA the Havana problem
     if (current_user_tz === "") {
       msg = '<p>Using the ' +
         browser_tz +

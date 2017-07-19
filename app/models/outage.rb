@@ -144,7 +144,8 @@ class Outage < ApplicationRecord
   # If the user is watching a CI that is an ancestor of a CI in an outage,
   # include that outage
   def self.watched_outages(user)
-    directly_watched_outages(user) + watched_by_cis(user)
+    (directly_watched_outages(user) + watched_by_cis(user)).uniq
+
     # directly_watched_outages(user).or(directly_watched_by_cis(user))
     # self.directly_watched_outages(user)
     # watches.where(watched_type: "Outage").first.w
@@ -153,7 +154,9 @@ class Outage < ApplicationRecord
   end
 
   def self.directly_watched_outages(user)
-    joins(:watches).where(watches: { user_id: user })
+    scope = joins(:watches).where(watches: { user_id: user })
+    # puts "#{__LINE__} scope: #{scope.to_sql}"
+    scope
   end
 
   # TODO: This method isn't needed anymore
@@ -192,7 +195,7 @@ class Outage < ApplicationRecord
     # puts "watched_by_cis: #{watched_cis.inspect}"
 
     scope = joins(:cis_outages).where(cis_outages: { ci_id: watched_cis })
-    # puts "watched_by_cis: #{scope.to_sql}"
+    # puts "#{__LINE__} scope: #{scope.to_sql}"
     scope
     # joins(cis: { affected_cis: :watches }).where(watches: {user_id: user})
   end
