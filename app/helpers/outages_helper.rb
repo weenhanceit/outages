@@ -31,6 +31,37 @@ module OutagesHelper
   end
 
   ##
+  # For grid view when it's by itself, defaul to showing only two weeks.
+  def outages_before
+    puts "outages_before: #{params.fetch(:latest, session.fetch(:latest, default_latest.to_s(:browser)))}"
+    puts "params[:latest]: #{params[:latest]}" if params[:latest].present?
+    puts "session[:latest]: #{session[:latest]}" if session[:latest].present?
+    puts "default_latest.to_s(:browser): #{default_latest.to_s(:browser)}"
+    params.fetch(:latest, session.fetch(:latest, default_latest.to_s(:browser)))
+  end
+
+  ##
+  # Get the last used search string.
+  def search_string
+    params.fetch(:frag, session[:frag])
+  end
+
+  ##
+  # The label and value when the user wants only the outages that interest them
+  def of_interest
+    "Of interest to me"
+  end
+
+  ##
+  # Is the user requesting only outages of interest?
+  # If neight params nor session are set, then this is true.
+  def of_interest?
+    of_interest == params.fetch(:watching,
+                    session.fetch(:watching,
+                      of_interest))
+  end
+
+  ##
   # Provide a start date for the calendar views based on the params.
   # When this is called, at least one of start_date, earliest, or latest
   # must be present.

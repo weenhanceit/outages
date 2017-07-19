@@ -3,11 +3,11 @@
 <%= form_with url: "#",
       local: true,
       method: :get do |f| %>
-  <div class="row form-group">
+  <div class="form-group">
     <%= label_tag "frag", class: "col col-form-label" do %>
       Fragment
       <%= text_field_tag "frag",
-            params.fetch(:frag, session[:frag]),
+            search_string,
             class: "form-control" %>
     <% end %>
     <%= label_tag "earliest", class: "col col-form-label" do %>
@@ -23,9 +23,8 @@
               value: "Interested",
               class: "col-form-label form-check-label" do %>
           <%= radio_button_tag :watching,
-                "Of interest to me",
-                params[:watching].blank? ||
-                  params[:watching] == "Of interest to me",
+                of_interest,
+                of_interest?,
                 class: "form-check-input" %> Of interest to me
         <% end %>
       </div>
@@ -35,7 +34,7 @@
               class: "col-form-label form-check-label" do %>
           <%= radio_button_tag :watching,
                 "All",
-                params[:watching] == "All",
+                !of_interest?,
                 class: "form-check-input" %> All
         <% end %>
       </div>

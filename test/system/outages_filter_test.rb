@@ -16,6 +16,15 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_text "Outage B", count: 1
           assert_selector "tbody tr", count: 1
         end
+
+        assert_checked_field "watching_All"
+        assert_field "Fragment", with: "Outage B"
+        click_button "Refresh"
+
+        within(".outages-grid") do
+          assert_text "Outage B", count: 1
+          assert_selector "tbody tr", count: 1
+        end
       end
     end
   end
@@ -37,12 +46,15 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_selector "tbody tr", count: 2
         end
 
+        assert_checked_field "watching_Of_interest_to_me"
         choose "watching_All"
         click_button "Refresh"
         within(".outages-grid") do
           assert_text "Outage A", count: 1
           assert_selector "tbody tr", count: 3
         end
+
+        assert_checked_field "watching_All"
       end
     end
   end
@@ -62,12 +74,16 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         # end
 
         choose "watching_All"
-        fill_in "Outages Before", with: Time.zone.local(2017, 9, 01, 00, 00)
+        fill_in "Outages Before",
+          with: Time.zone.local(2017, 9, 01, 00, 00).to_s(:to_browser_date)
         click_button "Refresh"
         within(".outages-grid") do
           assert_text "Outage Watched by Edit", count: 1
           assert_selector "tbody tr", count: 4
         end
+
+        assert_checked_field "watching_All"
+        assert_field "Outages Before", with: "2017-09-01"
       end
     end
   end
@@ -94,6 +110,9 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_text "Outage Watched by Edit", count: 1
           assert_selector "tbody tr", count: 1
         end
+
+        assert_checked_field "watching_All"
+        assert_field "Outages Before", with: ""
       end
     end
   end
@@ -118,13 +137,17 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         # o = Outage.find_by(account: Account.find_by(name: "Company D"), name: "Outage A")
         # puts "o.start_time: #{o.start_time}"
         fill_in "Outages After", with: ""
-        fill_in "Outages Before", with: "2017-08-14T00:00"
+        fill_in "Outages Before", with: "04/08/2017"
         click_button "Refresh"
         within(".outages-grid") do
           assert_text "Outage A", count: 1
           assert_text "Outage B", count: 1
           assert_selector "tbody tr", count: 2
         end
+
+        assert_checked_field "watching_Of_interest_to_me"
+        assert_field "Outages After", with: ""
+        assert_field "Outages Before", with: "2017-08-14"
       end
     end
   end
@@ -134,8 +157,11 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       travel_to Time.zone.local(2017, 5, 31) do
         user = sign_in_for_system_tests(users(:edit_ci_outages_d))
 
-        fill_in "Outages After", with: Time.zone.local(2017, 8, 1).to_s(:browser)
+        puts Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
+        fill_in "Outages After",
+          with: Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
         click_button "Refresh"
+        assert_field "Outages After", with: "2017-08-01"
 
         within(".outages-grid") do
           assert_text "Outage C", count: 1
@@ -143,11 +169,17 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         end
 
         click_link "Day"
+        assert_field "Outages After", with: "2017-08-01"
         within(".test-outages-day") do
           assert_text "Outage C", count: 1
         end
+        within(".outages-grid") do
+          assert_text "Outage C", count: 1
+          assert_selector "tbody tr", count: 1
+        end
 
         click_link "4-Day"
+        assert_field "Outages After", with: "2017-08-01"
         within(".test-outages-fourday") do
           assert_text "Outage C", count: 1
           assert_text "Outage D", count: 1
@@ -158,6 +190,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         # puts "o.start_time: #{o.start_time}"
         # puts "o.inspect: #{o.inspect}"
         click_link "Week"
+        assert_field "Outages After", with: "2017/08/01"
         within(".test-outages-week") do
           assert_text "Outage B", count: 1
           assert_text "Outage C", count: 1
@@ -169,7 +202,9 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         # The week is at the July/August boundary, so push a week into August
         # before we ask for the month view.
         click_link "Next"
+        assert_field "Outages After", with: "2017/08/01"
         click_link "Month"
+        assert_field "Outages After", with: "2017/08/01"
         within(".test-outages-month") do
           assert_text "Outage B", count: 1
           assert_text "Outage C", count: 1
@@ -180,6 +215,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         end
 
         click_link "Previous"
+        assert_field "Outages After", with: "2017/08/01"
         within(".test-outages-month") do
           assert_text "Outage A", count: 1
           assert_text "Outage B", count: 1
@@ -242,6 +278,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_selector "tbody tr", count: 1
           assert_text "No outages in specified date range"
         end
+        assert_field "Fragment", with: "Outage B"
 
         # puts "Clicking Month..."
         click_link "Month"
@@ -250,6 +287,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_selector "tbody tr", count: 1
           assert_text "No outages in specified date range"
         end
+        assert_field "Fragment", with: "Outage B"
 
         # puts "Clicking Next..."
         click_link "Next"
@@ -266,6 +304,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_text "Outage C", count: 1
           assert_selector "tbody tr", count: 3
         end
+        assert_field "Fragment", with: "Outage B"
       end
     end
   end
@@ -278,7 +317,8 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         visit outages_url
         current_window.maximize
 
-        fill_in "Outages Before", with: Time.zone.local(2017, 3, 31, 00, 00)
+        fill_in "Outages Before",
+          with: Time.zone.local(2017, 3, 31, 00, 00).to_s(:to_browser_date)
         click_button "Refresh"
         click_link "4-Day"
         within(".outages-grid") do
@@ -286,11 +326,14 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_text "Outage B", count: 1
           assert_selector "tbody tr", count: 2
         end
+
+        assert_field "Outages Before", with: "2017-03-31"
       end
     end
   end
 
   test "completed filter" do
+    # TODO: Make sure this test is good, as Phil saw some possible issues.
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 7, 28, 15, 14, 21) do
         sign_in_for_system_tests(users(:edit_ci_outages_d))
@@ -307,6 +350,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_selector "tbody tr", count: 6
           assert_text "Outage G"
         end
+        assert_checked_field "Show Completed Outages"
 
         # puts "Clicking Month..."
         click_link "Month"
@@ -315,6 +359,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_selector "tbody tr", count: 6
           assert_text "Outage G"
         end
+        assert_checked_field "Show Completed Outages"
 
         uncheck("Show Completed Outages")
         click_button "Refresh"
@@ -322,6 +367,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_selector "tbody tr", count: 5
           assert_no_text "Outage G"
         end
+        assert_no_checked_field "Show Completed Outages"
       end
     end
   end
