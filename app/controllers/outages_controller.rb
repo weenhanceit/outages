@@ -42,6 +42,7 @@ class OutagesController < ApplicationController
 
   def edit
     #  puts "IN EDIT"
+    # TODO: This hack to make watches work was ugly. Hopefully Ajax can fix.
     @outage.watched_by(current_user)
   end
 
@@ -104,30 +105,32 @@ class OutagesController < ApplicationController
   def show
     # puts "IN SHOW"
     @notable = @outage
+    # TODO: This hack to make watches work was ugly. Hopefully Ajax can fix.
+    @outage.watched_by(current_user)
     session[:sort_order] = params[:sort_order] if params[:sort_order].present?
   end
 
   def update
-    puts "IN UPDATE"
-    puts params.inspect
+    # puts "IN UPDATE"
+    # puts params.inspect
     update_watches
     # puts "params.require(:outage): #{params.require(:outage).inspect}"
     # puts "outage_params: #{outage_params.inspect}"
     # logger.debug "outages_controller.rb TP_#{__LINE__} Is this an outage? #{@outage.is_a?(Outage)}   #{@outage.inspect}"
 
-    puts "@outage.completed before: #{@outage.completed}"
+    # puts "@outage.completed before: #{@outage.completed}"
     @outage.assign_attributes(outage_params)
-    puts "@outage.completed after: #{@outage.completed}"
+    # puts "@outage.completed after: #{@outage.completed}"
     # logger.debug "outages_controller.rb TP_#{__LINE__} changed: #{@outage.changed?}"
     # @outage.attributes= outage_params
     # o = Outage.find(@outage.id)
     # puts "outages_controller.rb TP_#{__LINE__} #{o.inspect}"
     # puts "outages_controller.rb TP_#{__LINE__} #{@outage.inspect} changed: #{@outage.changed?}"
     if Services::SaveOutage.call(@outage)
-      puts "Saved"
+      # puts "Saved"
       redirect_to outages_path
     else
-      puts "Failed to save"
+      # puts "Failed to save"
       logger.warn @outage.errors.full_messages
       render :edit
     end
@@ -245,6 +248,8 @@ class OutagesController < ApplicationController
   end
 
   def update_watches
+    # puts "Contoller updating watch #{params[:outage][:watched]}"
+    # puts "params[:outage][:watched].in?(%w(1 true)): #{params[:outage][:watched].in?(%w(1 true))}"
     @outage.update_watches(current_user,
       params[:outage][:watched].in?(%w(1 true)))
   end
