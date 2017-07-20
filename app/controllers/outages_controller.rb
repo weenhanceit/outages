@@ -149,7 +149,7 @@ class OutagesController < ApplicationController
   private
 
   def normalize_params
-    session[:frag] = params[:frag] if params[:frag].present?
+    session[:frag] = params[:frag] unless params[:frag].nil?
     session[:watching] = params[:watching] if params[:watching].present?
     session[:completed] = params[:completed] if params[:completed].present?
     normalize_start_date # Has to be the last line in the method.
