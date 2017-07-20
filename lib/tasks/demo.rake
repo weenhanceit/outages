@@ -3,7 +3,6 @@ require "optparse"
 namespace :demo do
   desc "Create a demonstration account"
   task create: [:destroy] do
-
     # puts "ARGC: #{ARGV.size} ARGV: #{ARGV}"
     # ARGV.shift(2)
 
@@ -43,7 +42,7 @@ namespace :demo do
                           Time.zone.parse(options[:demo_start_time])
                         else
                           Time.zone.now + 1.hour
-      end
+                        end
 
       puts "Creating a demo to start at #{demo_start_time}"
 
@@ -88,8 +87,8 @@ namespace :demo do
         sales_agent = account.users.create!({
           name: "Sales Agent",
           email: "sales_agent@example.com",
-          notify_me_on_outage_changes: false,
-          notify_me_on_note_changes: false
+          notify_me_on_note_changes: false,
+          notify_me_on_overdue_outage: false
         }.reverse_merge(user_params))
 
         sales_app_support = account.users.create!({
@@ -194,6 +193,7 @@ namespace :demo do
         web_outage_start = demo_start_time + 10.minutes
         web_outage = account.outages.create!({
           name: "Web Outage",
+          description: "Update nginx and configure TLS for all connections.",
           start_time: web_outage_start,
           end_time: web_outage_start + 30.minutes
         }.reverse_merge(outage_params))
@@ -202,6 +202,8 @@ namespace :demo do
         test_lb_outage_start = demo_start_time + 15.minutes
         test_lb_outage = account.outages.create!({
           name: "LB Outage",
+          description: "Deploy new load balancer config " \
+                      "for testing.",
           start_time: test_lb_outage_start,
           end_time: test_lb_outage_start + 1.hour
         }.reverse_merge(outage_params))
@@ -210,10 +212,53 @@ namespace :demo do
         db_outage_start = demo_start_time - 1.hour
         db_outage = account.outages.create!({
           name: "DB Outage",
+          description: "Deploy new version of RDBMS.",
           start_time: db_outage_start,
           end_time: db_outage_start + 1.hour + 12.minutes
         }.reverse_merge(outage_params))
         db_outage.cis_outages.create!(ci: db_server)
+
+        code_deploy_start = demo_start_time - 23.hours
+        code_deploy = account.outages.create!({
+          name: "Code deploy of performance tweaks from master branch.",
+          start_time: code_deploy_start,
+          end_time: code_deploy_start + 30.minutes,
+          completed: true
+        }.reverse_merge(outage_params))
+        code_deploy.cis_outages.create!(ci: Ci.find_by(name: "sal001prf"))
+        code_deploy.cis_outages.create!(ci: Ci.find_by(name: "sal002prf"))
+        code_deploy.cis_outages.create!(ci: Ci.find_by(name: "sal003prf"))
+
+        load_balancer_config_start = demo_start_time + 23.hours
+        load_balancer_config = account.outages.create!({
+          name: "Load balancer config",
+          description: "Deploy new production load balancer config " \
+                      "in preparation for new system.",
+          start_time: load_balancer_config_start,
+          end_time: load_balancer_config_start + 30.minutes
+        }.reverse_merge(outage_params))
+        load_balancer_config.cis_outages.create!(ci: prd_load_balancer)
+
+        db_outage_2_start = demo_start_time + 2.days - 1.hour
+        db_outage_2 = account.outages.create!({
+          name: "DB Outage",
+          description: "Full cold backup of all data in preparation for " \
+            "data centre relocation.",
+          start_time: db_outage_2_start,
+          end_time: db_outage_2_start + 5.hours
+        }.reverse_merge(outage_params))
+        db_outage_2.cis_outages.create!(ci: db_server)
+
+        packet_size_start = demo_start_time + 29.hours
+        packet_size = account.outages.create!({
+          name: "IP packet size",
+          description: "Configuration change of IP packet size on server.",
+          start_time: packet_size_start,
+          end_time: packet_size_start + 75.minutes
+        }.reverse_merge(outage_params))
+        packet_size.cis_outages.create!(ci: Ci.find_by(name: "sal001prf"))
+        packet_size.cis_outages.create!(ci: Ci.find_by(name: "sal002prf"))
+        packet_size.cis_outages.create!(ci: Ci.find_by(name: "sal003prf"))
 
         # Watches
         # Server admin watches are created above when the servers are created
@@ -225,6 +270,7 @@ namespace :demo do
                                         watched: public_web_site
                                       }])
         sales_app_support.watches.create!(watched: sales_app_prd)
+        email_notifications.watches.create!(watched: sales_app_prd)
 
         # Put out some helpful messages at the end.
         account.users.each do |u|
