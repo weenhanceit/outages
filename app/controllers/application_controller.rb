@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
   # require 'lib/user.rb'
+  # FIXME: Check that users without privilege don't get to edit pages.
+  # Wherever the code is that checks for login.
   protect_from_forgery with: :exception
   around_action :use_user_time_zone, if: :current_user
   before_action :online_notifications,
