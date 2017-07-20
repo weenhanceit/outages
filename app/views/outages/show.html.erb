@@ -39,7 +39,8 @@
       <ul class="list-unstyled">
         <%# FIXME: These don't seem to work. %>
         <li>
-          <%= f.check_box :completed %>
+          <%= f.check_box :completed,
+                current_user.can_edit_outages? ? {} : { disabled: "disabled" } %>
         </li>
         <li>
           <%= f.check_box :causes_loss_of_service, disabled: "disabled" %>

@@ -130,20 +130,15 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     visit outage_url(@outage)
 
     assert_difference "Outage.unscoped.where(completed: true).count" do
-      puts "Completing..."
       check "Completed"
       # TODO: There has to be a better way for these ajax things
       sleep 2
     end
-    puts "Past Complete"
     assert_difference "Outage.unscoped.where(completed: true).count", -1 do
-      puts "Un-completing..."
       uncheck "Completed"
       # TODO: There has to be a better way for these ajax things
       sleep 2
     end
-    puts "Past Un-complete"
-    flunk
   end
 
   test "set and unset watched" do
@@ -158,15 +153,12 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       uncheck "Watched"
       sleep 2
     end
-    flunk
   end
 
   test "basic user can't set completed" do
     sign_in_for_system_tests(users(:basic))
     visit outage_url(@outage)
-    # TODO: How to check if the field is not enabled?
-    assert_no_checked_field "Completed"
-    flunk
+    assert_field "Completed", disabled: true
   end
 
   def setup
