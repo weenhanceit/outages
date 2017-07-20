@@ -4,7 +4,7 @@
 %>
 <div class="mb-3">
   <h1>
-    <%# FIXME: Make into in-line with edit button right-justified. %>
+    <%# TODO: Make into in-line with edit button right-justified. %>
     <%= @outage.name %>
     <small>
       <%= link_to "Edit Outage Information",
@@ -23,6 +23,7 @@
           Start Time:
         </div>
         <div class="col">
+          <%#= FIXME: This shows time in UTC, apparently %>
           <%= f.object.start_time.to_s(:db) %>
         </div>
       </div>
@@ -37,6 +38,7 @@
     </div>
     <div class="col">
       <ul class="list-unstyled">
+        <%# FIXME: These don't seem to work. %>
         <li>
           <%= f.check_box :completed %>
         </li>

@@ -23,6 +23,7 @@ class OutagesController < ApplicationController
     # puts "DAY PARAMS: #{params.inspect}"
     start_date = normalize_params
     params[:earliest] = start_date.to_date.to_s(:browser)
+    # FIXME: I think this is done in the search now, so we don't need it.
     params[:latest] = (start_date + 1.day).to_date.to_s(:browser)
     params[:start_date] = start_date.to_s(:ymd)
     outages
@@ -48,6 +49,7 @@ class OutagesController < ApplicationController
     # puts "FOURDAY PARAMS: #{params.inspect}"
     start_date = normalize_params
     params[:earliest] = start_date.to_date.to_s(:browser)
+    # FIXME: I think this is done in the search now, so we don't need it.
     params[:latest] = (start_date + 4.days).to_date.to_s(:browser)
     params[:start_date] = start_date.to_s(:ymd)
     outages
@@ -130,6 +132,7 @@ class OutagesController < ApplicationController
     # puts "WEEK PARAMS: #{params.inspect}"
     start_date = normalize_params
     params[:earliest] = start_date.beginning_of_week.to_date.to_s(:browser)
+    # FIXME: I think this is done in the search now, so we don't need it.
     params[:latest] = (start_date.end_of_week + 1.day).to_date.to_s(:browser)
     params[:start_date] = start_date.to_s(:ymd)
     outages
