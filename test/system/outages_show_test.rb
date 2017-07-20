@@ -125,6 +125,50 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     skip "Failing to destroy note would be too hard to fake."
   end
 
+  test "set and unset completed" do
+    sign_in_for_system_tests(users(:edit_ci_outages))
+    visit outage_url(@outage)
+
+    assert_difference "Outage.unscoped.where(completed: true).count" do
+      puts "Completing..."
+      check "Completed"
+      # TODO: There has to be a better way for these ajax things
+      sleep 2
+    end
+    puts "Past Complete"
+    assert_difference "Outage.unscoped.where(completed: true).count", -1 do
+      puts "Un-completing..."
+      uncheck "Completed"
+      # TODO: There has to be a better way for these ajax things
+      sleep 2
+    end
+    puts "Past Un-complete"
+    flunk
+  end
+
+  test "set and unset watched" do
+    sign_in_for_system_tests(users(:basic))
+    visit outage_url(@outage)
+
+    assert_difference "Watch.count" do
+      check "Watched"
+      sleep 2
+    end
+    assert_difference "Watch.count", -1 do
+      uncheck "Watched"
+      sleep 2
+    end
+    flunk
+  end
+
+  test "basic user can't set completed" do
+    sign_in_for_system_tests(users(:basic))
+    visit outage_url(@outage)
+    # TODO: How to check if the field is not enabled?
+    assert_no_checked_field "Completed"
+    flunk
+  end
+
   def setup
     @outage = Outage.find_by(account: accounts(:company_a), name: "Outage A")
     @outage.notes.create([

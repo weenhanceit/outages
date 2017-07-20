@@ -108,21 +108,26 @@ class OutagesController < ApplicationController
   end
 
   def update
-    # puts "IN UPDATE"
+    puts "IN UPDATE"
+    puts params.inspect
     update_watches
     # puts "params.require(:outage): #{params.require(:outage).inspect}"
     # puts "outage_params: #{outage_params.inspect}"
     # logger.debug "outages_controller.rb TP_#{__LINE__} Is this an outage? #{@outage.is_a?(Outage)}   #{@outage.inspect}"
 
+    puts "@outage.completed before: #{@outage.completed}"
     @outage.assign_attributes(outage_params)
+    puts "@outage.completed after: #{@outage.completed}"
     # logger.debug "outages_controller.rb TP_#{__LINE__} changed: #{@outage.changed?}"
     # @outage.attributes= outage_params
     # o = Outage.find(@outage.id)
     # puts "outages_controller.rb TP_#{__LINE__} #{o.inspect}"
     # puts "outages_controller.rb TP_#{__LINE__} #{@outage.inspect} changed: #{@outage.changed?}"
     if Services::SaveOutage.call(@outage)
+      puts "Saved"
       redirect_to outages_path
     else
+      puts "Failed to save"
       logger.warn @outage.errors.full_messages
       render :edit
     end
