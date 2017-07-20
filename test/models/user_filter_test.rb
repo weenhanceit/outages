@@ -327,7 +327,6 @@ class UserFilterTest < ActiveSupport::TestCase
     Watch.create(user: @user2, watched: outages_not_in_filter[0])
 
     # Check Filters
-    puts "OUTAGES IN FILTER: #{outages_in_filter.inspect}"
     assert_equal outages_in_filter,
       @user1.filter_outages(watching: "Of interest to me", completed: true)
 

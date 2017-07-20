@@ -38,12 +38,12 @@ module OutagesHelper
   end
 
   ##
-  # For grid view when it's by itself, defaul to showing only two weeks.
+  # For grid view when it's by itself, default to showing only two weeks.
   def outages_before
-    puts "outages_before: #{params.fetch(:latest, session.fetch(:latest, default_latest.to_s(:browser)))}"
-    puts "params[:latest]: #{params[:latest]}" if params[:latest].present?
-    puts "session[:latest]: #{session[:latest]}" if session[:latest].present?
-    puts "default_latest.to_s(:browser): #{default_latest.to_s(:browser)}"
+    # puts "outages_before: #{params.fetch(:latest, session.fetch(:latest, default_latest.to_s(:browser)))}"
+    # puts "params[:latest]: #{params[:latest]}" if params[:latest].present?
+    # puts "session[:latest]: #{session[:latest]}" if session[:latest].present?
+    # puts "default_latest.to_s(:browser): #{default_latest.to_s(:browser)}"
     params.fetch(:latest, session.fetch(:latest, default_latest.to_s(:browser)))
   end
 

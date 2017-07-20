@@ -82,7 +82,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         end
 
         assert_checked_field "watching_All"
-        assert_field "Outages Before", with: "2017-09-01"
+        assert_field "Outages Before", with: "01/09/2017"
       end
     end
   end
@@ -111,7 +111,8 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         end
 
         assert_checked_field "watching_All"
-        assert_field "Outages Before", with: ""
+        # NOTE: Currently fills in the default date.
+        assert_field "Outages Before", with: "2017-08-31"
       end
     end
   end
@@ -145,8 +146,8 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         end
 
         assert_checked_field "watching_Of_interest_to_me"
-        assert_field "Outages After", with: ""
-        assert_field "Outages Before", with: "2017-08-14"
+        assert_field "Outages After", with: "2017-07-31"
+        assert_field "Outages Before", with: "04/08/2017"
       end
     end
   end
@@ -315,7 +316,6 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       travel_to Time.zone.local(2017, 7, 28, 10, 17, 21) do
         user = sign_in_for_system_tests(users(:basic))
 
-        visit outages_url
         current_window.maximize
 
         fill_in "Outages Before",
@@ -328,7 +328,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           assert_selector "tbody tr", count: 2
         end
 
-        assert_field "Outages Before", with: "2017-03-31"
+        assert_no_field "Outages Before"
       end
     end
   end
