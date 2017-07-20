@@ -23,8 +23,7 @@
           Start Time:
         </div>
         <div class="col">
-          <%#= FIXME: This shows time in UTC, apparently %>
-          <%= f.object.start_time.to_s(:db) %>
+          <%= f.object.start_time.to_s(:wall) %>
         </div>
       </div>
       <div class="row">
@@ -32,7 +31,7 @@
           End Time:
         </div>
         <div class="col">
-          <%= f.object.end_time.to_s(:db) %>
+          <%= f.object.end_time.to_s(:wall) %>
         </div>
       </div>
     </div>

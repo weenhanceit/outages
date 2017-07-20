@@ -55,11 +55,7 @@
         <%= outage.end_time.strftime("%a, %d %b %Y %H:%M") if outage.end_time %>
       </td>
       <td>
-        <% if current_user.can_edit_outages? %>
-        <%= link_to outage.name, edit_outage_path(outage) %>
-        <% else %>
-        <%= link_to outage.name, outage_path(outage) %>
-        <% end %>
+        <%= link_to outage.name, edit_or_show_outage_path(outage) %>
       </td>
       <td>
         <%= outage.completed %>

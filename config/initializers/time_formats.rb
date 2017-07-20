@@ -1,5 +1,6 @@
-Time::DATE_FORMATS[:hms] = "%H:%M:%S"
 Time::DATE_FORMATS[:browser] = "%Y-%m-%d"
+Time::DATE_FORMATS[:hms] = "%H:%M:%S"
 Time::DATE_FORMATS[:to_browser_date] = "%d/%m/%Y"
 # Time::DATE_FORMATS[:browser] = "%Y-%m-%dT%H:%M"
+Time::DATE_FORMATS[:wall] = "%Y-%m-%d %H:%M:%S"
 Time::DATE_FORMATS[:ymd] = "%Y-%m-%d"
