@@ -7,6 +7,7 @@
     <%# TODO: Make into in-line with edit button right-justified. %>
     <%= @outage.name %>
     <small>
+      <%# FIXME: Only show this button to users with the privilege. %>
       <%= link_to "Edit Outage Information",
             edit_outage_path(@outage),
             class: "btn btn-sm btn-secondary" %>
@@ -65,7 +66,8 @@
       <div class="border rounded">
         <ul class="list-unstyled">
           <% @outage.cis_outages.each do |ci| %>
-          <li><%= link_to ci.name, ci_path(ci) %></li>
+          <%# The following has to be the id of the CI from the join table. %>
+          <li><%= link_to ci.name, ci_path(ci.ci_id) %></li>
           <% end %>
         </ul>
       </div>
