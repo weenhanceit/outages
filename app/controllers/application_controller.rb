@@ -2,7 +2,6 @@ class ApplicationController < ActionController::Base
   # require 'lib/user.rb'
   protect_from_forgery with: :exception
   before_action :authenticate_user!
-  # FIXME: Check that users without privilege don't get to edit pages.
   around_action :use_user_time_zone, if: :current_user
   before_action :online_notifications,
     if: :current_user,
@@ -43,6 +42,14 @@ class ApplicationController < ActionController::Base
   end
 
   helper_method :edit_or_show_outage_path
+
+  ##
+  # A generic way of responding to errors in controllers so the user sees
+  # a 404 Not Found page.
+  # See: https://stackoverflow.com/a/4983354/3109926
+  def not_found
+    raise ActionController::RoutingError.new("Not Found")
+  end
 
   ##
   # Put the current user's on-line notifications in an instance variable of

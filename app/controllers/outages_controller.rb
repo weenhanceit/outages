@@ -42,6 +42,7 @@ class OutagesController < ApplicationController
 
   def edit
     #  puts "IN EDIT"
+    not_found unless current_user.can_edit_outages?
     # TODO: This hack to make watches work was ugly. Hopefully Ajax can fix.
     @outage.watched_by(current_user)
   end

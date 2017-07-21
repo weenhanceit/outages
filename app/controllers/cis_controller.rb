@@ -33,6 +33,7 @@ class CisController < ApplicationController
   end
 
   def edit
+    not_found unless current_user.can_edit_cis?
     # puts "IN EDI"
     @ci = current_user.account.cis.find_by(id: params[:id])
     @ci.watched_by(current_user)
