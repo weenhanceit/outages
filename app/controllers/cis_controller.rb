@@ -40,7 +40,15 @@ class CisController < ApplicationController
   end
 
   def index
-    @cis = current_user.account.cis.where(active: true).order(:name)
+    # puts "INDEX PARAMS: #{params.inspect}"
+    @cis = current_account.cis.where(active: true)
+    @cis = @cis.where("lower(name) like ?", "%#{params[:text].downcase}%") if params[:text]
+    @cis = @cis.order(:name)
+
+    # respond_to do |format|
+    #   format.html
+    #   format.js
+    # end
   end
 
   def new

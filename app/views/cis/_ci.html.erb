@@ -1,0 +1,21 @@
+<tr class="test-<%= ci.id %>">
+  <td>
+    <%= link_to ci.name, edit_or_show_ci_path(ci.id) %>
+  </td>
+  <td>
+      <%= ci.description %>
+  </td>
+  <td>
+    <p>
+      <%# NOTE: You often have to specify formats when switching back and forth
+                between protocols (e.g. js and html) in views. %>
+      <%= render partial: "watches/form",
+            formats: [:html],
+            locals: {
+              watch: ci.watched_by_or_new(current_user),
+              row_index: ci_counter
+              } %>
+      <!-- All watches have same properties, which come from user preferences -->
+    </p>
+  </td>
+</tr>

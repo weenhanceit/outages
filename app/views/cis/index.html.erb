@@ -1,3 +1,6 @@
+<% content_for :filter do %>
+  <%= render partial: "filters" %>
+<% end %>
 <h1>Services</h1>
 <table>
   <thead>
@@ -13,29 +16,7 @@
       </td>
     </tr>
   </thead>
-  <tbody>
-    <% @cis.each_with_index do |ci, index| %>
-      <tr class="test-<%= ci.id %>">
-        <td>
-          <%= link_to ci.name, edit_or_show_ci_path(ci.id) %>
-          <!-- TODO: Where the above goes to may depend on permissions. -->
-        </td>
-        <td>
-            <%= ci.description %>
-        </td>
-        <td>
-          <p>
-            <%= render partial: "watches/form",
-                  locals: {
-                    watch: ci.watched_by_or_new(current_user),
-                    row_index: index
-                    } %>
-            <!-- All watches have same properties, which come from user preferences -->
-          </p>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
+  <%= render partial: "cis" %>
 </table>
 <br />
 <p>
