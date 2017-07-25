@@ -13,14 +13,18 @@ class CisFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassL
         end
 
         fill_in "Text", with: "B"
-        assert_no_text "Server AA"
+        puts "filled in text with B"
+        assert_no_text "Server AA", wait: 10
 
         click_link "Outages"
         assert_text "Outage"
         click_link "Services"
+        # YUCK: Once again, having to put in sleep because we do things that
+        # can't be seen on the front end.
+        sleep 1
+        assert_no_text "Server AA"
         assert_field "Text", with: "B"
         assert_text "Server BB"
-        assert_no_text "Server AA"
       end
     end
   end

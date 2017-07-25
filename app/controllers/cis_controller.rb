@@ -40,15 +40,18 @@ class CisController < ApplicationController
   end
 
   def index
-    # puts "INDEX PARAMS: #{params.inspect}"
+    puts "INDEX PARAMS: #{params.inspect}"
     @cis = current_account.cis.where(active: true)
-    @cis = @cis.where("lower(name) like ?", "%#{params[:text].downcase}%") if params[:text]
+    if params[:text]
+      session[:cis_text] = params[:text]
+    end
+    if session[:cis_text].present?
+      puts "CIs only: #{session[:cis_text]}"
+      @cis = @cis.where("lower(name) like ?", "%#{session[:cis_text].downcase}%")
+    end
+    puts "CIS.COUNT #{@cis.count}"
     @cis = @cis.order(:name)
-
-    # respond_to do |format|
-    #   format.html
-    #   format.js
-    # end
+    # puts render_to_string(partial: "cis")
   end
 
   def new
@@ -63,7 +66,7 @@ class CisController < ApplicationController
   def update
     @ci = current_user.account.cis.find_by(id: params[:id])
     update_watches
-    #  TODO This was a test that I was trying to create a save error.  But the
+    #  TODO: This was a test that I was trying to create a save error.  But the
     # ci was saved with a null account id
     # @ci.account_id = nil
     # phil = "Name: #{@ci.name} Valid: #{@ci.valid?} AccountID: #{@ci.account_id}"

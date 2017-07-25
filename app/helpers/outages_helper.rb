@@ -48,7 +48,7 @@ module OutagesHelper
   end
 
   ##
-  # Get the last used search string.
+  # Get the last used search string for outages.
   def search_string
     params.fetch(:frag, session[:frag])
   end
