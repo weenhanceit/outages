@@ -1,5 +1,5 @@
 <% content_for :filter do %>
-  <%= render partial: "filters" %>
+<%= render partial: "filters" %>
 <% end %>
 <h1>Services</h1>
 <table>
@@ -18,20 +18,23 @@
   </thead>
   <%= render partial: "cis" %>
 </table>
-<br />
+<br/>
 <p>
   <% if current_user.can_edit_cis? %>
-    <%= link_to "Add Service", new_ci_path, class: "btn btn-primary" %>
+  <%= link_to "Add Service", new_ci_path, class: "btn btn-primary" %>
   <% end %>
 </p>
-<hr>
-<h4>Notes, Issues, Questions, Futures</h4>
-<ul>
-  <li>Filters: radio buttons for all CIs vs. only CIs that I'm watching</li>
-  <li>Filters: check boxes for created by me, edited by me</li>
-  <li>Filters: free-form/wildcard text search on CI name, desription, and tags (TBC)</li>
-  <li>Filters: Show me what's changed (TBC)</li>
-  <li>Maybe more filters?</li>
-  <li>Add/Edit notes</li>
-  <li>Add/Edit/Delete tags</li>
-</ul>
+<div class="content-note">
+
+  <hr>
+  <h4>Notes, Issues, Questions, Futures</h4>
+  <ul>
+    <li>Filters: radio buttons for all CIs vs. only CIs that I'm watching</li>
+    <li>Filters: check boxes for created by me, edited by me</li>
+    <li>Filters: free-form/wildcard text search on CI name, desription, and tags (TBC)</li>
+    <li>Filters: Show me what's changed (TBC)</li>
+    <li>Maybe more filters?</li>
+    <li>Add/Edit notes</li>
+    <li>Add/Edit/Delete tags</li>
+  </ul>
+</div>
