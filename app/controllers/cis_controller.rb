@@ -40,16 +40,22 @@ class CisController < ApplicationController
   end
 
   def index
-    puts "INDEX PARAMS: #{params.inspect}"
-    @cis = current_account.cis.where(active: true)
-    if params[:text]
-      session[:cis_text] = params[:text]
+    # puts "INDEX PARAMS: #{params.inspect}"
+    session[:cis_watching] = params[:cis_watching] if params[:cis_watching].present?
+    # if session[:cis_watching].present? && session[:cis_watching] == "Of interest to me"
+    if helpers.cis_of_interest?
+      # puts "CIs watching: #{session[:cis_watching]}"
+      @cis = current_user.cis
+      # puts "FOUND WATCHED CIS: #{@cis.inspect}"
+    else
+      @cis = current_account.cis.where(active: true)
     end
+    session[:cis_text] = params[:text] if params[:text]
     if session[:cis_text].present?
-      puts "CIs only: #{session[:cis_text]}"
+      # puts "CIs only: #{session[:cis_text]}"
       @cis = @cis.where("lower(name) like ?", "%#{session[:cis_text].downcase}%")
     end
-    puts "CIS.COUNT #{@cis.count}"
+    # puts "CIS.COUNT #{@cis.count}"
     @cis = @cis.order(:name)
     # puts render_to_string(partial: "cis")
   end

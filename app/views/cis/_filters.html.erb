@@ -6,7 +6,6 @@
   <div class="form-group">
     <%= label_tag "text" do %>
     Text
-    <% puts "CIS SEARCH STRING #{cis_search_string}" %>
     <%= text_field_tag "text",
           cis_search_string,
           class: "form-control" %>
@@ -14,22 +13,22 @@
   </div>
   <div class="form-group">
     <div class="form-check">
-      <%= label_tag :watching,
+      <%= label_tag :cis_watching,
           value: "Interested",
           class: "form-check-label" do %>
-      <%= radio_button_tag :watching,
-            of_interest,
-            of_interest?,
+      <%= radio_button_tag :cis_watching,
+            cis_of_interest,
+            cis_of_interest?,
             class: "form-check-input" %>
       Of interest to me<% end %>
     </div>
     <div class="form-check">
-      <%= label_tag :watching,
+      <%= label_tag :cis_watching,
           value: "All",
           class: "form-check-label" do %>
-      <%= radio_button_tag :watching,
+      <%= radio_button_tag :cis_watching,
             "All",
-            !of_interest?,
+            !cis_of_interest?,
             class: "form-check-input" %>
       All<% end %>
     </div>

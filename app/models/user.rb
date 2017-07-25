@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :contributors, inverse_of: :user
   has_many :notes, inverse_of: :user
   has_many :watches, inverse_of: :user
+  has_many :cis, through: :watches, source: :watched, source_type: "Ci"
   has_many :notifications, through: :watches
 
   validates :active,
