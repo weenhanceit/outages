@@ -37,7 +37,7 @@ $(document).on('turbolinks:load', function() {
       msg = '<p>Using the ' +
         browser_tz +
         ' time zone. ' +
-        '. If you want to change your time zone, ' +
+        'If you want to change your time zone, ' +
         'go to the preferences page.</p>';
     } else if (browser_tz !== current_user_tz) {
       msg = '<p>You appear to be in ' +

@@ -118,6 +118,8 @@ company_d_outage_b:
   name: Outage B
   start_time: <%= Time.find_zone('Samoa').parse('2017-07-31T11:00:00') %>
 
+# Company D is for testing filters on outages and CIs.
+# Changing the number of Outages or CIs will probably break a lot of tests.
 company_d_outage_c:
   account: company_d
   active: true

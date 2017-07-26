@@ -121,11 +121,20 @@ company_c_012:
   description: Great grand child
   name: "012"
 
-# Company D
+# Company D is for testing filters on outages and CIs.
+# Changing the number of Outages or CIs will probably break a lot of tests.
 company_d_ci_a:
   account: company_d
   active: true
   description: Server AA Company D
   name: Server AA
+  maximum_unavailable_children_with_service_maintained:
+  minimum_children_to_maintain_service:
+
+company_d_ci_b:
+  account: company_d
+  active: true
+  description: Server BB Company D
+  name: Server BB
   maximum_unavailable_children_with_service_maintained:
   minimum_children_to_maintain_service:

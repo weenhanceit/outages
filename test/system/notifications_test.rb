@@ -199,7 +199,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
   def assert_check_notifications(expected = [])
     num = expected.size
     within(".notifications") do
-      assert_selector "h2", text: "Notifications"
+      assert_selector "h3", text: "Notifications"
 
       content = "You have #{num} un-read #{'notification'.pluralize(num)}."
       assert_content content

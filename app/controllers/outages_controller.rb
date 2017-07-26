@@ -42,6 +42,7 @@ class OutagesController < ApplicationController
 
   def edit
     #  puts "IN EDIT"
+    not_found unless current_user.can_edit_outages?
     # TODO: This hack to make watches work was ugly. Hopefully Ajax can fix.
     @outage.watched_by(current_user)
   end
@@ -149,7 +150,7 @@ class OutagesController < ApplicationController
   private
 
   def normalize_params
-    session[:frag] = params[:frag] if params[:frag].present?
+    session[:frag] = params[:frag] unless params[:frag].nil?
     session[:watching] = params[:watching] if params[:watching].present?
     session[:completed] = params[:completed] if params[:completed].present?
     normalize_start_date # Has to be the last line in the method.

@@ -33,13 +33,31 @@ class CisController < ApplicationController
   end
 
   def edit
+    not_found unless current_user.can_edit_cis?
     # puts "IN EDI"
     @ci = current_user.account.cis.find_by(id: params[:id])
     @ci.watched_by(current_user)
   end
 
   def index
-    @cis = current_user.account.cis.where(active: true).order(:name)
+    # puts "INDEX PARAMS: #{params.inspect}"
+    session[:cis_watching] = params[:cis_watching] if params[:cis_watching].present?
+    # if session[:cis_watching].present? && session[:cis_watching] == "Of interest to me"
+    if helpers.cis_of_interest?
+      # puts "CIs watching: #{session[:cis_watching]}"
+      @cis = current_user.cis
+      # puts "FOUND WATCHED CIS: #{@cis.inspect}"
+    else
+      @cis = current_account.cis.where(active: true)
+    end
+    session[:cis_text] = params[:text] if params[:text]
+    if session[:cis_text].present?
+      # puts "CIs only: #{session[:cis_text]}"
+      @cis = @cis.where("lower(name) like ?", "%#{session[:cis_text].downcase}%")
+    end
+    # puts "CIS.COUNT #{@cis.count}"
+    @cis = @cis.order(:name)
+    # puts render_to_string(partial: "cis")
   end
 
   def new
@@ -54,7 +72,7 @@ class CisController < ApplicationController
   def update
     @ci = current_user.account.cis.find_by(id: params[:id])
     update_watches
-    #  TODO This was a test that I was trying to create a save error.  But the
+    #  TODO: This was a test that I was trying to create a save error.  But the
     # ci was saved with a null account id
     # @ci.account_id = nil
     # phil = "Name: #{@ci.name} Valid: #{@ci.valid?} AccountID: #{@ci.account_id}"

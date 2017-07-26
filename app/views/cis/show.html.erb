@@ -5,11 +5,13 @@
 <div class="mb-3">
   <h1>
     <%= @ci.name %>
+    <% if current_user.can_edit_cis? %>
     <small>
       <%= link_to "Edit Service Information",
             edit_ci_path(@ci),
             class: "btn btn-sm btn-secondary" %>
     </small>
+    <% end %>
   </h1>
 
   <%= bootstrap_form_for(@ci, builder: WeitFormBuilder) do |f| %>

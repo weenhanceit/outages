@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :contributors, inverse_of: :user
   has_many :notes, inverse_of: :user
   has_many :watches, inverse_of: :user
+  has_many :cis, through: :watches, source: :watched, source_type: "Ci"
   has_many :notifications, through: :watches
 
   validates :active,
@@ -47,6 +48,7 @@ class User < ApplicationRecord
     # puts " ------------------#{__LINE__}--------------------------------------"
     # logger.debug "user.rb #{__LINE__}: PARAMS: #{params.inspect}"
     scope = account.outages.where(active: true, completed: false)
+    # FIXME: Make this case-insensitive
     if params[:frag].present?
       scope = scope.where("name like ?", "%#{params[:frag]}%")
     end
@@ -80,6 +82,7 @@ class User < ApplicationRecord
     # puts scope.is_a?(Array) ?
     #    "scope is an Array" : "SCOPE.TO_SQL: #{scope.to_sql}"
 
+    # FIXME: sort this by start time, end time, and name
     scope
   end
 

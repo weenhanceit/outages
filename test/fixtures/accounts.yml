@@ -9,6 +9,6 @@ company_b:
 company_c:
   name: Company C
 
-# Outages to test calendar filtering.
+# Outages to test filtering.
 company_d:
   name: Company D
