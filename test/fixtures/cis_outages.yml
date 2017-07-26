@@ -11,6 +11,10 @@ company_a_outage_c_ci_b:
   outage: company_a_outage_c
 
 # Company D
+company_d_outage_overnight_a_ci_a:
+  ci: company_d_ci_a
+  outage: company_d_outage_overnight_a
+
 company_d_outage_a_ci_a:
   ci: company_d_ci_a
   outage: company_d_outage_a
@@ -30,6 +34,10 @@ company_d_outage_d_ci_a:
 company_d_outage_e_ci_a:
   ci: company_d_ci_a
   outage: company_d_outage_e
+
+company_d_outage_overnight_e_ci_a:
+  ci: company_d_ci_a
+  outage: company_d_outage_overnight_e
 
 company_d_outage_f_ci_a:
   ci: company_d_ci_a

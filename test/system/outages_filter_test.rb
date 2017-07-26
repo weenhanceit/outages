@@ -152,6 +152,154 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     end
   end
 
+  test "calendar views contain same outages as grid" do
+    # TODO: These are two outages added for this test.
+    # They should be used in other tests as well and
+    # made active in the yml file.
+    outage = outages(:company_d_outage_overnight_a)
+    outage.active = true
+    outage.save
+    outage = outages(:company_d_outage_overnight_e)
+    outage.active = true
+    outage.save
+
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      travel_to Time.zone.local(2017, 5, 31) do
+        user = sign_in_for_system_tests(users(:edit_ci_outages_d))
+
+        # puts Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
+        fill_in "Outages After",
+          with: Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
+        fill_in "Outages Before",
+          with: Time.zone.local(2017, 8, 6).to_s(:to_browser_date)
+          # with: (Time.zone.local(2017, 8, 1) + 2.weeks).to_s(:to_browser_date)
+        click_button "Refresh"
+        assert_field "Outages After", with: "2017-08-01"
+
+        expected_outages = ["Outage C",
+                            "Outage  D",
+                            "Outage  E",
+                            "Outage Overnight E"]
+        # assert_expected_outages expected_outages
+
+        # within(".outages-grid") do
+        #   assert_text "Outage C", count: 1
+        #   assert_selector "tbody tr", count: 3
+        # end
+        #--------------------------------------------------------
+        the_date = Date.new(2017,6,26)
+        expected_day = ["Outage Overnight A"]
+        expected_4day = ["Outage Overnight A"]
+        expected_week = ["Outage Overnight A"]
+        expected_month = ["Outage Overnight A",
+                          "Outage Overnight A"]
+        assert_day_test expected_day,
+          expected_4day,
+          expected_week,
+          expected_month,
+          the_date.strftime("%Y-%m-%d")
+        #
+        #--------------------------------------------------------
+        the_date = Date.new(2017, 7, 1)
+        expected_day = []
+        expected_4day = []
+        expected_week = ["Outage Overnight A"]
+        expected_month = ["Outage Overnight A",
+                          "Outage B",
+                          "Outage C",
+                          "Outage D",
+                          "Outage E",
+                          "Outage Overnight E"]
+        # assert_day_test expected_day,
+        #   expected_4day,
+        #   expected_week,
+        #   expected_month,
+        #   the_date.strftime("%Y-%m-%d")
+        #--------------------------------------------------------
+        the_date = Date.new(2017, 7, 24)
+        expected_day = []
+        expected_4day = []
+        expected_week = ["Outage A"]
+        expected_month = ["Outage Overnight A",
+                          "Outage B",
+                          "Outage C",
+                          "Outage D",
+                          "Outage E",
+                          "Outage Overnight E"]
+        # assert_day_test expected_day,
+        #   expected_4day,
+        #   expected_week,
+        #   expected_month,
+        #   the_date.strftime("%Y-%m-%d")
+        #--------------------------------------------------------
+        the_date = Date.new(2017, 7, 26)
+        expected_day = []
+        expected_4day = []
+        expected_week = ["Outage A"]
+        expected_month = ["Outage Overnight A",
+                          "Outage B",
+                          "Outage C",
+                          "Outage D",
+                          "Outage E",
+                          "Outage Overnight E"]
+        # assert_day_test expected_day,
+        #   expected_4day,
+        #   expected_week,
+        #   expected_month,
+        #   the_date.strftime("%Y-%m-%d")
+        #--------------------------------------------------------
+        the_date = Date.new(2017, 7, 27)
+        expected_day = []
+        expected_4day = ["Outage A"]
+        expected_week = ["Outage A"]
+        expected_month = ["Outage Overnight A",
+                          "Outage B",
+                          "Outage C",
+                          "Outage D",
+                          "Outage E",
+                          "Outage Overnight E"]
+        assert_day_test expected_day,
+          expected_4day,
+          expected_week,
+          expected_month,
+          the_date.strftime("%Y-%m-%d")
+        # #--------------------------------------------------------
+        the_date = Date.new(2017, 7, 30)
+        expected_day = ["Outage A"]
+        expected_4day = ["Outage A"]
+        expected_week = ["Outage A"]
+        expected_month = ["Outage Overnight A",
+                          "Outage B",
+                          "Outage C",
+                          "Outage D",
+                          "Outage E",
+                          "Outage Overnight E"]
+        assert_day_test expected_day,
+          expected_4day,
+          expected_week,
+          expected_month,
+          the_date.strftime("%Y-%m-%d")
+        # #--------------------------------------------------------
+        the_date = Date.new(2017, 7, 31)
+        expected_day = []
+        expected_4day = ["Outage A"]
+        expected_week = ["Outage A"]
+        expected_month = ["Outage Overnight A",
+                          "Outage B",
+                          "Outage C",
+                          "Outage D",
+                          "Outage E",
+                          "Outage Overnight E"]
+        # assert_day_test expected_day,
+        #   expected_4day,
+        #   expected_week,
+        #   expected_month,
+        #   the_date.strftime("%Y-%m-%d")
+        # #--------------------------------------------------------
+      end
+    end
+  end
+
   test "calendar views by earliest date" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 5, 31) do
@@ -164,7 +312,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           with: (Time.zone.local(2017, 8, 1) + 2.weeks).to_s(:to_browser_date)
         click_button "Refresh"
         assert_field "Outages After", with: "2017-08-01"
-
+# assert_text "phil", count: 2
         within(".outages-grid") do
           assert_text "Outage C", count: 1
           assert_selector "tbody tr", count: 3
@@ -371,5 +519,59 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         assert_no_checked_field "Show Completed Outages"
       end
     end
+  end
+  private
+
+  def assert_day_test(exp_day, exp_4day, exp_week, exp_month, the_day)
+    fill_in "Outages After", with: the_day
+    click_button "Refresh"
+
+    click_link "Day"
+    assert_field "Outages After", with: the_day
+    assert_expected_outages exp_day, ".test-outages-day"
+
+    click_link "4-Day"
+    assert_field "Outages After", with: the_day
+    assert_expected_outages exp_4day, ".test-outages-fourday"
+
+    click_link "Week"
+    assert_field "Outages After", with: the_day
+    assert_expected_outages exp_week, ".test-outages-week"
+
+    click_link "Month"
+    # sleep 5
+    assert_field "Outages After", with: the_day
+    assert_expected_outages exp_month, ".test-outages-month"
+    # assert_expected_outages ["Outage Overnight A"], ".test-outages-month"
+    # puts body
+  end
+
+  def assert_expected_outages(expected, cal_div="")
+    puts "#{__LINE__}: expected: #{expected.inspect} div: #{cal_div}"
+    unless cal_div == ""
+      within(cal_div) do
+        expected.uniq.each do |o|
+          # puts "TP_#{__LINE__} o: #{o} Count: #{expected.count(o)}"
+          assert_text o, count: expected.count(o)
+        end
+      end
+    end
+
+    # Check Grid contains expected outages
+    within(".outages-grid") do
+      expected.uniq.each do |o|
+        # puts "TP_#{__LINE__}: Grid: #{o}"
+        assert_text o, count: 1
+      end
+      if expected.uniq.size.zero?
+        assert_selector "tbody tr", count: 1
+        assert_text "No outages in specified date range", count: 1
+      else
+        # puts "TP_#{__LINE__} Count: #{expected.uniq.size}"
+        assert_selector "tbody tr", count: expected.uniq.size
+        # assert_selector "tbody tr", count: 1
+      end
+    end
+
   end
 end

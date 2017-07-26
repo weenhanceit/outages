@@ -328,10 +328,10 @@ class UserFilterTest < ActiveSupport::TestCase
 
     # Check Filters
     assert_equal outages_in_filter,
-      @user1.filter_outages(watching: "Of interest to me", completed: true)
+      @user1.filter_outages(watching: "Of interest to me")
 
     assert_equal (outages_in_filter + outages_not_in_filter).sort,
-      @user1.filter_outages(watching: "All", completed: true).sort
+      @user1.filter_outages(watching: "All").sort
   end
 
   test "of interest 1 outage watched directly and indirectly" do
@@ -386,10 +386,46 @@ class UserFilterTest < ActiveSupport::TestCase
 
     # Check Filters
     assert_equal outages_in_filter,
-      @user1.filter_outages(watching: "Of interest to me", completed: true)
+      @user1.filter_outages(watching: "Of interest to me")
 
     assert_equal (outages_in_filter + outages_not_in_filter).sort,
-      @user1.filter_outages(watching: "All", completed: true).sort
+      @user1.filter_outages(watching: "All").sort
+  end
+
+  test "of interest completed outage" do
+    # initialize_account_and_users
+    initialize_account_and_users
+
+    # Set up our outages
+    outages_in_filter = []
+    outages_not_in_filter = []
+
+    outages_in_filter << Outage.create(account: @account,
+                                       active: true,
+                                       causes_loss_of_service: true,
+                                       completed: false,
+                                       end_time: Time.new + 1.day + 1.hour,
+                                       name: "outage 1",
+                                       start_time: Time.new + 1.day)
+
+    outages_not_in_filter << Outage.create(account: @account,
+                                           active: true,
+                                           causes_loss_of_service: true,
+                                           completed: true,
+                                           end_time: Time.new + 2.day + 1.hour,
+                                           name: "outage 2",
+                                           start_time: Time.new + 2.day)
+
+    # Set up watches
+    Watch.create(user: @user1, watched: outages_in_filter[0])
+    Watch.create(user: @user1, watched: outages_not_in_filter[0])
+
+    # Check Filters
+    assert_equal outages_in_filter,
+      @user1.filter_outages(watching: "Of interest to me")
+
+    assert_equal (outages_in_filter + outages_not_in_filter).sort,
+      @user1.filter_outages(watching: "Of interest to me", completed: "1").sort
   end
 
   private

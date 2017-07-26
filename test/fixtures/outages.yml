@@ -88,6 +88,16 @@ company_b_outage_inactive:
   name: Outage Inactive
   start_time: <%= Time.find_zone('Samoa').parse('2017-07-30T14:00:00') %>
 
+company_d_outage_overnight_a:
+  account: company_d
+  active: false
+  causes_loss_of_service: true
+  completed: false
+  description: Company D Outage Overnight A
+  end_time: <%= Time.find_zone('Samoa').parse('2017-06-26T00:30:00') %>
+  name: Outage Overnight A
+  start_time: <%= Time.find_zone('Samoa').parse('2017-06-25T23:30:00') %>
+
 company_d_outage_a:
   account: company_d
   active: true
@@ -139,6 +149,16 @@ company_d_outage_e:
   end_time: <%= Time.find_zone('Samoa').parse('2017-08-06T15:00:00') %>
   name: Outage E
   start_time: <%= Time.find_zone('Samoa').parse('2017-08-06T14:00:00') %>
+
+company_d_outage_overnight_e:
+  account: company_d
+  active: false
+  causes_loss_of_service: true
+  completed: false
+  description: Company D Outage Overnight E
+  end_time: <%= Time.find_zone('Samoa').parse('2017-08-06T23:30:00') %>
+  name: Outage Overnight E
+  start_time: <%= Time.find_zone('Samoa').parse('2017-08-07T00:30:00') %>
 
 company_d_outage_f:
   account: company_d
