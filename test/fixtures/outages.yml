@@ -156,9 +156,9 @@ company_d_outage_overnight_e:
   causes_loss_of_service: true
   completed: false
   description: Company D Outage Overnight E
-  end_time: <%= Time.find_zone('Samoa').parse('2017-08-06T23:30:00') %>
+  end_time: <%= Time.find_zone('Samoa').parse('2017-08-07T00:30:00') %>
   name: Outage Overnight E
-  start_time: <%= Time.find_zone('Samoa').parse('2017-08-07T00:30:00') %>
+  start_time: <%= Time.find_zone('Samoa').parse('2017-08-06T23:30:00') %>
 
 company_d_outage_f:
   account: company_d
@@ -176,6 +176,6 @@ company_d_outage_g_completed:
   causes_loss_of_service: true
   completed: true
   description: Company D outage G
-  end_time: <%= Time.find_zone('Samoa').parse('2017-07-31T12:00:00') %>
+  end_time: <%= Time.find_zone('Samoa').parse('2017-07-31T12:30:00') %>
   name: Outage G
-  start_time: <%= Time.find_zone('Samoa').parse('2017-07-31T12:30:00') %>
+  start_time: <%= Time.find_zone('Samoa').parse('2017-07-31T12:00:00') %>

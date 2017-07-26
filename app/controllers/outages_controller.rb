@@ -24,7 +24,7 @@ class OutagesController < ApplicationController
     start_date = normalize_params
     params[:earliest] = start_date.to_date.to_s(:browser)
     # FIXME: I think this is done in the search now, so we don't need it.
-    params[:latest] = (start_date + 1.day).to_date.to_s(:browser)
+    params[:latest] = start_date.to_date.to_s(:browser)
     params[:start_date] = start_date.to_s(:ymd)
     outages
   end

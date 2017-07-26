@@ -172,14 +172,14 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           with: Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
         fill_in "Outages Before",
           with: Time.zone.local(2017, 8, 6).to_s(:to_browser_date)
-          # with: (Time.zone.local(2017, 8, 1) + 2.weeks).to_s(:to_browser_date)
+        # with: (Time.zone.local(2017, 8, 1) + 2.weeks).to_s(:to_browser_date)
         click_button "Refresh"
         assert_field "Outages After", with: "2017-08-01"
 
-        expected_outages = ["Outage C",
-                            "Outage  D",
-                            "Outage  E",
-                            "Outage Overnight E"]
+        # expected_outages = ["Outage C",
+        #                     "Outage D",
+        #                     "Outage E",
+        #                     "Outage Overnight E"]
         # assert_expected_outages expected_outages
 
         # within(".outages-grid") do
@@ -187,7 +187,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         #   assert_selector "tbody tr", count: 3
         # end
         #--------------------------------------------------------
-        the_date = Date.new(2017,6,26)
+        the_date = Date.new(2017, 6, 26)
         expected_day = ["Outage Overnight A"]
         expected_4day = ["Outage Overnight A"]
         expected_week = ["Outage Overnight A"]
@@ -221,6 +221,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         expected_4day = []
         expected_week = ["Outage A"]
         expected_month = ["Outage Overnight A",
+                          "Outage A",
                           "Outage B",
                           "Outage C",
                           "Outage D",
@@ -237,6 +238,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         expected_4day = []
         expected_week = ["Outage A"]
         expected_month = ["Outage Overnight A",
+                          "Outage A",
                           "Outage B",
                           "Outage C",
                           "Outage D",
@@ -253,11 +255,16 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         expected_4day = ["Outage A"]
         expected_week = ["Outage A"]
         expected_month = ["Outage Overnight A",
+                          "Outage A",
                           "Outage B",
                           "Outage C",
                           "Outage D",
                           "Outage E",
                           "Outage Overnight E"]
+
+        outage = outages(:company_d_outage_overnight_e)
+        puts "Outage Overnight E start #{outage.start_time}"
+        puts "Outage Overnight E end #{outage.end_time}"
         assert_day_test expected_day,
           expected_4day,
           expected_week,
@@ -266,9 +273,12 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         # #--------------------------------------------------------
         the_date = Date.new(2017, 7, 30)
         expected_day = ["Outage A"]
-        expected_4day = ["Outage A"]
+        expected_4day = ["Outage A",
+                         "Outage B",
+                         "Outage C"]
         expected_week = ["Outage A"]
         expected_month = ["Outage Overnight A",
+                          "Outage A",
                           "Outage B",
                           "Outage C",
                           "Outage D",
@@ -281,10 +291,16 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           the_date.strftime("%Y-%m-%d")
         # #--------------------------------------------------------
         the_date = Date.new(2017, 7, 31)
-        expected_day = []
-        expected_4day = ["Outage A"]
-        expected_week = ["Outage A"]
+        expected_day = ["Outage B"]
+        expected_4day = ["Outage B",
+                         "Outage C",
+                         "Outage D"]
+        expected_week = ["Outage B",
+                         "Outage C",
+                         "Outage D",
+                         "Outage E"]
         expected_month = ["Outage Overnight A",
+                          "Outage A",
                           "Outage B",
                           "Outage C",
                           "Outage D",
@@ -312,7 +328,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           with: (Time.zone.local(2017, 8, 1) + 2.weeks).to_s(:to_browser_date)
         click_button "Refresh"
         assert_field "Outages After", with: "2017-08-01"
-# assert_text "phil", count: 2
+        # assert_text "phil", count: 2
         within(".outages-grid") do
           assert_text "Outage C", count: 1
           assert_selector "tbody tr", count: 3
@@ -520,6 +536,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       end
     end
   end
+
   private
 
   def assert_day_test(exp_day, exp_4day, exp_week, exp_month, the_day)
@@ -546,7 +563,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     # puts body
   end
 
-  def assert_expected_outages(expected, cal_div="")
+  def assert_expected_outages(expected, cal_div = "")
     puts "#{__LINE__}: expected: #{expected.inspect} div: #{cal_div}"
     unless cal_div == ""
       within(cal_div) do
@@ -572,6 +589,5 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         # assert_selector "tbody tr", count: 1
       end
     end
-
   end
 end
