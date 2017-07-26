@@ -205,50 +205,17 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         expected_4day = []
         expected_week = ["Outage Overnight A"]
         expected_month = ["Outage Overnight A",
-                          "Outage B",
-                          "Outage C",
-                          "Outage D",
-                          "Outage E",
-                          "Outage Overnight E"]
-        # assert_day_test expected_day,
-        #   expected_4day,
-        #   expected_week,
-        #   expected_month,
-        #   the_date.strftime("%Y-%m-%d")
-        #--------------------------------------------------------
-        the_date = Date.new(2017, 7, 24)
-        expected_day = []
-        expected_4day = []
-        expected_week = ["Outage A"]
-        expected_month = ["Outage Overnight A",
                           "Outage A",
                           "Outage B",
                           "Outage C",
                           "Outage D",
                           "Outage E",
                           "Outage Overnight E"]
-        # assert_day_test expected_day,
-        #   expected_4day,
-        #   expected_week,
-        #   expected_month,
-        #   the_date.strftime("%Y-%m-%d")
-        #--------------------------------------------------------
-        the_date = Date.new(2017, 7, 26)
-        expected_day = []
-        expected_4day = []
-        expected_week = ["Outage A"]
-        expected_month = ["Outage Overnight A",
-                          "Outage A",
-                          "Outage B",
-                          "Outage C",
-                          "Outage D",
-                          "Outage E",
-                          "Outage Overnight E"]
-        # assert_day_test expected_day,
-        #   expected_4day,
-        #   expected_week,
-        #   expected_month,
-        #   the_date.strftime("%Y-%m-%d")
+        assert_day_test expected_day,
+          expected_4day,
+          expected_week,
+          expected_month,
+          the_date.strftime("%Y-%m-%d")
         #--------------------------------------------------------
         the_date = Date.new(2017, 7, 27)
         expected_day = []
@@ -262,9 +229,9 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
                           "Outage E",
                           "Outage Overnight E"]
 
-        outage = outages(:company_d_outage_overnight_e)
-        puts "Outage Overnight E start #{outage.start_time}"
-        puts "Outage Overnight E end #{outage.end_time}"
+        # outage = outages(:company_d_outage_overnight_e)
+        # puts "Outage Overnight E start #{outage.start_time}"
+        # puts "Outage Overnight E end #{outage.end_time}"
         assert_day_test expected_day,
           expected_4day,
           expected_week,
@@ -298,7 +265,8 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         expected_week = ["Outage B",
                          "Outage C",
                          "Outage D",
-                         "Outage E"]
+                         "Outage E",
+                         "Outage Overnight E"]
         expected_month = ["Outage Overnight A",
                           "Outage A",
                           "Outage B",
@@ -306,11 +274,11 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
                           "Outage D",
                           "Outage E",
                           "Outage Overnight E"]
-        # assert_day_test expected_day,
-        #   expected_4day,
-        #   expected_week,
-        #   expected_month,
-        #   the_date.strftime("%Y-%m-%d")
+        assert_day_test expected_day,
+          expected_4day,
+          expected_week,
+          expected_month,
+          the_date.strftime("%Y-%m-%d")
         # #--------------------------------------------------------
       end
     end
@@ -564,7 +532,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
   end
 
   def assert_expected_outages(expected, cal_div = "")
-    puts "#{__LINE__}: expected: #{expected.inspect} div: #{cal_div}"
+    # puts "#{__LINE__}: expected: #{expected.inspect} div: #{cal_div}"
     unless cal_div == ""
       within(cal_div) do
         expected.uniq.each do |o|
