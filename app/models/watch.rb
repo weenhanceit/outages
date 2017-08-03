@@ -4,12 +4,12 @@
 class Watch < ApplicationRecord
   belongs_to :user
   belongs_to :watched, -> { unscope(where: :active) }, polymorphic: true
-  belongs_to :ci,
-    -> { where(watches: { watched_type: "Ci" }) },
-    foreign_key: :watched_id
-  belongs_to :outage,
-    -> { where(watches: { watched_type: "Outage" }) },
-    foreign_key: :watched_id
+  # belongs_to :ci,
+  #   -> { where(watches: { watched_type: "Ci" }).references(:watches) },
+  #   foreign_key: :watched_id
+  # belongs_to :outage,
+  #   -> { where(watches: { watched_type: "Outage" }).references(:watches) },
+  #   foreign_key: :watched_id
   has_many :notifications, inverse_of: :watches
 
   default_scope { where(active: true) }
@@ -22,16 +22,14 @@ class Watch < ApplicationRecord
   # 2. Indirect CI watch
   # 3. Outage watch
   def self.unique_watch_for(user, outage)
-    watch = where(user: user, cis_outages: { outage_id: outage })
-            .joins(ci: [:cis_outages]).first
+    watch = find_by(user: user, watched_type: "Ci", watched_id: outage.cis)
     return watch if watch
 
-    puts where(user: user, cis_outages: { outage_id: outage })
-      .joins(ci: [r_descendants: [:cis_outages]]).to_sql
-    watch = where(user: user, cis_outages: { outage_id: outage })
-            .joins(ci: [r_descendants: [:cis_outages]]).first
+    watch = find_by(user: user,
+                    watched_type: "Ci",
+                    watched_id: outage.cis.map(&:ancestors).flatten)
     return watch if watch
 
-    find_by(user: user, outage: outage)
+    find_by(user: user, watched_id: outage.id, watched_type: "Outage")
   end
 end

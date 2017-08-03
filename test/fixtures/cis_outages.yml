@@ -15,7 +15,7 @@ company_c_outage_watched_indirectly:
   ci: company_c_007
   outage: company_c_outage_watched_indirectly
 
-company_c_outage_watched_indirectly:
+company_c_outage_watched_three_ways:
   ci: company_c_008
   outage: company_c_outage_watched_three_ways
 

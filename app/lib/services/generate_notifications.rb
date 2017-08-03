@@ -41,7 +41,9 @@ module Services
     def self.create_reminder(user, outage)
       # rubocop:disable Lint/AssignmentInCondition
       return unless event = create_unique_reminder_event(user, outage)
-      puts "Event created: #{event.inspect}"
+      # puts "Event created: #{event.inspect}"
+      return unless watch = Watch.unique_watch_for(user, outage)
+      # puts "Watch found: #{watch.inspect}"
       # rubocop:enable Lint/AssignmentInCondition
       create_notifications(event, watch)
     end

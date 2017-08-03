@@ -163,16 +163,6 @@ class CiTest < ActiveSupport::TestCase
       .include?(@unrelated)
   end
 
-  test "dependency graph" do
-    @account.cis.each do |ci|
-      puts ci.id
-      puts ci.r_descendants.to_sql
-      puts ci.descendant_links.to_sql
-      assert_equal ci.ancestors.to_a.sort, ci.r_ancestors.to_a.sort
-      assert_equal ci.descendants.to_a.sort, ci.r_descendants.to_a.sort
-    end
-  end
-
   def setup
     @account = Account.new(name: "No CIs")
     @ci = Ci.create(account: @account, name: "Me")
