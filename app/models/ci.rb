@@ -23,6 +23,46 @@ class Ci < ApplicationRecord
   has_many :notes, as: :notable
   has_many :tags, as: :taggable
   has_many :watches, as: :watched, autosave: true, dependent: :destroy
+  has_many :ancestor_links, -> do
+    query = <<-SQL
+    join (with recursive search_graph(child_id, parent_id, starting_id) as (
+      select c.child_id, c.parent_id, c.child_id from cis_cis c
+      union select g.child_id, g.parent_id, sg.starting_id
+      from cis_cis g, search_graph sg
+      where sg.child_id = g.parent_id)
+      select parent_id, child_id, starting_id
+      from search_graph) as ancestors
+      on ancestors.starting_id = cis_cis.child_id
+    SQL
+    joins(query)
+  end, class_name: "CisCi", foreign_key: :child_id
+  has_many :r_ancestors, through: :ancestor_links, source: :parent
+  has_many :descendant_links, -> do
+    # Pure SQL:
+    # with recursive descendants(start_id, parent_id, child_id, depth) as (
+    # select parent_id, parent_id, child_id, 0
+    # from cis_cis where parent_id = 565268562 
+    # union
+    # select distinct descendants.start_id,
+    #   cis_cis.parent_id,
+    #   cis_cis.child_id,
+    #   descendants.depth + 1
+    # from descendants
+    # join cis_cis on cis_cis.parent_id = descendants.child_id)
+    # select start_id, parent_id, child_id, depth from descendants;
+    query = <<-SQL
+    join (with recursive search_graph(child_id, parent_id, starting_id) as (
+      select c.child_id, c.parent_id, c.parent_id from cis_cis c
+      union select g.child_id, g.parent_id, sg.starting_id
+      from cis_cis g, search_graph sg
+      where g.child_id = sg.parent_id)
+      select parent_id, child_id, starting_id
+      from search_graph) as descendants
+      on descendants.starting_id = cis_cis.parent_id
+    SQL
+    joins(query)
+  end, class_name: "CisCi", foreign_key: :parent_id
+  has_many :r_descendants, through: :descendant_links, source: :child
 
   validates :active,
     inclusion: { in: [true, false], message: "can't be blank" }
@@ -43,6 +83,18 @@ class Ci < ApplicationRecord
   # All the ancestor Cis of a CI
   def ancestors
     parents + parents.map(&:ancestors).flatten
+  end
+
+  ##
+  # All the ancestors as a Relation.
+  def ancestors_relation
+    Ci.where("id in (with recursive search_graph(child_id, parent_id) as (" \
+              "select c.child_id, c.parent_id from cis_cis c " \
+              "where c.child_id = ? " \
+              "union select sg.child_id, g.parent_id " \
+              "from cis_cis g, search_graph sg " \
+              "where g.child_id = sg.parent_id) " \
+              "select parent_id from search_graph)", self)
   end
 
   # All the ancestor Cis of a Ci that are affected by an outage
@@ -117,6 +169,21 @@ class Ci < ApplicationRecord
   # TODO: or maybe not. Think about it.
   def descendants_affected
     descendants
+  end
+
+  ##
+  # All the descendants as a Relation.
+  def descendants_relation
+    query = <<-SQL
+      id in (with recursive search_graph(child_id, parent_id) as (
+        select c.child_id, c.parent_id from cis_cis c
+        where c.parent_id = ?
+        union select sg.parent_id, g.child_id
+        from cis_cis g, search_graph sg
+        where g.parent_id = sg.child_id)
+      select child_id from search_graph)
+    SQL
+    Ci.where(query, self)
   end
 
   private

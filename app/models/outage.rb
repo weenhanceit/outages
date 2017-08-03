@@ -138,7 +138,7 @@ class Outage < ApplicationRecord
   # A Relation for all the
   # All the outages the user is directly watching
   # All outages the directly affect a CI that the user is watching
-  # All the outages that have a CI that has a descendent of a CI
+  # All the outages that have a CI that has a descendant of a CI
   # that the user is watching
   # The previous could be:
   # If the user is watching a CI that is an ancestor of a CI in an outage,

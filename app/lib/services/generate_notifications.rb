@@ -38,7 +38,23 @@ module Services
       end
     end
 
+    def self.create_reminder(user, outage)
+      # rubocop:disable Lint/AssignmentInCondition
+      return unless event = create_unique_reminder_event(user, outage)
+      puts "Event created: #{event.inspect}"
+      # rubocop:enable Lint/AssignmentInCondition
+      create_notifications(event, watch)
+    end
+
     private
+
+    def self.create_unique_reminder_event(_user, outage)
+      outage.events.create(event_type: "reminder",
+                           text:
+                            "Outaged Scheduled to Begin at " \
+                            "#{outage.start_time.to_s(:iso8601)}",
+                           handled: true)
+    end
 
     def self.handle_watch(event, watch)
       # puts "-xxyeh-: generate_notification.rb #{__LINE__}:"
@@ -76,6 +92,11 @@ module Services
                             notification_type: notification_type,
                             notified: false)
       end
+    end
+
+    def self.create_notifications(event, watch)
+      create_notification(event, watch, "online")
+      create_notification(event, watch, "email") if watch.user.preference_notify_me_by_email
     end
   end
 end
