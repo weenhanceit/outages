@@ -88,6 +88,30 @@ company_b_outage_inactive:
   name: Outage Inactive
   start_time: <%= Time.find_zone('Samoa').parse('2017-07-30T14:00:00') %>
 
+# Company C is for testing hierarchies of CIs.
+# Adding an outage to test watches through the graph.
+company_c_outage_watched_indirectly:
+  account: company_c
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company C watched through CI graph
+  end_time: <%= Time.find_zone('Samoa').local(2017, 6, 26, 0, 30, 0) %>
+  name: Outage Indirect
+  start_time: <%= Time.find_zone('Samoa').local(2017, 6, 25, 23, 30, 0) %>
+
+company_c_outage_watched_three_ways:
+  account: company_c
+  active: true
+  causes_loss_of_service: true
+  completed: false
+  description: Company C watched three ways
+  end_time: <%= Time.find_zone('Samoa').local(2017, 6, 26, 0, 30, 0) %>
+  name: Outage Indirect
+  start_time: <%= Time.find_zone('Samoa').local(2017, 6, 25, 23, 30, 0) %>
+
+# Company D is for testing filters on outages and CIs.
+# Changing the number of Outages or CIs will probably break a lot of tests.
 company_d_outage_overnight_a:
   account: company_d
   active: false
@@ -118,8 +142,6 @@ company_d_outage_b:
   name: Outage B
   start_time: <%= Time.find_zone('Samoa').parse('2017-07-31T11:00:00') %>
 
-# Company D is for testing filters on outages and CIs.
-# Changing the number of Outages or CIs will probably break a lot of tests.
 company_d_outage_c:
   account: company_d
   active: true

@@ -17,3 +17,18 @@ edit_watching_company_d_ci_a:
   active: true
   user: edit_ci_outages_d
   watched: company_d_ci_a (Ci)
+
+edit_watching_company_c_ci_001:
+  active: true
+  user: edit_ci_outages_c
+  watched: company_c_001 (Ci)
+
+edit_watching_company_c_outage:
+  active: true
+  user: edit_ci_outages_c
+  watched: company_c_outage_watched_three_ways (Outage)
+
+edit_watching_company_c_outage:
+  active: true
+  user: edit_ci_outages_c
+  watched: company_c_008 (Ci)

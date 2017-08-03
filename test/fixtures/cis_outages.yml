@@ -10,6 +10,15 @@ company_a_outage_c_ci_b:
   ci: company_a_ci_b
   outage: company_a_outage_c
 
+# Company C
+company_c_outage_watched_indirectly:
+  ci: company_c_007
+  outage: company_c_outage_watched_indirectly
+
+company_c_outage_watched_indirectly:
+  ci: company_c_008
+  outage: company_c_outage_watched_three_ways
+
 # Company D
 company_d_outage_overnight_a_ci_a:
   ci: company_d_ci_a
