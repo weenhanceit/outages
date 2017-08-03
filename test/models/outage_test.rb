@@ -1,6 +1,6 @@
 require "test_helper"
 
-class OutageTest < ActiveSupport::TestCase
+class OutageTest < ActiveSupport::TestCase # rubocop:disable Metrics/ClassLength
   test "validators" do
     outage = Outage.new
     assert_not outage.valid?, "Valid when it should be invalid."
@@ -171,4 +171,30 @@ class OutageTest < ActiveSupport::TestCase
     assert_not outage.only_completed_changed?
   end
 
+  test "get all users watching outage" do
+    account = accounts(:company_a)
+    outage_start = Time.zone.now.round + 1.hour
+    outage = account.outages.create!(
+      name: "Outage",
+      start_time: outage_start,
+      end_time: outage_start + 30.minutes,
+      causes_loss_of_service: true,
+      completed: false
+    )
+    # Direct CI watch
+    ci_d = cis(:company_a_ci_d)
+    outage.cis_outages.create!(ci: ci_d)
+    user_admin = users(:user_admin)
+    user_admin.watches.create!(watched: ci_d)
+
+    # Indirect CI watch
+    ci_b = cis(:company_a_ci_b)
+    basic = users(:basic)
+    basic.watches.create!(watched: ci_b)
+
+    # Direct watch of outage
+    outage.watches.create!(user: editor = users(:edit_ci_outages))
+
+    assert_equal [basic, editor, user_admin].sort, outage.users.sort
+  end
 end

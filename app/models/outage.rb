@@ -65,7 +65,6 @@ class Outage < ApplicationRecord
     completed_changed? && !completed
   end
 
-
   ##
   # If end time is on the date, return end time.
   # If end time is after the date, but start time is on the date or before,
@@ -135,6 +134,18 @@ class Outage < ApplicationRecord
   end
 
   ##
+  # All users watching the outage via any way.
+  def users
+    (watches.map(&:user) +
+      (cis + cis.map(&:ancestors).flatten)
+        .map(&:watches)
+        .flatten
+        .map(&:user)
+        .flatten)
+      .uniq
+  end
+
+  ##
   # A Relation for all the
   # All the outages the user is directly watching
   # All outages the directly affect a CI that the user is watching
@@ -172,7 +183,8 @@ class Outage < ApplicationRecord
       # puts "indirectly_watched_by_cis: #{watch.inspect}"
       # puts "indirectly_watched_by_cis: " \
       # "#{watch.watched.descendants_affected.inspect}"
-      watch.watched.descendants_affected # TODO: put this in to combine methods + [watch.watched
+      # TODO: put this in to combine methods + [watch.watched]
+      watch.watched.descendants_affected
     end.flatten.uniq
     # puts "indirectly_watched_by_cis: #{watched_cis.inspect}"
 
