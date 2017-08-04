@@ -13,7 +13,11 @@ class Outage < ApplicationRecord
   has_many :events, inverse_of: :outage, dependent: :destroy
   has_many :notes, as: :notable
   has_many :tags, as: :taggable
-  has_many :watches, as: :watched, autosave: true, dependent: :destroy
+  has_many :watches,
+            as: :watched,
+            autosave: true,
+            dependent: :destroy,
+            after_add: :schedule_reminders
 
   validates :active,
     :causes_loss_of_service,
@@ -210,5 +214,13 @@ class Outage < ApplicationRecord
     # puts "#{__LINE__} scope: #{scope.to_sql}"
     scope
     # joins(cis: { affected_cis: :watches }).where(watches: {user_id: user})
+  end
+
+  private
+
+  def schedule_reminders(watch)
+    if watch.user.notify_me_before_outage
+      Jobs::ReminderJob.schedule(self)
+    end
   end
 end
