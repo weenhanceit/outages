@@ -14,13 +14,19 @@ module Jobs
     end
 
     ##
-    # Schedule a reminder.
-    def self.schedule(user, outage)
-      t = outage.start_time -
-          user
-          .notification_periods_before_outage
-          .send(user.notification_period_interval.to_sym)
-      set(wait_until: t).perform_later(user, outage)
+    # Schedule reminders for an outage.
+    def self.schedule(outage)
+      puts "Scheduling: #{outage.inspect} for #{outage.users.inspect}"
+      outage.users.each do |user|
+        if user.notify_me_before_outage
+          puts "SCHEDULING IT."
+          t = outage.start_time -
+              user
+              .notification_periods_before_outage
+              .send(user.notification_period_interval.to_sym)
+          set(wait_until: t).perform_later(user, outage)
+        end
+      end
     end
 
     private

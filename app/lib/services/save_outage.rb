@@ -21,6 +21,11 @@ module Services
       return false unless outage.save
       # puts "-xxyeh- save_outage.rb: TP_#{__LINE__}"
 
+      changes = outage.previous_changes
+      puts "changes: #{changes}"
+
+      Jobs::ReminderJob.schedule(outage) if changes[:start_time].present?
+
       events = []
       # puts "Line: #{__LINE__}: events size: #{events.size}"
       if outage_event
@@ -53,18 +58,18 @@ module Services
       # end
     end
 
-    def self.outage_event_text (outage)
+    def self.outage_event_text(outage)
       determine_event_text(outage)[:outage]
     end
 
-    def self.completed_event_text (outage)
+    def self.completed_event_text(outage)
       determine_event_text(outage)[:completed]
     end
 
     def self.determine_event_text(outage)
       # puts "save_outage.rb TP_#{__LINE__}: outage new: #{outage.new_record?} active: #{outage.active}"
 
-      results = {outage: nil, completed: nil}
+      results = { outage: nil, completed: nil }
 
       # New outages
       if outage.new_record?
@@ -99,7 +104,6 @@ module Services
       results
     end
 
-
     # def self.event_text (outage)
     #   # puts "-xxyeh- save_outage.rb: TP_#{__LINE__}"
     #   # puts "-xxyeh- New: #{outage.new_record?} Active: #{outage.active} Changed: #{outage.changed?} Active Changed: #{outage.active_changed?}"
@@ -115,6 +119,5 @@ module Services
     #     end
     #   end
     # end
-
   end
 end
