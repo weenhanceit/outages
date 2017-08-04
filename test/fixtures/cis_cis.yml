@@ -10,6 +10,10 @@ company_a_ci_d_parent_of_company_a_ci_e:
   child: company_a_ci_e
   parent: company_a_ci_d
 
+company_a_ci_watched_by_edit_parent_of_company_a_ci_b:
+  child: company_a_ci_b
+  parent: company_a_ci_watched_by_edit
+
 # Company C is for testing CI hierarchies only
 company_c_001_002:
   child: company_c_002

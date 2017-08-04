@@ -22,4 +22,13 @@ class UserTest < ActiveSupport::TestCase
       "Privilege manage users can't be blank"
     ], user.errors.full_messages.sort
   end
+
+  test "get all outages watched by user" do
+    user = users(:edit_ci_outages)
+    assert_equal [
+      outages(:company_a_outage_watched_by_edit),
+      outages(:company_a_outage_ci_watched_by_edit),
+      outages(:company_a_outage_c)
+    ].sort, user.outages.sort
+  end
 end

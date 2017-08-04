@@ -4,11 +4,15 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+    :recoverable, :rememberable, :trackable, :validatable
   belongs_to :account
   has_many :contributors, inverse_of: :user
   has_many :notes, inverse_of: :user
   has_many :watches, inverse_of: :user
+  has_many :direct_outages,
+    through: :watches,
+    source: :watched,
+    source_type: "Outage"
   has_many :cis, through: :watches, source: :watched, source_type: "Ci"
   has_many :notifications, through: :watches
 
@@ -53,9 +57,7 @@ class User < ApplicationRecord
       scope = scope.where("name like ?", "%#{params[:frag]}%")
     end
 
-    if get_completed_too?(params)
-      scope = scope.unscope(where: :completed)
-    end
+    scope = scope.unscope(where: :completed) if get_completed_too?(params)
 
     # EXCLUDED: end <= earliest || latest <= start
     # EXCLUDED: earliest <= end || start <= latest
@@ -91,6 +93,14 @@ class User < ApplicationRecord
   # pending outages.
   def get_completed_too?(params)
     params.fetch(:completed, "0") == "1"
+  end
+
+  ##
+  # ALl outages currently watched by user.
+  def outages
+    (direct_outages +
+      cis.map(&:outages).flatten +
+      cis.map(&:descendants).flatten.map(&:outages).flatten).uniq
   end
 
   # Provide an array of outstanding (notified false) online notifications
