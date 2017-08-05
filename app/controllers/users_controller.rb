@@ -17,7 +17,8 @@ class UsersController < ApplicationController
   def update
     @user = current_user
 
-    if current_user.update(user_params)
+    current_user.update_attributes(user_params)
+    if Services::SaveUser.call(current_user)
       # redirect_to outages_path
     else
       logger.warn current_user.errors.full_messages
