@@ -12,10 +12,6 @@ class OutageTest < ActiveSupport::TestCase # rubocop:disable Metrics/ClassLength
     ], outage.errors.full_messages.sort
   end
 
-  test "default scope returns only active" do
-    assert_equal 16, Outage.count
-  end
-
   test "default scope sets value on new" do
     outage = Outage.new
     assert outage.active

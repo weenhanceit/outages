@@ -22,7 +22,7 @@ module Services
       # puts "-xxyeh- save_outage.rb: TP_#{__LINE__}"
 
       changes = outage.previous_changes
-      puts "changes: #{changes}"
+      # puts "changes: #{changes}"
 
       Jobs::ReminderJob.schedule(outage) if changes[:start_time].present?
 

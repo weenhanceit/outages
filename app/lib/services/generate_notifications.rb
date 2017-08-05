@@ -38,6 +38,9 @@ module Services
       end
     end
 
+    # TODO: Write unit tests on this method.
+    # If we refactor other tests out of existence, there will be much more
+    # risk that we would break this in the future.
     def self.create_reminder(user, outage)
       # rubocop:disable Lint/AssignmentInCondition
       return unless event = create_unique_reminder_event(user, outage)

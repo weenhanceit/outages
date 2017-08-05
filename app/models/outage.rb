@@ -4,7 +4,10 @@ class Outage < ApplicationRecord
   include Watched
 
   belongs_to :account
-  has_many :cis_outages, inverse_of: :outage, dependent: :destroy
+  has_many :cis_outages,
+    inverse_of: :outage,
+    dependent: :destroy,
+    autosave: true
   accepts_nested_attributes_for :cis_outages, allow_destroy: true
   has_many :cis, through: :cis_outages
   accepts_nested_attributes_for :cis
@@ -14,10 +17,10 @@ class Outage < ApplicationRecord
   has_many :notes, as: :notable
   has_many :tags, as: :taggable
   has_many :watches,
-            as: :watched,
-            autosave: true,
-            dependent: :destroy,
-            after_add: :schedule_reminders
+    as: :watched,
+    autosave: true,
+    dependent: :destroy,
+    after_add: :schedule_reminders
 
   validates :active,
     :causes_loss_of_service,
@@ -220,7 +223,7 @@ class Outage < ApplicationRecord
 
   def schedule_reminders(watch)
     if watch.user.notify_me_before_outage
-      Jobs::ReminderJob.schedule(self)
+      Jobs::ReminderJob.schedule(self, watch.user)
     end
   end
 end

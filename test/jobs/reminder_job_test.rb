@@ -4,23 +4,15 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
   test "watch on CI, create outage, get reminder" do
     # Remember to round the time so it will compare correctly after it's
     # been stored in the database.
-    start_time = Time.zone.now.round
-    outage = @account.outages.build(
-      name: "Outage",
-      start_time: start_time,
-      end_time: start_time + 30.minutes,
-      causes_loss_of_service: true,
-      completed: false
-    )
-    outage.cis_outages.build(ci: @ci)
+    outage = make_outage_with_ci_watch(Time.zone.now.round)
     assert_enqueued_jobs 1, only: Jobs::ReminderJob do
       Services::SaveOutage.call(outage)
     end
 
-    perform_enqueued_jobs do
+    assert_performed_jobs 1 do
       assert_difference "Event.count" do
         assert_difference "Notification.count", 2 do
-          Jobs::ReminderJob.perform_now(@user, outage)
+          Jobs::ReminderJob.perform_later(@user, outage)
         end
       end
     end
@@ -28,6 +20,7 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
 
   test "add watch to outage, get reminder" do
     outage = make_outage(Time.zone.now.round + 10.minutes)
+    Services::SaveOutage.call(outage)
     assert_no_enqueued_jobs
     assert_enqueued_jobs 1 do
       outage.watches.create!(user: @user)
@@ -36,92 +29,126 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
 
   test "outage starts earlier than originally planned" do
     outage = make_outage_with_ci_watch(Time.zone.now.round + 1.day)
-
-    assert_no_enqueued_jobs
-    outage.start_time -= 23.hours + 30.minutes
-    outage.end_time -= 23.hours + 30.minutes
-    assert_enqueued_jobs 1, only: Jobs::ReminderJob do
+    assert_enqueued_with at: outage.start_time - 1.hour do
       Services::SaveOutage.call(outage)
     end
+
+    original_outage = outage.dup
+    outage.start_time -= 23.hours + 30.minutes
+    outage.end_time -= 23.hours + 30.minutes
+    assert_enqueued_with(job: Jobs::ReminderJob,
+                         at: outage.start_time - 1.hour) do
+      Services::SaveOutage.call(outage)
+    end
+
+    assert Jobs::ReminderJob.send(:job_invalid?,
+      original_outage,
+      outage,
+      @user,
+      @user)
   end
 
   test "outage starts later than originally planned" do
     outage = make_outage_with_ci_watch(Time.zone.now.round + 5.minutes)
-
-    assert_enqueued_jobs 1, only: Jobs::ReminderJob
-    outage.start_time += 23.hours + 30.minutes
-    outage.end_time += 23.hours + 30.minutes
-    assert_no_enqueued_jobs only: Jobs::ReminderJob do
+    assert_enqueued_with at: outage.start_time - 1.hour do
       Services::SaveOutage.call(outage)
     end
-    # TODO: Should we run the job here to make sure it doesn't do anything?
+
+    original_outage = outage.dup
+    outage.start_time += 23.hours + 30.minutes
+    outage.end_time += 23.hours + 30.minutes
+    assert_enqueued_with(job: Jobs::ReminderJob,
+                         at: outage.start_time - 1.hour) do
+      Services::SaveOutage.call(outage)
+    end
+
+    assert Jobs::ReminderJob.send(:job_invalid?,
+      original_outage,
+      outage,
+      @user,
+      @user)
   end
 
   test "user stops asking for reminders" do
-    outage = make_outage_with_ci_watch()
+    outage = make_outage_with_ci_watch
+    Services::SaveOutage.call(outage)
     assert_enqueued_jobs 1, only: Jobs::ReminderJob
+    original_user = @user.dup
     @user.notify_me_before_outage = false
     @user.save!
-    assert_no_difference "Notification.count" do
-      assert_performed_jobs 1, only: Jobs::ReminderJob
-    end
+
+    assert Jobs::ReminderJob.send(:job_invalid?,
+      outage,
+      outage,
+      original_user,
+      @user)
   end
 
   test "user asks for reminders with existing outage" do
     @user.notify_me_before_outage = false
-    @user.save!
-    outage = make_outage_with_ci_watch(Time.zone.now + 2.hours)
+    Services::SaveUser.call(@user)
+    outage = make_outage_with_ci_watch(Time.zone.now.round + 2.hours)
+    Services::SaveOutage.call(outage)
     assert_no_enqueued_jobs only: Jobs::ReminderJob
-    @user.notify_me_before_outage = true
-    @user.save!
-    assert_enqueued_jobs 1, only: Jobs::ReminderJob
-    assert_difference "Notification.count" do
-      assert_performed_jobs 1, only: Jobs::ReminderJob
+    # puts "@user.outages: #{@user.outages}"
+    # puts "@user.cis: #{@user.cis.inspect}"
+    # puts "And so on: #{@user.cis.map(&:outages).flatten.inspect}"
+    # TODO: Why do I need this reload?
+    @user.reload
+    # puts "@user.outages: #{@user.outages}"
+    # puts "And so on: #{@user.cis.map(&:outages).flatten.inspect}"
+    assert_enqueued_with(job: Jobs::ReminderJob,
+                         at: outage.start_time - 1.hour) do
+      @user.notify_me_before_outage = true
+      assert Services::SaveUser.call(@user)
     end
   end
 
   test "user stops watching outage" do
     outage = make_outage(Time.zone.now.round + 10.minutes)
-    assert_no_enqueued_jobs
-    assert_enqueued_jobs 1 do
-      watch = outage.watches.create!(user: @user)
-      outage.watches.find(watch.id).destroy
-      outage.save!
-    end
-    assert_no_difference "Notification.count" do
-      assert_performed_jobs 1, only: Jobs::ReminderJob
-    end
+    Services::SaveOutage.call(outage)
+    outage.watches.create!(user: @user)
+    assert_enqueued_jobs 1
+    @user.watches.destroy_all
+    Services::SaveUser.call(@user)
+    assert Jobs::ReminderJob.send(:job_invalid?,
+      outage,
+      outage,
+      @user,
+      @user)
   end
 
   test "user stops watching CI of outage" do
     outage = make_outage_with_ci_watch(Time.zone.now.round + 10.minutes)
+    Services::SaveOutage.call(outage)
     assert_enqueued_jobs 1, only: Jobs::ReminderJob
-    outage.watches.destroy_all
-    outage.save!
-    assert_no_difference "Notification.count" do
-      assert_performed_jobs 1, only: Jobs::ReminderJob
-    end
+    @user.watches.destroy_all
+    Services::SaveUser.call(@user)
+    assert Jobs::ReminderJob.send(:job_invalid?,
+      outage,
+      outage,
+      @user,
+      @user)
   end
 
   private
 
   def make_outage(start_time = Time.zone.now.round)
-    @account.outages.create!(
-      name: "Outage",
-      start_time: start_time,
-      end_time: start_time + 30.minutes,
-      causes_loss_of_service: true,
-      completed: false
-    )
+    @account.outages.build(name: "Outage",
+                           start_time: start_time,
+                           end_time: start_time + 30.minutes,
+                           causes_loss_of_service: true,
+                           completed: false)
   end
 
   def make_outage_with_ci_watch(start_time = Time.zone.now.round)
     outage = make_outage(start_time)
-    outage.cis_outages.create!(ci: @ci)
+    outage.cis_outages.build(ci: @ci)
     outage
   end
 
   def setup # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    # TODO: Create more users.
     @account = Account.create!(name: "Reminders")
     @user = @account
             .users
