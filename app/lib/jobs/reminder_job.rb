@@ -6,11 +6,11 @@ module Jobs
       # If all is good, generate notification(s) for the user.
       outage_now = Outage.find(outage.id)
       user_now = User.find(user.id)
-      puts "Got current outage and user."
+      # puts "Got current outage and user."
       return if ReminderJob.job_invalid?(outage, outage_now, user, user_now)
-      puts "Job is valid."
+      # puts "Job is valid."
       Services::GenerateNotifications.create_reminder(user_now, outage_now)
-      puts "Notifications created."
+      # puts "Notifications created."
     end
 
     ##
@@ -47,7 +47,6 @@ module Jobs
     # * Outage is active and not completed
     # * Outage starts at the same time as when this job was scheduled
     # * The user notification period hasn't changed
-    # * TODO: Is the user still watching this outage?
     def self.job_invalid?(outage, outage_now, user, user_now)
       # puts "outage.start_time != outage_now.start_time: #{outage.start_time != outage_now.start_time}"
       # puts "outage_now.completed: #{outage_now.completed}"
@@ -55,7 +54,7 @@ module Jobs
       # puts "user.notification_periods_before_outage != user_now.notification_periods_before_outage: #{user.notification_periods_before_outage != user_now.notification_periods_before_outage}"
       # puts "user.notification_period_interval != user_now.notification_period_interval: #{user.notification_period_interval != user_now.notification_period_interval}"
       Watch.unique_watch_for(user, outage).nil? ||
-      outage.start_time != outage_now.start_time ||
+        outage.start_time != outage_now.start_time ||
         outage_now.completed ||
         !outage_now.active ||
         user.notify_me_before_outage != user_now.notify_me_before_outage ||
