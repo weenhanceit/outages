@@ -171,23 +171,32 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       user.notify_me_on_overdue_outage = false
       user.save!
 
-      # Pick an outage, any outage and create a watch on it
-      outage = Outage.where(account: user.account).first
-      outage.watches.create(active: true, user: user)
+      # TODO: This test needs to be fixed for the "Job" approach to reminders.
+      # LCR moved the assert_difference up here to catch the fact that the
+      # reminder can get generated simply by adding the watch. But if we add
+      # the check to not generate the notification if the event is passed,
+      # we'll have to create a specific event, or time travel to the right time
+      # earlier.
+      # Because the generation of the notification now depends on the job,
+      # this whole testing approach has to be changed to force the job to
+      # run.
+      assert_difference "Event.count" do
+        assert_difference "Notification.count" do
+          # Pick an outage, any outage and create a watch on it
+          outage = Outage.where(account: user.account).first
+          outage.watches.create(active: true, user: user)
 
-      # Be sure that time travelling will only pick up an event and notification
-      # for the outage we are watching in this test
-      mark_all_but_selected_outage_complete(outage.id)
+          # Be sure that time travelling will only pick up an event and notification
+          # for the outage we are watching in this test
+          mark_all_but_selected_outage_complete(outage.id)
 
-      # Time travel past the end date of the outage
-      travel_to outage.start_time - 1.minute do
-        assert_difference "Event.count" do
-          assert_difference "Notification.count" do
+          # TODO: The next comment doesn't seem to match the code.
+          # Time travel past the end date of the outage
+          travel_to outage.start_time - 1.minute do
             user = sign_in_for_system_tests(users(:edit_ci_outages))
             # After login we should be on the Outage index page
             # There should be 1 notification and the outage name show be there
             assert_check_notifications [outage.name]
-
           end
         end
       end
