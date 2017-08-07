@@ -131,6 +131,19 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
       @user)
   end
 
+  test "outage is completed when reminder runs -- no reminder" do
+    outage = make_outage_with_ci_watch(Time.zone.now.round + 10.minutes)
+    Services::SaveOutage.call(outage)
+    assert_enqueued_jobs 1, only: Jobs::ReminderJob
+    outage.completed = true
+    Services::SaveOutage.call(outage)
+    assert Jobs::ReminderJob.send(:job_invalid?,
+      outage,
+      outage,
+      @user,
+      @user)
+  end
+
   private
 
   def make_outage(start_time = Time.zone.now.round)
