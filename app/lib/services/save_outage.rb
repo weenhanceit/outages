@@ -29,14 +29,14 @@ module Services
       events = []
       # puts "Line: #{__LINE__}: events size: #{events.size}"
       if outage_event
-        events << outage.events.create(event_type: "outage",
-                                       text: outage_event,
-                                       handled: false)
+        events << Services::GenerateNotifications.create_event_and_notifications(outage,
+          "outage",
+          outage_event)
       end
       if completed_event
-        events << outage.events.create(event_type: "completed",
-                                       text: completed_event,
-                                       handled: false)
+        events << Services::GenerateNotifications.create_event_and_notifications(outage,
+          "completed",
+          completed_event)
       end
 
       return true if events.empty?

@@ -107,9 +107,10 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
   test "user stops watching outage" do
     outage = make_outage(Time.zone.now.round + 10.minutes)
     Services::SaveOutage.call(outage)
-    outage.watches.create!(user: @user)
+    watch = outage.watches.create!(user: @user)
     assert_enqueued_jobs 1
-    @user.watches.destroy_all
+    watch.active = false
+    watch.save!
     Services::SaveUser.call(@user)
     assert Jobs::ReminderJob.send(:job_invalid?,
       outage,
@@ -122,7 +123,10 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
     outage = make_outage_with_ci_watch(Time.zone.now.round + 10.minutes)
     Services::SaveOutage.call(outage)
     assert_enqueued_jobs 1, only: Jobs::ReminderJob
-    @user.watches.destroy_all
+    @user.watches.each do |w|
+      w.active = false
+      w.save!
+    end
     Services::SaveUser.call(@user)
     assert Jobs::ReminderJob.send(:job_invalid?,
       outage,

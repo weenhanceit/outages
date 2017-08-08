@@ -117,8 +117,8 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
                          text: "A test event - overdue",
                          event_type: :overdue)
 
-   outage.completed = true
-   outage.save
+    outage.completed = true
+    outage.save
 
     assert_no_difference "Notification.all.size" do
       Services::GenerateNotifications.call
@@ -335,18 +335,18 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
 
     assert_equal 1, user.outstanding_online_notifications.size
 
-    assert_difference "Event.count" do
-      outage.active = false
-      events = Services::SaveOutage.call(outage)
-
-      assert_equal 1, events.size, "Should only see an outage event on cancel"
-      cancelled_event = events[0]
-      assert_equal "outage", cancelled_event.event_type
-
-      assert_equal "Outage Cancelled", cancelled_event.text
-    end
-
     assert_difference "Notification.count" do
+      assert_difference "Event.count" do
+        outage.active = false
+        events = Services::SaveOutage.call(outage)
+
+        assert_equal 1, events.size, "Should only see an outage event on cancel"
+        cancelled_event = events[0]
+        assert_equal "outage", cancelled_event.event_type
+
+        assert_equal "Outage Cancelled", cancelled_event.text
+      end
+
       Services::GenerateNotifications.call
     end
     assert_equal 2, user.outstanding_online_notifications.size
@@ -531,7 +531,6 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
       watch.save
     end
   end
-
 
   private
 

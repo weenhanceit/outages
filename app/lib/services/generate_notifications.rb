@@ -14,28 +14,38 @@ module Services
         # puts "-xxyeh-: TP_#{__LINE__}"
         # puts "generate_notification.rb #{__LINE__}: Event: #{event.id} -xxyeh-"
         # puts "-xxyeh-: #{event.inspect}"
-        if event.outage
-          # puts "-xxyeh-: TP_#{__LINE__}"
-          # puts "generate_notification.rb #{__LINE__}: Outage: #{event.outage.name} -xxyeh-"
-          event.outage.watches.each do |watch|
-            # puts "-xxyeh-: TP_#{__LINE__}"
-            handle_watch event, watch
-          end
-          event.outage.cis.map(&:watches).flatten.each do |watch|
-            # puts "TP_#{__LINE__}"
-            handle_watch event, watch
-          end
-
-          event.outage.cis.map(&:ancestors_affected)
-               .flatten.map(&:watches).flatten.each do |watch|
-            # puts "TP_#{__LINE__}"
-            handle_watch event, watch
-          end
-        end
-        # puts "-xxyeh-: TP_#{__LINE__}"
-        event.handled = true
-        event.save
+        create_notifications_for_event(event)
       end
+    end
+
+    def self.create_notifications_for_event(event)
+      if event.outage
+        # puts "-xxyeh-: TP_#{__LINE__}"
+        # puts "generate_notification.rb #{__LINE__}: Outage: #{event.outage.name} -xxyeh-"
+        event.outage.watches.each do |watch|
+          # puts "-xxyeh-: TP_#{__LINE__}"
+          handle_watch event, watch
+        end
+        event.outage.cis.map(&:watches).flatten.each do |watch|
+          # puts "TP_#{__LINE__}"
+          handle_watch event, watch
+        end
+
+        event.outage.cis.map(&:ancestors_affected)
+             .flatten.map(&:watches).flatten.each do |watch|
+          # puts "TP_#{__LINE__}"
+          handle_watch event, watch
+        end
+      end
+      # puts "-xxyeh-: TP_#{__LINE__}"
+      event
+    end
+
+    def self.create_event_and_notifications(outage, event_type, event_text)
+      event = outage.events.create(event_type: event_type,
+                                   text: event_text,
+                                   handled: true)
+      create_notifications_for_event(event)
     end
 
     # TODO: Write unit tests on this method.
