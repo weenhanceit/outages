@@ -13,7 +13,7 @@ class OutageTest < ActiveSupport::TestCase
   end
 
   test "default scope returns only active" do
-    assert_equal 14, Outage.count
+    assert_equal 15, Outage.count
   end
 
   test "default scope sets value on new" do

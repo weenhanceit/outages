@@ -106,4 +106,12 @@ class User < ApplicationRecord
                         notification_type: "online")
                  .order(created_at: :desc)
   end
+
+  # Returns all outstanding notifications of a given notificaton type
+  def outstanding_notifications(notification_type)
+    notifications.where(notified: false,
+                        notification_type: notification_type)
+                 .order(created_at: :desc)
+  end
+
 end

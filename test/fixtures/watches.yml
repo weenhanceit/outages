@@ -17,3 +17,14 @@ edit_watching_company_d_ci_a:
   active: true
   user: edit_ci_outages_d
   watched: company_d_ci_a (Ci)
+
+company_mailer_test_watching_outage:
+  active: true
+  user: test_mail_recepient
+  watched: company_mailer_test_outage_a (Outage)
+
+
+company_mailer_test_watching_ci:
+  active: true
+  user: test_mail_recepient
+  watched: company_mailer_test_ci_a (Ci)

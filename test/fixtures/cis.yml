@@ -138,3 +138,12 @@ company_d_ci_b:
   name: Server BB
   maximum_unavailable_children_with_service_maintained:
   minimum_children_to_maintain_service:
+
+# company_mailer_test is only for testing the email notifications
+company_mailer_test_ci_a:
+  account: company_mailer_test
+  active: true
+  description: Server A Company Mailer Test
+  name: Server A
+  maximum_unavailable_children_with_service_maintained:
+  minimum_children_to_maintain_service:

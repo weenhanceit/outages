@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset-UTF-8' http-equiv= 'Content-Type' />
+  </head>
+  <body style="font-family: arial; font-size: 11pt;">
+    <h3>Hello, <%= @user.name %><h3>
+      <h4>Here are your latest notifications</h4>
+      <table style="width:50%; padding: 2px 40px 2px 20px;">
+        <tbody style="background-color: #F8F8FF;">
+          <% @notification_list.each do |item| %>
+            <tr>
+              <td colspan="3" style="font-weight: bold; padding: 5px;">
+                <%= link_to item[:event].outage.name, outage_url(item[:event].outage.id) %>
+              </td>
+            </tr>
+              <%#TODO NEXT: Put out the outage range in the user's time %>
+            <tr>
+              <td style="width: 15px">&nbsp;</td>
+              <td colspan="2" style=" padding: 5px 0px 1px 5px;">
+                <%= item[:event].text %>
+              </td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td colspan="2" style=" padding: 1px 0px 5px 5px; font-size: 10pt; font-style: italic">
+                <%= distance_of_time_in_words(item[:event].created_at,
+                            Time.zone.now,
+                            options = {include_seconds: true }) %> ago
+              </td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td colspan="2" style=" padding: 5pt; font-size: 11pt;">
+                You are receiving this notification because you are watching the
+                following:
+              </td>
+            </tr>
+            <% item[:watches].each do |w| %>
+              <tr>
+                <td style="width: 15px">&nbsp;</td>
+                <td style="width: 15px">&nbsp;</td>
+                <td colspan="2" style=" padding: 5pt; font-size: 10pt;">
+                  <% if w.watched_type == "Outage" %>
+                    Outage: <%= w.watched.name %>
+                  <% else %>
+                    Service: <%= w.watched.name %>
+                  <% end %>
+                  <%#= w.watched_type %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+
+    <p>
+        To review these outages and for the latest information
+        please click to go to the <%= link_to("Outages Site", new_user_session_url) %>
+    </p>
+  </body>
+</html>
