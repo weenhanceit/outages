@@ -17,9 +17,15 @@ module Services
       if (changes[:notify_me_before_outage].present? ||
         changes[:notification_periods_before_outage].present? ||
         changes[:notification_period_interval].present?) &&
-        user.notification_periods_before_outage
+        user.notify_me_before_outage
         # puts "Scheduling."
         Jobs::ReminderJob.schedule(user.outages, user)
+      end
+
+      if changes[:notify_me_on_overdue_outage].present? &&
+        user.notify_me_on_overdue_outage
+        # puts "Scheduling."
+        Jobs::OverdueJob.schedule(user.outages, user)
       end
 
       user

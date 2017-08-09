@@ -1,6 +1,5 @@
 module Jobs
   class ReminderJob < ApplicationJob
-    # TODO: This has to go with watches not users.
     def perform(user, outage)
       # Create an event if needed (but watch for races).
       # If all is good, generate notification(s) for the user.

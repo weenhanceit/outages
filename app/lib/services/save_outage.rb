@@ -25,6 +25,7 @@ module Services
       # puts "changes: #{changes}"
 
       Jobs::ReminderJob.schedule(outage) if changes[:start_time].present?
+      Jobs::OverdueJob.schedule(outage) if changes[:end_time].present?
 
       events = []
       # puts "Line: #{__LINE__}: events size: #{events.size}"

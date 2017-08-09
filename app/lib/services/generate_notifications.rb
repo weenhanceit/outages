@@ -28,6 +28,20 @@ module Services
       create_notifications_for_event(event)
     end
 
+    ##
+    # Create an overdue event and all notifications for it.
+    def self.create_overdue(user, outage)
+      # rubocop:disable Lint/AssignmentInCondition
+      return unless event = create_unique_overdue_event(user, outage)
+      # puts "Event created: #{event.inspect}"
+      return unless watch = Watch.unique_watch_for(user, outage)
+      # puts "Watch found: #{watch.inspect}"
+      # rubocop:enable Lint/AssignmentInCondition
+      create_notifications(event, watch)
+    end
+
+    ##
+    # Create an overdue event and all notifications for it.
     # TODO: Write unit tests on this method.
     # If we refactor other tests out of existence, there will be much more
     # risk that we would break this in the future.
@@ -43,15 +57,20 @@ module Services
 
     private
 
-    def self.create_unique_reminder_event(_user, outage)
-      outage.events.create(event_type: "reminder",
-                           text:
-                            "Outaged Scheduled to Begin at " \
+    def self.create_unique_overdue_event(_user, outage)
+      outage.events.create(event_type: "overdue",
+                           text: "Outaged Scheduled to Begin at " \
                             "#{outage.start_time.to_s(:iso8601)}",
                            handled: true)
     end
 
-    # TODO: To add e-mail notificaitons, change `create_notification`
+    def self.create_unique_reminder_event(_user, outage)
+      outage.events.create(event_type: "reminder",
+                           text: "Outage Not Completed As Scheduled",
+                           handled: true)
+    end
+
+    # TODO: To add e-mail notifications, change `create_notification`
     # to `create_notifications`
     def self.handle_watch(event, watch)
       # puts "-xxyeh-: generate_notification.rb #{__LINE__}:"
