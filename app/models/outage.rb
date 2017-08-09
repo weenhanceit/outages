@@ -143,13 +143,17 @@ class Outage < ApplicationRecord
   ##
   # All users watching the outage via any way.
   def users
-    (watches.map(&:user) +
+    watches_unique_by_user.map(&:user)
+  end
+
+  ##
+  # An arbitrary single watch per user for the outage..
+  def watches_unique_by_user
+    (watches +
       (cis + cis.map(&:ancestors).flatten)
         .map(&:watches)
-        .flatten
-        .map(&:user)
         .flatten)
-      .uniq
+    .uniq(&:user)
   end
 
   ##

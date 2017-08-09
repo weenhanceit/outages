@@ -6,38 +6,18 @@ module Services
     def self.call
       # TODO: Review this code and review whether this needs DRYing or
       # improving the performance
-      # puts "-xxyeh-: TP_#{__LINE__}"
-      # puts "generate_notification #{__LINE__}: - -xxyeh- -"
-      # puts "generate_notification.rb #{__LINE__}: -- IN the Loop!!!!!!!!!!!!!!!!!! -xxyeh-"
       events_to_handle = Event.where(handled: false)
       events_to_handle.each do |event|
-        # puts "-xxyeh-: TP_#{__LINE__}"
-        # puts "generate_notification.rb #{__LINE__}: Event: #{event.id} -xxyeh-"
-        # puts "-xxyeh-: #{event.inspect}"
         create_notifications_for_event(event)
       end
     end
 
     def self.create_notifications_for_event(event)
       if event.outage
-        # puts "-xxyeh-: TP_#{__LINE__}"
-        # puts "generate_notification.rb #{__LINE__}: Outage: #{event.outage.name} -xxyeh-"
-        event.outage.watches.each do |watch|
-          # puts "-xxyeh-: TP_#{__LINE__}"
-          handle_watch event, watch
-        end
-        event.outage.cis.map(&:watches).flatten.each do |watch|
-          # puts "TP_#{__LINE__}"
-          handle_watch event, watch
-        end
-
-        event.outage.cis.map(&:ancestors_affected)
-             .flatten.map(&:watches).flatten.each do |watch|
-          # puts "TP_#{__LINE__}"
+        event.outage.watches_unique_by_user.each do |watch|
           handle_watch event, watch
         end
       end
-      # puts "-xxyeh-: TP_#{__LINE__}"
       event
     end
 
@@ -71,6 +51,8 @@ module Services
                            handled: true)
     end
 
+    # TODO: To add e-mail notificaitons, change `create_notification`
+    # to `create_notifications`
     def self.handle_watch(event, watch)
       # puts "-xxyeh-: generate_notification.rb #{__LINE__}:"
       case event.event_type
@@ -98,6 +80,7 @@ module Services
     end
 
     def self.create_notification(event, watch, notification_type)
+      # TODO: the following search may not be quite right
       if Notification.all
                      .where(event: event, notification_type: notification_type)
                      .size.zero?
@@ -112,6 +95,7 @@ module Services
     def self.create_notifications(event, watch)
       create_notification(event, watch, "online")
       create_notification(event, watch, "email") if watch.user.preference_notify_me_by_email
+      # TODO: And trigger the e-mail here if the user wants immediate e-mails.
     end
   end
 end

@@ -14,9 +14,10 @@ module Services
       # puts "changes: #{changes}"
       # puts changes[:notify_me_before_outage].present?
       # puts "User ID saved: #{user.id}"
-      if changes[:notify_me_before_outage].present? ||
+      if (changes[:notify_me_before_outage].present? ||
         changes[:notification_periods_before_outage].present? ||
-        changes[:notification_period_interval].present?
+        changes[:notification_period_interval].present?) &&
+        user.notification_periods_before_outage
         # puts "Scheduling."
         Jobs::ReminderJob.schedule(user.outages, user)
       end

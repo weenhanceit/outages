@@ -15,7 +15,7 @@ module Jobs
 
     ##
     # Schedule reminders for outages.
-    # `outages` can be a single outage or an Enumberable of outages.
+    # `outages` can be a single outage or an Enumerable of outages.
     # `users` can be a single user or an Enumberable of users.
     def self.schedule(outages, users = [])
       outages = [outages] unless outages.is_a?(Array)
