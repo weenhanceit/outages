@@ -109,7 +109,7 @@ class CisTest < ApplicationSystemTestCase
       click_on "Delete"
     end
 
-    assert Ci.where(name: ci.name).empty?
+    assert Ci.where(name: ci.name, account: user.account).empty?
   end
 
   test "Add a dependent service to an existing service" do

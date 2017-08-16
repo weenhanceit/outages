@@ -12,3 +12,6 @@ company_c:
 # Outages to test filtering.
 company_d:
   name: Company D
+
+company_mailer_test:
+  name: Company Doing Mailer Tests
