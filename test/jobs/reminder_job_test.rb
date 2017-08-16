@@ -27,6 +27,16 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
     end
   end
 
+  test "run job" do
+    outage = make_outage(Time.zone.now.round + 10.minutes)
+    Services::SaveOutage.call(outage)
+    assert_no_enqueued_jobs
+    perform_enqueued_jobs do
+      outage.watches.create!(user: @user)
+      assert_performed_jobs 1
+    end
+  end
+
   test "outage starts earlier than originally planned" do
     outage = make_outage_with_ci_watch(Time.zone.now.round + 1.day)
     assert_enqueued_with at: outage.start_time - 1.hour do
