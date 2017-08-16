@@ -28,6 +28,15 @@ module Services
         Jobs::OverdueJob.schedule(user.outages, user)
       end
 
+      if changes[:preference_notify_me_by_email].present? &&
+        user.preference_notify_me_by_email ||
+        changes[:preference_individual_email_notifications].present? &&
+        !user.preference_individual_email_notifications ||
+        changes[:preference_email_time].present?
+        # puts "Scheduling."
+        Jobs::EmailJob.schedule(user)
+      end
+
       user
     end
   end
