@@ -79,12 +79,14 @@ module Services
         # puts "TP_#{__LINE__} #{watch.user.notify_me_on_outage_changes}"
 
         # puts "-xxyeh-: generate_notification.rb #{__LINE__}: Notify Me!: #{watch.user.notify_me_on_outage_changes}"
-        create_notification(event, watch, "online") if watch.user.notify_me_on_outage_changes
+        # create_notification(event, watch, "online") if watch.user.notify_me_on_outage_changes
+        create_notifications(event, watch) if watch.user.notify_me_on_outage_changes
       when "completed"
         # puts "TP_#{__LINE__} #{watch.user.notify_me_on_outage_changes}"
 
         # puts "-xxyeh-: generate_notification.rb #{__LINE__}: Notify Me!: #{watch.user.notify_me_on_outage_changes}"
-        create_notification(event, watch, "online") if watch.user.notify_me_on_outage_complete
+        # create_notification(event, watch, "online") if watch.user.notify_me_on_outage_complete
+        create_notifications(event, watch) if watch.user.notify_me_on_outage_complete
       when "overdue"
         # puts "generate_notifications.rb TP_#{__LINE__}: "
         if watch.user.notify_me_on_overdue_outage && !event.outage.completed
