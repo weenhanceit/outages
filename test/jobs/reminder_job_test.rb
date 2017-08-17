@@ -51,11 +51,7 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
       Services::SaveOutage.call(outage)
     end
 
-    assert Jobs::ReminderJob.send(:job_invalid?,
-      original_outage,
-      outage,
-      @user,
-      @user)
+    assert Jobs::ReminderJob.job_invalid?(original_outage, outage, @user, @user)
   end
 
   test "outage starts later than originally planned" do
@@ -72,11 +68,7 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
       Services::SaveOutage.call(outage)
     end
 
-    assert Jobs::ReminderJob.send(:job_invalid?,
-      original_outage,
-      outage,
-      @user,
-      @user)
+    assert Jobs::ReminderJob.job_invalid?(original_outage, outage, @user, @user)
   end
 
   test "user stops asking for reminders" do
@@ -87,11 +79,7 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
     @user.notify_me_before_outage = false
     @user.save!
 
-    assert Jobs::ReminderJob.send(:job_invalid?,
-      outage,
-      outage,
-      original_user,
-      @user)
+    assert Jobs::ReminderJob.job_invalid?(outage, outage, original_user, @user)
   end
 
   test "user asks for reminders with existing outage" do
@@ -122,11 +110,7 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
     watch.active = false
     watch.save!
     Services::SaveUser.call(@user)
-    assert Jobs::ReminderJob.send(:job_invalid?,
-      outage,
-      outage,
-      @user,
-      @user)
+    assert Jobs::ReminderJob.job_invalid?(outage, outage, @user, @user)
   end
 
   test "user stops watching CI of outage" do
@@ -138,11 +122,7 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
       w.save!
     end
     Services::SaveUser.call(@user)
-    assert Jobs::ReminderJob.send(:job_invalid?,
-      outage,
-      outage,
-      @user,
-      @user)
+    assert Jobs::ReminderJob.job_invalid?(outage, outage, @user, @user)
   end
 
   test "outage is completed when reminder runs -- no reminder" do
@@ -151,11 +131,7 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
     assert_enqueued_jobs 1, only: Jobs::ReminderJob
     outage.completed = true
     Services::SaveOutage.call(outage)
-    assert Jobs::ReminderJob.send(:job_invalid?,
-      outage,
-      outage,
-      @user,
-      @user)
+    assert Jobs::ReminderJob.job_invalid?(outage, outage, @user, @user)
   end
 
   private
