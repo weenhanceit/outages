@@ -40,11 +40,7 @@ class OverdueJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength
       Services::SaveOutage.call(outage)
     end
 
-    assert Jobs::OverdueJob.send(:job_invalid?,
-      original_outage,
-      outage,
-      @user,
-      @user)
+    assert Jobs::OverdueJob.job_invalid?(original_outage, outage, @user, @user)
   end
 
   test "outage ends later than originally planned" do
@@ -60,11 +56,7 @@ class OverdueJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength
       Services::SaveOutage.call(outage)
     end
 
-    assert Jobs::OverdueJob.send(:job_invalid?,
-      original_outage,
-      outage,
-      @user,
-      @user)
+    assert Jobs::OverdueJob.job_invalid?(original_outage, outage, @user, @user)
   end
 
   test "user stops asking for overdue notifications" do
@@ -75,11 +67,7 @@ class OverdueJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength
     @user.notify_me_on_overdue_outage = false
     @user.save!
 
-    assert Jobs::OverdueJob.send(:job_invalid?,
-      outage,
-      outage,
-      original_user,
-      @user)
+    assert Jobs::OverdueJob.job_invalid?(outage, outage, original_user, @user)
   end
 
   test "user asks for overdue notifications with existing outage" do
@@ -109,11 +97,7 @@ class OverdueJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength
     watch.active = false
     watch.save!
     Services::SaveUser.call(@user)
-    assert Jobs::OverdueJob.send(:job_invalid?,
-      outage,
-      outage,
-      @user,
-      @user)
+    assert Jobs::OverdueJob.job_invalid?(outage, outage, @user, @user)
   end
 
   test "user stops watching CI of outage" do
@@ -125,11 +109,7 @@ class OverdueJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength
       w.save!
     end
     Services::SaveUser.call(@user)
-    assert Jobs::OverdueJob.send(:job_invalid?,
-      outage,
-      outage,
-      @user,
-      @user)
+    assert Jobs::OverdueJob.job_invalid?(outage, outage, @user, @user)
   end
 
   test "outage is completed when overdue job runs" do
@@ -138,11 +118,7 @@ class OverdueJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength
     assert_enqueued_jobs 1, only: Jobs::OverdueJob
     outage.completed = true
     Services::SaveOutage.call(outage)
-    assert Jobs::OverdueJob.send(:job_invalid?,
-      outage,
-      outage,
-      @user,
-      @user)
+    assert Jobs::OverdueJob.job_invalid?(outage, outage, @user, @user)
   end
 
   private

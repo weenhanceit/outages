@@ -11,17 +11,15 @@ module Jobs
             end
           end
         end
+      end
 
-        private
-
-        def job_invalid?(outage, outage_now, user, user_now)
-          Watch.unique_watch_for(user, outage).nil? ||
-            outage.start_time != outage_now.start_time ||
-            outage_now.completed ||
-            !outage_now.active ||
-            user.notify_me_on_overdue_outage !=
-              user_now.notify_me_on_overdue_outage
-        end
+      def job_invalid?(outage, outage_now, user, user_now)
+        Watch.unique_watch_for(user, outage).nil? ||
+        outage.start_time != outage_now.start_time ||
+        outage_now.completed ||
+        !outage_now.active ||
+        user.notify_me_on_overdue_outage !=
+        user_now.notify_me_on_overdue_outage
       end
     end
 
