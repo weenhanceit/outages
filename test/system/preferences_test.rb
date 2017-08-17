@@ -8,4 +8,11 @@ class PreferencesTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     click_button "Save"
     assert_text "Preferences"
   end
+
+  test "save leaves correct URL" do
+    sign_in_for_system_tests(users(:basic))
+    visit edit_user_path
+    click_button "Save"
+    assert_current_path edit_user_path
+  end
 end
