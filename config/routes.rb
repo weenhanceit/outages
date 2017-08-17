@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   # Put this before Devise during the transition so the old tests still work.
   devise_for :users, controllers: { registrations: :registrations }
   # The following should be where Devise goes after login.
-  get "user_root_path", to: "outages#index"
+  get "user_root", to: "outages#index"
 
   root "welcome#index"
 
