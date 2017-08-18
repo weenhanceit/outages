@@ -16,26 +16,26 @@ watching_company_a_outage_watched_by_edit:
   watch: edit_watching_company_a_outage_watched_by_edit
   notified: false
 
-company_mailer_test_outage_watched_by_test_mail_recepient_a_online:
-  event: company_mailer_test_outage_watched_by_test_mail_recepient
+company_mailer_test_outage_watched_by_test_mail_recepient_1_a_online:
+  event: company_mailer_test_outage_watched_by_test_mail_recepient_1
   notification_type: online
   watch: company_mailer_test_watching_outage
   notified: false
 
-company_mailer_test_outage_watched_by_test_mail_recepient_b_email:
-  event: company_mailer_test_outage_watched_by_test_mail_recepient
+company_mailer_test_outage_watched_by_test_mail_recepient_1_b_email:
+  event: company_mailer_test_outage_watched_by_test_mail_recepient_1
   notification_type: email
   watch: company_mailer_test_watching_outage
   notified: false
 
-company_mailer_test_ci_watched_by_test_mail_recepient_a_online:
-  event: company_mailer_test_outage_watched_by_test_mail_recepient
+company_mailer_test_ci_watched_by_test_mail_recepient_1_a_online:
+  event: company_mailer_test_outage_watched_by_test_mail_recepient_1
   notification_type: online
   watch: company_mailer_test_watching_ci
   notified: false
 
-company_mailer_test_ci_watched_by_test_mail_recepient_b_email:
-  event: company_mailer_test_outage_watched_by_test_mail_recepient
+company_mailer_test_ci_watched_by_test_mail_recepient_1_b_email:
+  event: company_mailer_test_outage_watched_by_test_mail_recepient_1
   notification_type: email
   watch: company_mailer_test_watching_ci
   notified: false
