@@ -34,6 +34,8 @@ class User < ApplicationRecord
 
   default_scope { where(active: true) }
 
+  before_validation :set_defaults
+
   def can_edit_outages?
     privilege_edit_outages
   end
@@ -49,7 +51,7 @@ class User < ApplicationRecord
   # Also, one day is added if the date is a string.
   # FIXME: We should really change the test cases.
   def filter_outages(params)
-    # puts " ------------------#{__LINE__}--------------------------------------"
+    # puts " ------------------#{__LINE__}-------------------------------------"
     # logger.debug "user.rb #{__LINE__}: PARAMS: #{params.inspect}"
     scope = account.outages.where(active: true, completed: false)
     # FIXME: Make this case-insensitive
@@ -124,4 +126,21 @@ class User < ApplicationRecord
                  .order(created_at: :desc)
   end
 
+  ##
+  # Set the defaults so validations will pass when someone signs up.
+  def set_defaults
+    puts "SETTING DEFAULTS"
+    self.notify_me_before_outage = false unless notify_me_before_outage.present?
+    self.notify_me_on_note_changes = false unless notify_me_on_note_changes.present?
+    self.notify_me_on_outage_changes = true unless notify_me_on_outage_changes.present?
+    self.notify_me_on_outage_complete = true unless notify_me_on_outage_complete.present?
+    self.notify_me_on_overdue_outage = false unless notify_me_on_overdue_outage.present?
+    self.preference_individual_email_notifications = false unless preference_individual_email_notifications.present?
+    self.preference_notify_me_by_email = false unless preference_notify_me_by_email.present?
+    self.privilege_account = false unless privilege_account.present?
+    self.privilege_edit_cis = false unless privilege_edit_cis.present?
+    self.privilege_edit_outages = false unless privilege_edit_outages.present?
+    self.privilege_manage_users = false unless privilege_manage_users.present?
+    puts "self.inspect: #{inspect}"
+  end
 end
