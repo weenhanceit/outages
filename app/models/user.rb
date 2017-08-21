@@ -5,7 +5,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :trackable, :validatable
-  belongs_to :account
+  belongs_to :account, optional: true
   has_many :contributors, inverse_of: :user
   has_many :notes, inverse_of: :user
   has_many :watches, inverse_of: :user
@@ -129,7 +129,7 @@ class User < ApplicationRecord
   ##
   # Set the defaults so validations will pass when someone signs up.
   def set_defaults
-    puts "SETTING DEFAULTS"
+    # puts "SETTING DEFAULTS"
     self.notify_me_before_outage = false unless notify_me_before_outage.present?
     self.notify_me_on_note_changes = false unless notify_me_on_note_changes.present?
     self.notify_me_on_outage_changes = true unless notify_me_on_outage_changes.present?
@@ -141,6 +141,6 @@ class User < ApplicationRecord
     self.privilege_edit_cis = false unless privilege_edit_cis.present?
     self.privilege_edit_outages = false unless privilege_edit_outages.present?
     self.privilege_manage_users = false unless privilege_manage_users.present?
-    puts "self.inspect: #{inspect}"
+    # puts "self.inspect: #{inspect}"
   end
 end

@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  skip_before_action :account_exists!
+
   def create
     session[:user_id] = params[:selected_privilege] if params[:selected_privilege]
     redirect_to "/outages"
