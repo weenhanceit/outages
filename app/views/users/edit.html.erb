@@ -4,12 +4,16 @@
     <h3>Preferences</h3>
   </div>
   <div class="row">
-    <div class="col-sm-1"></div>
-    <%= f.time_zone_select :time_zone %>
-    <div class="col-sm-1 content-note" >
-      Should default to the current time zone, which if not set in the user
-      profile, should be set in a cookie by Javascript based on the code to
-      guess time zone in the browser.
+    <div class="col">
+      <%= f.text_field :name, layout: :horizontal %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <%= f.time_zone_select :time_zone, nil, layout: :horizontal %>
+    </div>
+    <div class="col content-note">
+      Should default to the current time zone, which if not set in the user profile, should be set in a cookie by Javascript based on the code to guess time zone in the browser.
       <!-- NOTE: Don't need to let the user set a preference.
       <hr/>
       <p>
@@ -27,49 +31,51 @@
     <h3>Notification Preferences</h3>
   </div>
   <div class="row">
-    <div class="col-sm-1"></div>
-    <%= f.check_box :notify_me_on_outage_changes,
-          label: "Notify me about new or changed outages associated with anything I'm watching.",
-          column_width: 10  %>
+    <div class="col">
+      <%= f.check_box :notify_me_on_outage_changes,
+          label: "Notify me about new or changed outages associated with anything I'm watching." %>
+    </div>
   </div>
 
   <div class="row">
-    <div class="col-sm-1"></div>
-    <%= f.check_box :notify_me_on_note_changes,
-          label: "Notify me when notes are added, changed, or deleted.",
-          column_width: 10  %>
+    <div class="col">
+      <%= f.check_box :notify_me_on_note_changes,
+          label: "Notify me when notes are added, changed, or deleted." %>
+    </div>
   </div>
 
   <div class="row">
-    <div class="col-sm-1"></div>
-    <%= f.check_box :notify_me_on_outage_complete,
-          label: "Notify me when the outage is completed.",
-          column_width: 10  %>
+    <div class="col">
+      <%= f.check_box :notify_me_on_outage_complete,
+          label: "Notify me when the outage is completed." %>
+    </div>
   </div>
 
   <div class="row">
-    <div class="col-sm-1"></div>
-    <%= f.check_box :notify_me_on_overdue_outage,
-          label: "Notify me when the outage is not completed by its scheduled end time.",
-          column_width: 10  %>
+    <div class="col">
+      <%= f.check_box :notify_me_on_overdue_outage,
+          label: "Notify me when the outage is not completed by its scheduled end time." %>
+    </div>
   </div>
 
   <div class="row">
-    <div class="col-sm-1"></div>
-    <%= f.check_box :notify_me_before_outage,
-          layout: :horizontal,
-          label: ""  %>
-    <%= f.number_field :notification_periods_before_outage,
-          label: "Notify me",
-          layout: :horizontal,
-          label_col: "col",
-          control_col: "col" %>
-    <%= f.select :notification_period_interval,
-          [ "hours", "days", "weeks", "months" ],
-          label: "before outage starts.",
-          layout: :horizontal,
-          label_col: "col",
-          control_col: "col" %>
+    <div class="col">
+      <%= f.form_group :notify_me_before_outage do %>
+      <%= f.check_box :notify_me_before_outage do %>
+        <%= f.number_field :notification_periods_before_outage,
+            label: "Notify me",
+            layout: :horizontal,
+            label_col: "col",
+            control_col: "col" %>
+        <%= f.select :notification_period_interval,
+            [ "hours", "days", "weeks", "months" ],
+            label: "before outage starts.",
+            layout: :horizontal,
+            label_col: "col",
+            control_col: "col" %>
+        <% end %>
+      <% end %>
+    </div>
   </div>
 </div>
 
@@ -78,31 +84,28 @@
     <h3>E-Mail Notification Preferences</h3>
   </div>
   <div class="row">
-    <div class="col-sm-1"></div>
-    <%= f.check_box :preference_notify_me_by_email,
-          label: "Also notify me by e-mail.",
-          column_width: 10  %>
+    <div class="col">
+      <%= f.check_box :preference_notify_me_by_email,
+          label: "Also notify me by e-mail." %>
+    </div>
   </div>
   <div class="row">
-    <div class="col-sm-1"></div>
-    <%= f.form_group :preference_individual_email_notifications do %>
+    <div class="col">
+      <%= f.form_group :preference_individual_email_notifications do %>
       <%= f.radio_button :preference_individual_email_notifications,
             1,
             label: " Individual e-mail for each outage "%>
       <%= f.radio_button :preference_individual_email_notifications,
             0,
             label: " One e-mail per day ",
-            layout: :horizontal,
-            label_col: "col",
-            control_col: "col" %>
+            layout: :horizontal %>
       <%= f.time_field :preference_email_time,
             label: "at",
-            layout: :horizontal,
-            label_col: "col",
-            control_col: "col" %>
-  <% end %>
+            layout: :horizontal %>
+      <% end %>
+    </div>
   </div>
-    <%= f.primary "Save" %>
+  <%= f.primary "Save" %>
 </div>
 <% end %>
 

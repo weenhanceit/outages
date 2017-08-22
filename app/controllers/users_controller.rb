@@ -35,6 +35,7 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:id,
+      :name,
       :notification_periods_before_outage,
       :notification_period_interval,
       :notify_me_before_outage,
