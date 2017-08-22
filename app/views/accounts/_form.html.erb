@@ -1,0 +1,11 @@
+<%= bootstrap_form_for @account do |f| %>
+  <%= f.text_field :name %>
+  <%= f.primary "Save" %>
+  <% if @account.persisted? %>
+  <%= link_to "Delete",
+        account_path(@account),
+        method: :delete,
+        class: "btn btn-danger",
+        data: { confirm: "Really delete the account? This can't be undone." } %>
+  <% end %>
+<% end %>

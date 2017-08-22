@@ -8,6 +8,21 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # Only show the path of the screenshot on failed test cases.
   ENV["RAILS_SYSTEM_TESTING_SCREENSHOT"] = "simple"
 
+  def click_list_item(text)
+    find("li", text: text).click
+  end
+
+  def fill_in_registration_page(email = "a@example.com", name = nil)
+    fill_in "Email", with: email
+    fill_in "Password", with: "password"
+    fill_in "Password confirmation", with: "password"
+    fill_in "Name", with: name if name
+    click_button "Sign up"
+    assert_text "You must create an account before you can do anything else."
+    assert_current_path new_account_path
+    User.find_by(email: email)
+  end
+
   def sign_in_for_system_tests(user)
     visit root_url
     within('.test-sign-in') { click_link "Sign In" }
@@ -17,7 +32,8 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     user
   end
 
-  def click_list_item(text)
-    find("li", text: text).click
+  def sign_up_new_user(email = "a@example.com", name = nil)
+    visit new_user_registration_path
+    fill_in_registration_page(email, name)
   end
 end

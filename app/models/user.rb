@@ -137,10 +137,12 @@ class User < ApplicationRecord
     self.notify_me_on_overdue_outage = false unless notify_me_on_overdue_outage.present?
     self.preference_individual_email_notifications = false unless preference_individual_email_notifications.present?
     self.preference_notify_me_by_email = false unless preference_notify_me_by_email.present?
-    self.privilege_account = false unless privilege_account.present?
-    self.privilege_edit_cis = false unless privilege_edit_cis.present?
-    self.privilege_edit_outages = false unless privilege_edit_outages.present?
-    self.privilege_manage_users = false unless privilege_manage_users.present?
+    # NOTE: User created by signing up is a super-user. This mignt not always
+    # be true.
+    self.privilege_account = true unless privilege_account.present?
+    self.privilege_edit_cis = true unless privilege_edit_cis.present?
+    self.privilege_edit_outages = true unless privilege_edit_outages.present?
+    self.privilege_manage_users = true unless privilege_manage_users.present?
     # puts "self.inspect: #{inspect}"
   end
 end

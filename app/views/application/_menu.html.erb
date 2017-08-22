@@ -17,14 +17,22 @@
     <div class="container">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav">
-          <% if current_user %>
-          <li class="nav-item">
-            <%= link_to "Outages", outages_path, class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Services", cis_path, class: "nav-link" %>
-          </li>
-          <% end %>
+        <% if current_user %>
+        <li class="nav-item">
+          <%= link_to "Outages", outages_path, class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Services", cis_path, class: "nav-link" %>
+        </li>
+        <%# TODO: Put this in a drop-down for settings. %>
+        <% if current_user.privilege_account? %>
+        <li class="nav-item">
+          <%= link_to "Account",
+            current_account ? edit_account_path(current_account) : new_account_path,
+            class: "nav-link" %>
+        </li>
+        <% end %>
+        <% end %>
         </ul>
         <ul class="navbar-nav ml-auto">
           <% if current_user %>
