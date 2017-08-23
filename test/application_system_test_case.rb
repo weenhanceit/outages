@@ -18,9 +18,15 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     fill_in "Password confirmation", with: "password"
     fill_in "Name", with: name if name
     click_button "Sign up"
+    # NOTE: There's a gem to look at e-mail from Capybara tests:
+    # NOTE: https://github.com/DockYard/capybara-email
+    user = User.find_by(email: email)
+    user.confirm
+    user.save!
+    sign_in_for_system_tests(user)
     assert_text "You must create an account before you can do anything else."
     assert_current_path new_account_path
-    User.find_by(email: email)
+    user
   end
 
   def sign_in_for_system_tests(user)
