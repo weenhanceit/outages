@@ -35,14 +35,4 @@ class AccountsTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLe
     assert Account.find_by(name: "Tested Account"), "Name wasn't changed"
     assert_current_path user_root_path
   end
-
-  private
-
-  def create_account
-    fill_in "Name", with: "Test Account"
-    assert_difference "Account.count" do
-      click_button "Save"
-    end
-    assert_current_path user_root_path
-  end
 end

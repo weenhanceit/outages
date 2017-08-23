@@ -7,7 +7,11 @@ Rails.application.routes.draw do
   root "welcome#index"
 
   # get "/outages", to: "outages#index", as: "outages_index"
-  resources :accounts
+  resources :accounts do
+    namespace :admin do
+      resources :users, shallow: true
+    end
+  end
   resources :cis do
     resources :notes, shallow: true, only: [:create, :destroy, :edit, :update]
   end

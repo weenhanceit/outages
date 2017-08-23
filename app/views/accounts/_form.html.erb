@@ -2,6 +2,9 @@
   <%= f.text_field :name %>
   <%= f.primary "Save" %>
   <% if @account.persisted? %>
+  <%= link_to "Add User",
+        new_account_admin_user_path(@account),
+        class: "btn btn-secondary" %>
   <%= link_to "Delete",
         account_path(@account),
         method: :delete,

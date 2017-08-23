@@ -12,11 +12,24 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     find("li", text: text).click
   end
 
-  def fill_in_registration_page(email = "a@example.com", name = nil)
+  def create_account
+    fill_in "Name", with: "Test Account"
+    assert_difference "Account.count" do
+      click_button "Save"
+    end
+    assert_current_path user_root_path
+    Account.find_by(name: "Test Account")
+  end
+
+  def fill_in_new_user_page(email = "a@example.com", name = nil)
     fill_in "Email", with: email
     fill_in "Password", with: "password"
     fill_in "Password confirmation", with: "password"
     fill_in "Name", with: name if name
+  end
+
+  def fill_in_registration_page(email = "a@example.com", name = nil) # rubocop:disable Metrics/MethodLength, Metrics/LineLength
+    fill_in_new_user_page(email, name)
     click_button "Sign up"
     # NOTE: There's a gem to look at e-mail from Capybara tests:
     # NOTE: https://github.com/DockYard/capybara-email
@@ -31,7 +44,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   def sign_in_for_system_tests(user)
     visit root_url
-    within('.test-sign-in') { click_link "Sign In" }
+    within(".test-sign-in") { click_link "Sign In" }
     fill_in "Email", with: user.email
     fill_in "Password", with: "password"
     click_button "Sign in"
