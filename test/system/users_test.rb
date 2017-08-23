@@ -21,7 +21,7 @@ class UsersTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLengt
     account = create_account
     click_link "Account"
     click_link "Add User"
-    assert_current_path new_account_admin_user_path(account)
+    assert_current_path new_user_invitation_path
     fill_in_new_user_page("b.example.com", "Second User")
     assert_difference "account.users.count" do
       click_button "Save"
