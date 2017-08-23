@@ -3,7 +3,7 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable, :confirmable,
+  devise :invitable, :database_authenticatable, :registerable, :confirmable,
     :recoverable, :rememberable, :trackable, :validatable
   belongs_to :account, optional: true
   has_many :contributors, inverse_of: :user
@@ -128,8 +128,10 @@ class User < ApplicationRecord
 
   ##
   # Set the defaults so validations will pass when someone signs up.
+  # This is in the model so it would happen when Devise creates a user.
   def set_defaults
     # puts "SETTING DEFAULTS"
+    # FIXME: Add default for time of daily e-mail.
     self.notify_me_before_outage = false unless notify_me_before_outage.present?
     self.notify_me_on_note_changes = false unless notify_me_on_note_changes.present?
     self.notify_me_on_outage_changes = true unless notify_me_on_outage_changes.present?

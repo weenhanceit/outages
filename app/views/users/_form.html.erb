@@ -1,4 +1,5 @@
-<%= bootstrap_form_for(url_for_user_form(@account, @user),
+<%= bootstrap_form_for(@user,
+      url: url_for_user_form(@account, @user),
       builder: WeitFormBuilder) do |f| %>
 <div class="mb-3">
   <div class="row">

@@ -2,12 +2,16 @@
 # Methods for User views.
 module UsersHelper
   def url_for_user_form(account, user)
-    if controller_name == "UsersController"
-      edit_user_path
+    # puts "controller_name: #{controller_name}"
+    if controller_name == "users"
+      # puts "returning #{user_path}"
+      user_path
     elsif user.persisted?
-      edit_admin_user_path(user)
+      # puts "returning #{admin_user_path(user)}"
+      admin_user_path(user)
     else
-      new_account_admin_user_path(account)
+      # puts "returning #{account_admin_users_path(account)}"
+      account_admin_users_path(account)
     end
   end
 end
