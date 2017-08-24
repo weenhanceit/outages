@@ -1,6 +1,7 @@
 <%= bootstrap_form_for(@user,
       url: url_for_user_form(@account, @user),
       builder: WeitFormBuilder) do |f| %>
+<%= f.hidden_field :account_id %>
 <div class="mb-3">
   <div class="row">
     <h3>Preferences</h3>
@@ -8,6 +9,11 @@
   <div class="row">
     <div class="col">
       <%= f.text_field :name, layout: :horizontal %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <%= f.email_field :email, layout: :horizontal %>
     </div>
   </div>
   <div class="row">
@@ -96,9 +102,11 @@
       <%= f.form_group :preference_individual_email_notifications do %>
       <%= f.radio_button :preference_individual_email_notifications,
             1,
+            checked: f.object.preference_individual_email_notifications?,
             label: " Individual e-mail for each outage "%>
       <%= f.radio_button :preference_individual_email_notifications,
             0,
+            checked: !f.object.preference_individual_email_notifications?,
             label: " One e-mail per day ",
             layout: :horizontal %>
       <%= f.time_field :preference_email_time,
@@ -107,12 +115,39 @@
       <% end %>
     </div>
   </div>
+</div>
+
+<% puts "current_user.privilege_manage_users?: #{current_user.privilege_manage_users?}" %>
+<% if current_user.privilege_manage_users? %>
+<% puts "rendering Privileges" %>
+<div class="mb-3">
+  <div class="row">
+    <h3>Privileges</h3>
+  </div>
+  <div class="row">
+    <div class="col">
+      <%= f.form_group :privileges do %>
+        <%= f.check_box :privilege_account, label: "Manage Account" %>
+        <%= f.check_box :privilege_manage_users, label: "Add/Change/Delete Users" %>
+        <%= f.check_box :privilege_edit_cis, label: "Add/Change/Delete Services" %>
+        <%= f.check_box :privilege_edit_outages, label: "Add/Change/Delete Outages" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<div class="mb-3">
   <%= f.primary "Save" %>
 </div>
 <% end %>
 
-<h3>Change Password</h3>
-<p>
-  <%= link_to "Change Password or Cancel Registration",
-        edit_user_registration_path %>
-</p>
+<%if controller_name == "users" || current_user.privilege_manage_users? %>
+<div class="mb-3">
+  <h3>Change Password</h3>
+  <p>
+    <%= link_to "Change Password or Cancel Registration",
+          edit_user_registration_path %>
+  </p>
+</div>
+<% end %>

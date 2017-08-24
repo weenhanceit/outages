@@ -11,7 +11,7 @@ module UsersHelper
       admin_user_path(user)
     else
       # puts "returning #{account_admin_users_path(account)}"
-      new_user_invitation_path
+      user_invitation_path
     end
   end
 end

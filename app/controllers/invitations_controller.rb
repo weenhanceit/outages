@@ -4,7 +4,7 @@
 # to the edit profile path after changing the password.
 # See: https://github.com/plataformatec/devise/wiki/How-To:-Customize-the-redirect-after-a-user-edits-their-profile
 class InvitationsController < Devise::InvitationsController
-  before_action :configure_permitted_parameters, only: [:new, :edit]
+  before_action :configure_permitted_parameters, only: [:create, :update]
 
   def new
     @user = current_account.users.build(invitation_user_defaults)
