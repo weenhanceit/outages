@@ -32,4 +32,55 @@ class UserTest < ActiveSupport::TestCase
       outages(:company_a_outage_c)
     ].sort, user.outages.sort
   end
+
+  test "can't remove account admin from last account admin" do
+    user = new_user(privilege_account: true)
+    user.privilege_account = false
+    assert !user.save
+    assert ["This is the last account manager"], user.errors
+  end
+
+  test "can't remove user admin from last user admin" do
+    user = new_user(privilege_manage_users: true)
+    user.privilege_manage_users = false
+    assert !user.save
+    assert ["This is the last user manager"], user.errors
+  end
+
+  test "can't remove last account admin" do
+    user = new_user(privilege_account: true)
+    user.active = false
+    assert !user.save
+    assert ["This is the last account manager"], user.errors
+  end
+
+  test "can't remove last user admin" do
+    user = new_user(privilege_manage_users: true)
+    user.active = false
+    assert !user.save
+    assert ["This is the last user manager"], user.errors
+  end
+
+  private
+
+  def new_user(attrs)
+    account = Account.create!(name: "Test")
+    account.users.create!({ email: "a@example.com",
+                            name: "A",
+                            notification_periods_before_outage: 1,
+                            notification_period_interval: "hours",
+                            notify_me_before_outage: false,
+                            notify_me_on_note_changes: false,
+                            notify_me_on_outage_changes: true,
+                            notify_me_on_outage_complete: true,
+                            notify_me_on_overdue_outage: false,
+                            password: "password",
+                            preference_email_time: "8:00",
+                            preference_individual_email_notifications: false,
+                            preference_notify_me_by_email: false,
+                            privilege_account: false,
+                            privilege_edit_cis: false,
+                            privilege_edit_outages: false,
+                            privilege_manage_users: false }.merge(attrs))
+  end
 end

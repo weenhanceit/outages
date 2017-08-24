@@ -30,6 +30,9 @@ class User < ApplicationRecord
     :privilege_manage_users,
     inclusion: { in: [true, false], message: "can't be blank" }
 
+  validate :at_least_one_account_admin
+  validate :at_least_one_user_admin
+
   validates_presence_of :email
 
   default_scope { where(active: true) }
@@ -146,5 +149,31 @@ class User < ApplicationRecord
     self.privilege_edit_outages = true if privilege_edit_outages.nil?
     self.privilege_manage_users = true if privilege_manage_users.nil?
     # puts "self.inspect: #{inspect}"
+  end
+
+  private
+
+  def at_least_one_account_admin
+    if removing_account_admin &&
+       account &&
+       account.users.where(privilege_account: true).where.not(id: id).empty?
+      errors[:base] << "This is the last account manager."
+    end
+  end
+
+  def at_least_one_user_admin
+    if removing_user_admin &&
+       account &&
+       account.users.where(privilege_manage_users: true).where.not(id: id).empty?
+      errors[:base] << "This is the last user manager."
+    end
+  end
+
+  def removing_account_admin
+    changed_attributes[:privilege_account] || changed_attributes[:active]
+  end
+
+  def removing_user_admin
+    changed_attributes[:privilege_manage_users] || changed_attributes[:active]
   end
 end
