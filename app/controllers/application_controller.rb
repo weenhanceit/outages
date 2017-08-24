@@ -51,6 +51,7 @@ class ApplicationController < ActionController::Base
   # See: https://stackoverflow.com/a/4983354/3109926
   def not_found
     raise ActionController::RoutingError.new("Not Found")
+    # raise ActiveRecord::RecordNotFound
   end
 
   ##

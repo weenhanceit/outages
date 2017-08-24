@@ -2,6 +2,8 @@ module Admin
   ##
   # Controller for administering users.
   class UsersController < ::UsersController
+    before_action :validate_user_privilege
+
     def destroy
       @user = current_account.users.find(params[:id])
       @user.active = false
@@ -28,6 +30,12 @@ module Admin
       privilege_edit_cis: false,
       privilege_edit_outages: false,
       privilege_manage_users: false)
+    end
+
+    private
+
+    def validate_user_privilege
+      not_found unless current_user.privilege_manage_users?
     end
   end
 end

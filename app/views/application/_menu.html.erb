@@ -25,6 +25,13 @@
           <%= link_to "Services", cis_path, class: "nav-link" %>
         </li>
         <%# TODO: Put this in a drop-down for settings. %>
+        <% if current_user.privilege_manage_users? && current_account %>
+        <li class="nav-item">
+          <%= link_to "Users",
+            account_admin_users_path(current_account),
+            class: "nav-link" %>
+        </li>
+        <% end %>
         <% if current_user.privilege_account? %>
         <li class="nav-item">
           <%= link_to "Account",

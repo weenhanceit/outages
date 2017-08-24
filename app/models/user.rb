@@ -132,19 +132,19 @@ class User < ApplicationRecord
   def set_defaults
     # puts "SETTING DEFAULTS"
     # FIXME: Add default for time of daily e-mail.
-    self.notify_me_before_outage = false unless notify_me_before_outage.present?
-    self.notify_me_on_note_changes = false unless notify_me_on_note_changes.present?
-    self.notify_me_on_outage_changes = true unless notify_me_on_outage_changes.present?
-    self.notify_me_on_outage_complete = true unless notify_me_on_outage_complete.present?
-    self.notify_me_on_overdue_outage = false unless notify_me_on_overdue_outage.present?
-    self.preference_individual_email_notifications = false unless preference_individual_email_notifications.present?
-    self.preference_notify_me_by_email = false unless preference_notify_me_by_email.present?
+    self.notify_me_before_outage = false if notify_me_before_outage.nil?
+    self.notify_me_on_note_changes = false if notify_me_on_note_changes.nil?
+    self.notify_me_on_outage_changes = true if notify_me_on_outage_changes.nil?
+    self.notify_me_on_outage_complete = true if notify_me_on_outage_complete.nil?
+    self.notify_me_on_overdue_outage = false if notify_me_on_overdue_outage.nil?
+    self.preference_individual_email_notifications = false if preference_individual_email_notifications.nil?
+    self.preference_notify_me_by_email = false if preference_notify_me_by_email.nil?
     # NOTE: User created by signing up is a super-user. This mignt not always
     # be true.
-    self.privilege_account = true unless privilege_account.present?
-    self.privilege_edit_cis = true unless privilege_edit_cis.present?
-    self.privilege_edit_outages = true unless privilege_edit_outages.present?
-    self.privilege_manage_users = true unless privilege_manage_users.present?
+    self.privilege_account = true if privilege_account.nil?
+    self.privilege_edit_cis = true if privilege_edit_cis.nil?
+    self.privilege_edit_outages = true if privilege_edit_outages.nil?
+    self.privilege_manage_users = true if privilege_manage_users.nil?
     # puts "self.inspect: #{inspect}"
   end
 end
