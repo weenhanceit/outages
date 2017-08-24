@@ -117,9 +117,7 @@
   </div>
 </div>
 
-<% puts "current_user.privilege_manage_users?: #{current_user.privilege_manage_users?}" %>
 <% if current_user.privilege_manage_users? %>
-<% puts "rendering Privileges" %>
 <div class="mb-3">
   <div class="row">
     <h3>Privileges</h3>
@@ -139,6 +137,15 @@
 
 <div class="mb-3">
   <%= f.primary "Save" %>
+  <% if current_user.privilege_manage_users? &&
+      current_user != @user &&
+      @user.persisted? %>
+  <%= link_to "Delete",
+        admin_user_path(@user),
+        method: :delete,
+        class: "btn btn-danger",
+        data: { confirm: "Really delete the account? This can't be undone." } %>
+  <% end %>
 </div>
 <% end %>
 

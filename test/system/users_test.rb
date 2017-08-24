@@ -17,35 +17,61 @@ class UsersTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLengt
   end
 
   test "add user" do
-    user = sign_up_new_user
-    Rails.logger.debug "*" * 20 + "User signed up."
-    Rails.logger.debug "*" * 20 + "New user can manage users? #{user.privilege_manage_users?}"
-    account = create_account
-    click_link "Account"
-    click_link "Add User"
-    Rails.logger.debug "*" * 20 + "Adding other user."
-    assert_current_path new_user_invitation_path
-    assert_text "Privileges"
-    assert_text "Preferences"
-    fill_in_new_user_page("b@example.com", "Second User")
-    Rails.logger.debug "*" * 20 + "Filled in user info."
-    assert_difference "account.users.count" do
-      Rails.logger.debug "*" * 20 + "About to click Save on other user."
-      click_button "Save"
-      Rails.logger.debug "*" * 20 + "Clicked Save on other user."
+    add_user
+  end
+
+  test "delete user" do
+    account, user = add_user
+    visit account_admin_users_path(account)
+    within("fieldset.user-#{user.id}") { click_link "Edit" }
+    assert_difference "account.users.count", -1 do
+      click_link "Delete"
       assert_current_path edit_account_path(account)
     end
   end
 
-  test "delete user" do
-    flunk
-  end
-
   test "edit user" do
-    flunk "Make sure to test fields in both Devise and our preferences"
+    account, user = add_user
+    visit account_admin_users_path(account)
+    within("fieldset.user-#{user.id}") { click_link "Edit" }
+    fill_in "Name", with: "That's a funny name."
+    click_button "Save"
+    assert account.users.find_by(name: "That's a funny name.")
   end
 
-  test "only admin users can access user pages" do
+  test "only user admin users can access user pages" do
     flunk
+  end
+
+  test "can't remove account admin from last account admin" do
+    flunk
+  end
+
+  test "can't remove user admin from last user admin" do
+    flunk
+  end
+
+  private
+
+  def add_user
+    user = sign_up_new_user
+    # Rails.logger.debug "*" * 20 + "User signed up."
+    # Rails.logger.debug "*" * 20 + "New user can manage users? #{user.privilege_manage_users?}"
+    account = create_account
+    click_link "Account"
+    click_link "Add User"
+    # Rails.logger.debug "*" * 20 + "Adding other user."
+    assert_current_path new_user_invitation_path
+    assert_text "Privileges"
+    assert_text "Preferences"
+    fill_in_new_user_page("b@example.com", "Second User")
+    # Rails.logger.debug "*" * 20 + "Filled in user info."
+    assert_difference "account.users.count" do
+      # Rails.logger.debug "*" * 20 + "About to click Save on other user."
+      click_button "Save"
+      # Rails.logger.debug "*" * 20 + "Clicked Save on other user."
+      assert_current_path edit_account_path(account)
+    end
+    [account, User.find_by(email: "b@example.com")]
   end
 end

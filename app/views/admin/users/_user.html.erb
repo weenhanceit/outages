@@ -1,0 +1,13 @@
+<fieldset class="user-<%= user.id -%>">
+  <div class="row">
+    <div class="col">
+      <%= user.name %>
+    </div>
+    <div class="col">
+      <%= user.email %>
+    </div>
+    <div class="col">
+      <%= link_to "Edit", edit_admin_user_path(user.id), class: "btn btn-sm" %>
+    </div>
+  </div>
+</fieldset>

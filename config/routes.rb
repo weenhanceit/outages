@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   # get "/outages", to: "outages#index", as: "outages_index"
   resources :accounts do
     namespace :admin do
-      resources :users, shallow: true, only: [:destroy, :edit, :update]
+      resources :users, shallow: true, only: [:destroy, :edit, :index, :update]
     end
   end
   resources :cis do
