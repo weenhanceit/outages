@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { registrations: :registrations }
+  devise_for :users, controllers: {
+    invitations: :invitations,
+    registrations: :registrations
+  }
   # The following should be where Devise goes after login.
   get "user_root", to: "outages#index"
 
