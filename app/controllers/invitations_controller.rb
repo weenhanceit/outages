@@ -20,6 +20,12 @@ class InvitationsController < Devise::InvitationsController
     edit_account_path(current_account)
   end
 
+  # NOTE: How this would work isn't clear from the docs.
+  def authenticate_inviter!
+    not_found unless current_user.privilege_manage_users?
+    super
+  end
+
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:invite,
       keys: [

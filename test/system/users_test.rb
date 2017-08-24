@@ -41,6 +41,20 @@ class UsersTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLengt
   end
 
   test "only user admin users can access user pages" do
+    account, _user = add_non_user_admin_user
+    visit account_admin_users_path(account)
+    assert_text "Routing Error Not Found"
+  end
+
+  test "only allow user admins to invite users" do
+    add_non_user_admin_user
+    visit new_user_invitation_path
+    assert_text "Routing Error Not Found"
+  end
+
+  private
+
+  def add_non_user_admin_user
     user = sign_up_new_user
     user.privilege_manage_users = false
     user.save!
@@ -48,19 +62,8 @@ class UsersTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLengt
     assert !user.privilege_manage_users?
     account = create_account
     assert_no_text "Users"
-    visit account_admin_users_path(account)
-    assert_text "Routing Error Not Found"
+    [account, user]
   end
-
-  test "can't remove account admin from last account admin" do
-    flunk
-  end
-
-  test "can't remove user admin from last user admin" do
-    flunk
-  end
-
-  private
 
   def add_user
     user = sign_up_new_user
