@@ -52,6 +52,21 @@ class UsersTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLengt
     assert_text "Routing Error Not Found"
   end
 
+  test "resend invitation" do
+    account, user = add_user
+    click_link "Users"
+    edit_user(user)
+    click_link "Send Invitation"
+    # TODO: Check that mail was actually sent.
+  end
+
+  test "no resend button once invitation accepted" do
+    account, user = add_user
+    click_link "Users"
+    edit_user(user)
+    assert_no_link "Send Invitation"
+  end
+
   private
 
   def add_non_user_admin_user
@@ -85,5 +100,11 @@ class UsersTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLengt
       assert_current_path edit_account_path(account)
     end
     [account, User.find_by(email: "b@example.com")]
+  end
+
+  ##
+  # From the admin user index page, edit a given user.
+  def edit_user(user)
+    within("fieldset.user-#{user.id}") { click_link "Edit" }
   end
 end

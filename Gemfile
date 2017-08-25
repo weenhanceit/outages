@@ -55,6 +55,7 @@ group :development, :test do
   gem 'capybara', '~> 2.13.0'
   # gem 'selenium-webdriver' We can't use this with vagrant boxes.
   gem 'poltergeist'
+  gem 'capybara-email'
 end
 
 group :development do

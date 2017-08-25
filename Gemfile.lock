@@ -73,6 +73,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-email (2.5.0)
+      capybara (~> 2.4)
+      mail
     choice (0.2.0)
     cliver (0.3.2)
     concurrent-ruby (1.0.5)
@@ -224,6 +227,7 @@ DEPENDENCIES
   bootstrap_form!
   byebug
   capybara (~> 2.13.0)
+  capybara-email
   detect_timezone_rails
   devise
   devise_invitable
