@@ -2,6 +2,11 @@ require "test_helper"
 require "capybara/poltergeist"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
+  # For capybara-email https://github.com/DockYard/capybara-email
+  include Capybara::Email::DSL
+  # The docs said do the following, but it borks things big-time:
+  # Capybara.app_host = "http://localhost:3000"
+
   # driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
   driven_by :poltergeist, screen_size: [1600, 1400]
 
@@ -21,12 +26,12 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     Account.find_by(name: "Test Account")
   end
 
-  def fill_in_new_user_page(email = "a@example.com", name = nil)
+  def fill_in_new_user_page(email = "a@example.com")
     fill_in "Email", with: email
   end
 
   def fill_in_registration_page(email = "a@example.com", name = nil) # rubocop:disable Metrics/MethodLength, Metrics/LineLength
-    fill_in_new_user_page(email, name)
+    fill_in_new_user_page(email)
     fill_in "Name", with: name if name
     fill_in "Password", with: "password"
     fill_in "Password confirmation", with: "password"

@@ -32,6 +32,12 @@ module Admin
       privilege_manage_users: false)
     end
 
+    def resend_invitation
+      @user = current_account.users.find(params[:id])
+      @user.invite!(current_user)
+      flash.now[:notice] = "Invitation sent."
+    end
+
     private
 
     def validate_user_privilege

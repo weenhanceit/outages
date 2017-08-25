@@ -140,6 +140,12 @@
   <% if current_user.privilege_manage_users? &&
       current_user != @user &&
       @user.persisted? %>
+  <% unless @user.invitation_accepted? %>
+  <%= link_to "Send Invitation",
+        resend_invitation_admin_user_path(@user),
+        method: :post,
+        class: "btn btn-secondary" %>
+  <% end %>
   <%= link_to "Delete",
         admin_user_path(@user),
         method: :delete,
