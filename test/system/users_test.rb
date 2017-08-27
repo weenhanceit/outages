@@ -37,7 +37,8 @@ class UsersTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLengt
     within("fieldset.user-#{user.id}") { click_link "Edit" }
     fill_in "Name", with: "That's a funny name."
     click_button "Save"
-    assert account.users.find_by(name: "That's a funny name.")
+    user.reload
+    assert_equal "That's a funny name.", user.name
   end
 
   test "only user admin users can access user pages" do
@@ -81,6 +82,33 @@ class UsersTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLengt
     click_link "Users"
     edit_user(@user)
     assert_no_link "Send Invitation"
+  end
+
+  test "Account admin sees all privilege edits" do
+    sign_in_for_system_tests(user = users(:domain_admin))
+    visit edit_user_path(user)
+    assert_checked_field "Manage Account"
+    assert_checked_field "Add/Change/Delete Users"
+    assert_checked_field "Add/Change/Delete Services"
+    assert_checked_field "Add/Change/Delete Outages"
+  end
+
+  test "User admin sees all privilege edits except account" do
+    sign_in_for_system_tests(user = users(:user_admin))
+    visit edit_user_path(user)
+    assert_unchecked_field "Manage Account", disabled: true
+    assert_checked_field "Add/Change/Delete Users"
+    assert_checked_field "Add/Change/Delete Services"
+    assert_checked_field "Add/Change/Delete Outages"
+  end
+
+  test "Non-admin sees no privilege edits" do
+    sign_in_for_system_tests(user = users(:basic))
+    visit edit_user_path(user)
+    assert_unchecked_field "Manage Account", disabled: true
+    assert_unchecked_field "Add/Change/Delete Users", disabled: true
+    assert_unchecked_field "Add/Change/Delete Services", disabled: true
+    assert_unchecked_field "Add/Change/Delete Outages", disabled: true
   end
 
   private

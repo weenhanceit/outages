@@ -117,7 +117,9 @@
   </div>
 </div>
 
-<% if current_user.privilege_manage_users? %>
+<%# NOTE: Should we show disabled fields for users without privileges, or
+    nothing at all? %>
+<%# if current_user.privilege_manage_users? %>
 <div class="mb-3">
   <div class="row">
     <h3>Privileges</h3>
@@ -125,15 +127,29 @@
   <div class="row">
     <div class="col">
       <%= f.form_group :privileges do %>
-        <%= f.check_box :privilege_account, label: "Manage Account" %>
-        <%= f.check_box :privilege_manage_users, label: "Add/Change/Delete Users" %>
-        <%= f.check_box :privilege_edit_cis, label: "Add/Change/Delete Services" %>
-        <%= f.check_box :privilege_edit_outages, label: "Add/Change/Delete Outages" %>
+      <%# Add hidden fields when disabled because browser won't return
+          valudes for disabled fields. %>
+        <%= f.hidden_field :privilege_account unless @user.privilege_account? %>
+        <%= f.check_box :privilege_account,
+              {label: "Manage Account",
+              disabled: !@user.privilege_account?} %>
+        <%= f.hidden_field :privilege_manage_users unless @user.privilege_manage_users? %>
+        <%= f.check_box :privilege_manage_users,
+              {label: "Add/Change/Delete Users",
+              disabled: !@user.privilege_manage_users?} %>
+        <%= f.hidden_field :privilege_edit_cis unless @user.privilege_manage_users? %>
+        <%= f.check_box :privilege_edit_cis,
+              {label: "Add/Change/Delete Services",
+              disabled: !@user.privilege_manage_users?} %>
+        <%= f.hidden_field :privilege_edit_outages unless @user.privilege_manage_users? %>
+        <%= f.check_box :privilege_edit_outages,
+              {label: "Add/Change/Delete Outages",
+              disabled: !@user.privilege_manage_users?} %>
       <% end %>
     </div>
   </div>
 </div>
-<% end %>
+<%# end %>
 
 <div class="mb-3">
   <%= f.primary "Save" %>

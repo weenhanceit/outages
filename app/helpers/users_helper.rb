@@ -2,16 +2,21 @@
 # Methods for User views.
 module UsersHelper
   def url_for_user_form(account, user)
-    # puts "controller_name: #{controller_name}"
-    if controller_name == "users"
+    # puts "WTF controller_path: #{controller_path}"
+    s = case controller_path
+    when "users"
       # puts "returning #{user_path}"
       user_path
-    elsif user.persisted?
+    when "admin/users"
       # puts "returning #{admin_user_path(user)}"
       admin_user_path(user)
-    else
-      # puts "returning #{account_admin_users_path(account)}"
+    when "invitations"
+      # puts "returning #{user_invitation_path}"
       user_invitation_path
+    else
+      # puts "Can't happen."
     end
+    # puts "s: #{s}"
+    s
   end
 end
