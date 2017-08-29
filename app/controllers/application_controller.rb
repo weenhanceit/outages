@@ -55,6 +55,6 @@ class ApplicationController < ActionController::Base
   # Put the current user's on-line notifications in an instance variable of
   # the controller, so it's available to the notification partial.
   def online_notifications
-    @online_notifications ||= current_user.outstanding_online_notifications
+    @online_notifications ||= current_user.outstanding_notifications(:online)
   end
 end

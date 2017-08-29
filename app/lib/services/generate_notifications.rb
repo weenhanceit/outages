@@ -67,14 +67,14 @@ module Services
 
     def self.create_unique_overdue_event(_user, outage)
       outage.events.create(event_type: "overdue",
-                           text: "Outaged Scheduled to Begin at " \
-                            "#{outage.start_time.to_s(:iso8601)}",
+                           text: "Outage Not Completed As Scheduled",
                            handled: true)
     end
 
     def self.create_unique_reminder_event(_user, outage)
       outage.events.create(event_type: "reminder",
-                           text: "Outage Not Completed As Scheduled",
+                           text: "Outaged Scheduled to Begin at " \
+                           "#{outage.start_time.to_s(:iso8601)}",
                            handled: true)
     end
 
@@ -110,17 +110,17 @@ module Services
 
     def self.create_notification(event, watch, notification_type)
       # TODO: the following search may not be quite right
-      # if Notification.all
-      #                .where(event: event,
-      #                       watch: watch,
-      #                       notification_type: notification_type)
-      #                .size.zero?
-      #
+      if Notification.all
+                     .where(event: event,
+                            watch: watch,
+                            notification_type: notification_type)
+                     .size.zero?
+
         Notification.create(watch: watch,
                             event: event,
                             notification_type: notification_type,
                             notified: false)
-      # end
+      end
     end
 
     def self.create_notifications(event, watch)
