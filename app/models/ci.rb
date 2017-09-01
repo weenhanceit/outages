@@ -25,7 +25,7 @@ class Ci < ApplicationRecord
   has_many :watches, as: :watched, autosave: true, dependent: :destroy
   # FIXME: Need to think about callback for watches added to ci to generate
   # reminder job.  This possibly should be a callback on create watch
-  
+
   validates :active,
     inclusion: { in: [true, false], message: "can't be blank" }
 
@@ -119,6 +119,10 @@ class Ci < ApplicationRecord
   # TODO: or maybe not. Think about it.
   def descendants_affected
     descendants
+  end
+
+  def affected_by_outages
+    (outages + descendants.flat_map(&:outages)).uniq
   end
 
   private

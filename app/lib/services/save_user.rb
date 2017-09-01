@@ -19,7 +19,7 @@ module Services
         changes[:notification_period_interval].present?) &&
         user.notify_me_before_outage
         # puts "Scheduling."
-        Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
+        # Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
 
         Jobs::ReminderJob.schedule(user.outages, user)
       end

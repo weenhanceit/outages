@@ -12,6 +12,8 @@ class Watch < ApplicationRecord
   #   foreign_key: :watched_id
   has_many :notifications, inverse_of: :watches
 
+  after_save :schedule_reminders
+
   default_scope { where(active: true) }
 
   ##
@@ -31,5 +33,15 @@ class Watch < ApplicationRecord
     return watch if watch
 
     find_by(user: user, watched_id: outage.id, watched_type: "Outage")
+  end
+
+  private
+
+  def schedule_reminders
+    if active && saved_changes?
+      Jobs::ReminderJob.schedule(watched, user) if watched_type == "Outage"
+      Jobs::ReminderJob.schedule(watched.affected_by_outages, user) if watched_type == "Ci"
+      # puts "HI!! from #{__FILE__}m line #{__LINE__}"
+    end
   end
 end

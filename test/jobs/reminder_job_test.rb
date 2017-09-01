@@ -27,6 +27,28 @@ class ReminderJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLengt
     end
   end
 
+  test "add watch to ci for outage, get reminder" do
+    outage = make_outage(Time.zone.now.round + 10.minutes)
+    Services::SaveOutage.call(outage)
+    ci = outage.cis.create!(name: "test ci", account: @account)
+    assert_no_enqueued_jobs
+    assert_enqueued_jobs 1 do
+      @user.watches.create!(watched: ci)
+    end
+  end
+
+  test "add watch to ancestor of ci for outage, get reminder" do
+    outage = make_outage(Time.zone.now.round + 10.minutes)
+    Services::SaveOutage.call(outage)
+    ci = outage.cis.create!(name: "test ci", account: @account)
+    ci_parent = ci.parents.create!( name: "Parent", account: @account)
+    assert_no_enqueued_jobs
+    assert_enqueued_jobs 1 do
+      @user.watches.create!(watched: ci_parent)
+    end
+  end
+
+
   test "run job" do
     outage = make_outage(Time.zone.now.round + 10.minutes)
     Services::SaveOutage.call(outage)

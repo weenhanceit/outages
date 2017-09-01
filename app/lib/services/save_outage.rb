@@ -24,7 +24,7 @@ module Services
       changes = outage.previous_changes
       # puts "changes: #{changes}"
 
-      Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
+      # Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
       Jobs::ReminderJob.schedule(outage) if changes[:start_time].present?
       Jobs::OverdueJob.schedule(outage) if changes[:end_time].present?
 

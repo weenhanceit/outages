@@ -118,12 +118,12 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         assert_no_difference "Notification.count" do
 
           # now go back to the day of our outage
-          puts outage.inspect
+          # puts outage.inspect
           goto = outage.end_time.strftime("%Y-%m-%d")
-          puts "#{__LINE__}: #{goto}"
+          # puts "#{__LINE__}: #{goto}"
           fill_in "Outages After", with: goto
           click_on "Refresh"
-          puts "--#{__LINE__}--"
+          # puts "--#{__LINE__}--"
           assert_check_notifications expected
 
           # FIXME: Problem seems to be related to the call back within outages
@@ -132,31 +132,31 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           # that are not being watched.
 
           visit cis_path
-          puts "--#{__LINE__}--"
+          # puts "--#{__LINE__}--"
           assert_check_notifications expected
 
           visit month_outages_path
-          puts "--#{__LINE__}--"
+          # puts "--#{__LINE__}--"
           assert_check_notifications expected
 
           visit week_outages_path
-          puts "--#{__LINE__}--"
+          # puts "--#{__LINE__}--"
           assert_check_notifications expected
 
           visit fourday_outages_path
-          puts "--#{__LINE__}--"
+          # puts "--#{__LINE__}--"
           assert_check_notifications expected
 
           visit day_outages_path
-          puts "--#{__LINE__}--"
+          # puts "--#{__LINE__}--"
           assert_check_notifications expected
 
           # assert false
           # sleep 5
-          take_screenshot
+          # take_screenshot
           # assert_no_enqueued_jobs
-          puts "--#{__LINE__}--"
-          assert_check_notifications expected
+          # puts "--#{__LINE__}--"
+          # assert_check_notifications expected
         end
       end
     end
