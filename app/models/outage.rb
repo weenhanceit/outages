@@ -227,7 +227,9 @@ class Outage < ApplicationRecord
 
   def schedule_reminders(watch)
     if watch.user.notify_me_before_outage
+      Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
       Jobs::ReminderJob.schedule(self, watch.user)
+      Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
     end
   end
 end

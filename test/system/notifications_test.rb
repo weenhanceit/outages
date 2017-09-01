@@ -74,19 +74,28 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     # Set notified to be true on all outstanding online notifications
     user = sign_in_for_system_tests(users(:edit_ci_outages))
     user.notify_me_on_outage_changes = true
+    user.notify_me_before_outage = true
+    user.notify_me_on_outage_complete = true
+    user.notify_me_on_overdue_outage = true
+    user.notification_periods_before_outage = 4
+    user.notification_period_interval = "hours"
+
     user.save!
+
     mark_all_existing_notifications_notified
     user.reload
 
     # Pick an outage, any outage and create a watch on it
-    outage = Outage.where(account: user.account).first
+    outage = Outage.where(account: user.account, name: "Outage A").first
     outage.watches.create(active: true, user: user)
+    # assert_no_enqueued_jobs
 
     # Edit the outage and check that 1 event and no new outages or watches
     # were generated
     # puts "notifications_test.rb TP_#{__LINE__}: Outage: #{outage.inspect}"
     visit edit_outage_url(outage.id)
     # puts "notifications_test.rb TP_#{__LINE__}:"
+    # assert_no_enqueued_jobs
 
     assert_difference "Event.count" do
       assert_no_difference "Outage.where(account: user.account).size" do
@@ -101,36 +110,56 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     # There should be a single notification and the outage name show be listed
     expected = { outage: outage.name, text: "Outage Changed" }
     assert_check_notifications expected
+    # assert_no_enqueued_jobs
 
     # Check that notifications and events are unchanged if we re-visit pages
-    assert_no_difference "Event.count" do
-      assert_no_difference "Notification.count" do
-        visit cis_path
-        assert_check_notifications expected
+    perform_enqueued_jobs do
+      assert_no_difference "Event.count" do
+        assert_no_difference "Notification.count" do
 
-        visit month_outages_path
-        assert_check_notifications expected
+          # now go back to the day of our outage
+          puts outage.inspect
+          goto = outage.end_time.strftime("%Y-%m-%d")
+          puts "#{__LINE__}: #{goto}"
+          fill_in "Outages After", with: goto
+          click_on "Refresh"
+          puts "--#{__LINE__}--"
+          assert_check_notifications expected
 
-        visit week_outages_path
-        assert_check_notifications expected
+          # FIXME: Problem seems to be related to the call back within outages
+          # after_add: :schedule_reminders
+          # It appears that 'extra' notifications are generated on outages
+          # that are not being watched.
 
-        visit fourday_outages_path
-        assert_check_notifications expected
+          visit cis_path
+          puts "--#{__LINE__}--"
+          assert_check_notifications expected
 
-        visit day_outages_path
-        assert_check_notifications expected
+          visit month_outages_path
+          puts "--#{__LINE__}--"
+          assert_check_notifications expected
 
-        # now go back to the day of our outage
-        puts outage.inspect
-        goto = outage.end_time.strftime("%Y-%m-%d")
-        puts "#{__LINE__}: #{goto}"
-        fill_in "Outages After", with: goto
-        click_on "Refresh"
-        assert false
-        assert_check_notifications expected
+          visit week_outages_path
+          puts "--#{__LINE__}--"
+          assert_check_notifications expected
+
+          visit fourday_outages_path
+          puts "--#{__LINE__}--"
+          assert_check_notifications expected
+
+          visit day_outages_path
+          puts "--#{__LINE__}--"
+          assert_check_notifications expected
+
+          # assert false
+          # sleep 5
+          take_screenshot
+          # assert_no_enqueued_jobs
+          puts "--#{__LINE__}--"
+          assert_check_notifications expected
+        end
       end
     end
-
 
 
   end
@@ -324,7 +353,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       assert_selector "h3", text: "Notifications"
 
       content = "You have #{num} un-read #{'notification'.pluralize(num)}."
-      assert_content content
+      assert_text content
 
       expected.each do |e|
         assert e.is_a?(Hash), "Test Code Error, pass an array of hashes"

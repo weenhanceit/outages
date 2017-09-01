@@ -23,7 +23,9 @@ class Ci < ApplicationRecord
   has_many :notes, as: :notable
   has_many :tags, as: :taggable
   has_many :watches, as: :watched, autosave: true, dependent: :destroy
-
+  # FIXME: Need to think about callback for watches added to ci to generate
+  # reminder job.  This possibly should be a callback on create watch
+  
   validates :active,
     inclusion: { in: [true, false], message: "can't be blank" }
 
