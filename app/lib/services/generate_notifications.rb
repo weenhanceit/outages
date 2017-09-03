@@ -12,20 +12,28 @@ module Services
       end
     end
 
-    def self.create_notifications_for_event(event)
-      if event.outage
-        event.outage.watches_unique_by_user.each do |watch|
-          handle_watch event, watch
-        end
-      end
-      event
-    end
-
+    # Creates an event, and then all notifications for the event
+    # Used for :outage and :completed events
+    # These events generate notifications for all users watching the event
     def self.create_event_and_notifications(outage, event_type, event_text)
       event = outage.events.create(event_type: event_type,
                                    text: event_text,
                                    handled: true)
+      event.reload
       create_notifications_for_event(event)
+    end
+
+    # Enumerates a set of watches for the event outage and creates required
+    # notifications.
+    # Note the watch set will contain 1 or 0 watches for any user
+    def self.create_notifications_for_event(event)
+      if event.outage
+        event.outage.watches_unique_by_user.each do |watch|
+          # puts "Gen_notifications #{__LINE__}: Watch: #{watch.inspect}"
+          create_required_notifications event, watch
+        end
+      end
+      event
     end
 
     ##
@@ -59,20 +67,20 @@ module Services
 
     def self.create_unique_overdue_event(_user, outage)
       outage.events.create(event_type: "overdue",
-                           text: "Outaged Scheduled to Begin at " \
-                            "#{outage.start_time.to_s(:iso8601)}",
+                           text: "Outage Not Completed As Scheduled",
                            handled: true)
     end
 
     def self.create_unique_reminder_event(_user, outage)
       outage.events.create(event_type: "reminder",
-                           text: "Outage Not Completed As Scheduled",
+                           text: "Outaged Scheduled to Begin at " \
+                           "#{outage.start_time.to_s(:iso8601)}",
                            handled: true)
     end
 
-    # TODO: To add e-mail notifications, change `create_notification`
-    # to `create_notifications`
-    def self.handle_watch(event, watch)
+    # Generates required notifications for :outage and :completed events
+    # for a specific watch
+    def self.create_required_notifications(event, watch)
       # puts "-xxyeh-: generate_notification.rb #{__LINE__}:"
       case event.event_type
       when "outage"
@@ -103,7 +111,9 @@ module Services
     def self.create_notification(event, watch, notification_type)
       # TODO: the following search may not be quite right
       if Notification.all
-                     .where(event: event, notification_type: notification_type)
+                     .where(event: event,
+                            watch: watch,
+                            notification_type: notification_type)
                      .size.zero?
 
         Notification.create(watch: watch,

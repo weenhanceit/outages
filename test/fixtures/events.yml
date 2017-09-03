@@ -10,13 +10,13 @@ company_a_outage_watched_by_edit_event_a:
   event_type: outage
   text: An outage changed
 
-company_mailer_test_outage_watched_by_test_mail_recepient:
+company_mailer_test_outage_watched_by_test_mail_recepient_1:
   handled: false
   outage: company_mailer_test_outage_a
   event_type: overdue
   text: Outage is overdue (test)
 
-company_mailer_test_ci_watched_by_test_mail_recepient:
+company_mailer_test_ci_watched_by_test_mail_recepient_1:
   handled: false
   outage: company_mailer_test_outage_a
   event_type: overdue

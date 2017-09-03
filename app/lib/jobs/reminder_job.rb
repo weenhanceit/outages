@@ -6,6 +6,8 @@ module Jobs
       # `outages` can be a single outage or an Enumerable of outages.
       # `users` can be a single user or an Enumberable of users.
       def schedule(outages, users = [])
+        # Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
+
         outages = [outages] unless outages.is_a?(Array)
         users = [users] unless users.is_a?(Array)
         # puts "outages.inspect: #{outages.inspect}"
@@ -23,6 +25,8 @@ module Jobs
             set(wait_until: t).perform_later(user, outage)
           end
         end
+        # Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
+
       end
 
       ##
@@ -53,6 +57,8 @@ module Jobs
     def perform(user, outage)
       # Create an event if needed (but watch for races).
       # If all is good, generate notification(s) for the user.
+      # Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
+
       outage_now = Outage.find(outage.id)
       user_now = User.find(user.id)
       # puts "Got current outage and user."
@@ -60,6 +66,8 @@ module Jobs
       # puts "Job is valid."
       Services::GenerateNotifications.create_reminder(user_now, outage_now)
       # puts "Notifications created."
+      # Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
+
     end
   end
 end

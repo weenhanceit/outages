@@ -35,10 +35,10 @@ edit_watching_company_c_outage:
 
 company_mailer_test_watching_outage:
   active: true
-  user: test_mail_recepient
+  user: test_mail_recepient_1
   watched: company_mailer_test_outage_a (Outage)
 
 company_mailer_test_watching_ci:
   active: true
-  user: test_mail_recepient
+  user: test_mail_recepient_1
   watched: company_mailer_test_ci_a (Ci)

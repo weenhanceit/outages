@@ -106,12 +106,14 @@ class User < ApplicationRecord
   # Provide an array of outstanding (notified false) online notifications
   # for the user
   def outstanding_online_notifications
+    puts "outstanding_online_notifications #{__LINE__} Notifications: #{Notification.all.size}"
     ## TODO: This class method generates notifications.  It is anticipated
     ## this will be run as a background task.  It is places here during
     ## development and NEED to re-evaluate where this should wind up
     # logger.debug "HERE !!!!"
     Services::GenerateBackgroundEvents.call
     Services::GenerateNotifications.call
+    puts "outstanding_online_notifications #{__LINE__} Notifications: #{Notification.all.size}"
     notifications.where(notified: false,
                         notification_type: "online")
                  .order(created_at: :desc)
@@ -119,6 +121,8 @@ class User < ApplicationRecord
 
   # Returns all outstanding notifications of a given notificaton type
   def outstanding_notifications(notification_type)
+    # TODO: Review if this should do a reload
+    reload
     notifications.where(notified: false,
                         notification_type: notification_type)
                  .order(created_at: :desc)

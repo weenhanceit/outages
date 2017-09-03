@@ -1,6 +1,9 @@
 require "application_system_test_case"
+require "test_helper"
 
 class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
+  include ActiveJob::TestHelper
+
   test "notification generated for new outage on watched ci" do
     # Set up the user and outage name to be used in this test
     # Set notified to be true on all outstanding online notifications
@@ -40,7 +43,30 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     # After save we should be on the Outage index page
     # There should be a single notification and the outage name show be listed
     assert_selector ".test-home-page"
-    assert_check_notifications [outage_name]
+
+    expected = { outage: outage_name, text: "New Outage" }
+    assert_check_notifications expected
+
+    # Check that notifications and events are unchanged if we re-visit pages
+    assert_no_difference "Event.count" do
+      assert_no_difference "Notification.count" do
+        visit cis_path
+        assert_check_notifications expected
+
+        visit month_outages_path
+        assert_check_notifications expected
+
+        visit week_outages_path
+        assert_check_notifications expected
+
+        visit fourday_outages_path
+        assert_check_notifications expected
+
+        visit day_outages_path
+        assert_check_notifications expected
+
+      end
+    end
   end
 
   test "notification generated for edit outage on watched outage" do
@@ -48,19 +74,28 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     # Set notified to be true on all outstanding online notifications
     user = sign_in_for_system_tests(users(:edit_ci_outages))
     user.notify_me_on_outage_changes = true
+    user.notify_me_before_outage = true
+    user.notify_me_on_outage_complete = true
+    user.notify_me_on_overdue_outage = true
+    user.notification_periods_before_outage = 4
+    user.notification_period_interval = "hours"
+
     user.save!
+
     mark_all_existing_notifications_notified
     user.reload
 
     # Pick an outage, any outage and create a watch on it
-    outage = Outage.where(account: user.account).first
+    outage = Outage.where(account: user.account, name: "Outage A").first
     outage.watches.create(active: true, user: user)
+    # assert_no_enqueued_jobs
 
     # Edit the outage and check that 1 event and no new outages or watches
     # were generated
     # puts "notifications_test.rb TP_#{__LINE__}: Outage: #{outage.inspect}"
     visit edit_outage_url(outage.id)
     # puts "notifications_test.rb TP_#{__LINE__}:"
+    # assert_no_enqueued_jobs
 
     assert_difference "Event.count" do
       assert_no_difference "Outage.where(account: user.account).size" do
@@ -73,7 +108,60 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     end
     # After save we should be on the Outage index page
     # There should be a single notification and the outage name show be listed
-    assert_check_notifications [outage.name]
+    expected = { outage: outage.name, text: "Outage Changed" }
+    assert_check_notifications expected
+    # assert_no_enqueued_jobs
+
+    # Check that notifications and events are unchanged if we re-visit pages
+    perform_enqueued_jobs do
+      assert_no_difference "Event.count" do
+        assert_no_difference "Notification.count" do
+
+          # now go back to the day of our outage
+          # puts outage.inspect
+          goto = outage.end_time.strftime("%Y-%m-%d")
+          # puts "#{__LINE__}: #{goto}"
+          fill_in "Outages After", with: goto
+          click_on "Refresh"
+          # puts "--#{__LINE__}--"
+          assert_check_notifications expected
+
+          # FIXME: Problem seems to be related to the call back within outages
+          # after_add: :schedule_reminders
+          # It appears that 'extra' notifications are generated on outages
+          # that are not being watched.
+
+          visit cis_path
+          # puts "--#{__LINE__}--"
+          assert_check_notifications expected
+
+          visit month_outages_path
+          # puts "--#{__LINE__}--"
+          assert_check_notifications expected
+
+          visit week_outages_path
+          # puts "--#{__LINE__}--"
+          assert_check_notifications expected
+
+          visit fourday_outages_path
+          # puts "--#{__LINE__}--"
+          assert_check_notifications expected
+
+          visit day_outages_path
+          # puts "--#{__LINE__}--"
+          assert_check_notifications expected
+
+          # assert false
+          # sleep 5
+          # take_screenshot
+          # assert_no_enqueued_jobs
+          # puts "--#{__LINE__}--"
+          # assert_check_notifications expected
+        end
+      end
+    end
+
+
   end
 
   test "mark a notification read" do
@@ -91,7 +179,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     end
 
     visit cis_path
-    assert_check_notifications []
+    assert_check_notifications
   end
 
   test "mark a notification read then mark it unread" do
@@ -115,6 +203,12 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     end
   end
 
+  # TODO: This test, and the next test, simulate the use of an active job to
+  # create notifications for overdue and reminders.  There is a time element
+  # and we should review whether these tests should incorporate time travel to
+  # ensure that jobs operate as expected with different timing.
+
+
   test "notification generated for overdue outage on watched outage" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       # Set notified to be true on all outstanding online notifications
@@ -129,31 +223,40 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       user.notify_me_on_overdue_outage = true
       user.save!
 
+      assert_enqueued_jobs 0
+
       # Pick an outage, any outage and create a watch on it
       outage = Outage.where(account: user.account).first
-      outage.watches.create(active: true, user: user)
+      # TODO: The fixture selected likely has an end date in the past.  We need
+      # to review what should happen should the user save an outage with a date
+      # in the past.  It is suggested that we may wnat to make this a validation
+      # for saving of outages.
 
-      # sql = "SELECT now() as time_now, end_time, updated_at FROM outages WHERE id = #{outage.id}"
-      # conn = ActiveRecord::Base.connection
-      # res = conn.execute(sql)
-      # msg = "#{__LINE__} Results: Now: #{Time.zone.now} Db Now: #{res[0]['time_now']}  End (db): #{res[0]['end_time']} End Rails: #{outage.end_time}"
-      # puts msg
-
-      # Be sure that time travelling will only pick up an event and notification
-      # for the outage we are watching in this test
-      mark_all_but_selected_outage_complete(outage.id)
-
-      # Time travel past the end date of the outage
-      travel_to outage.end_time + 1.second do
-        assert_difference "Event.count" do
+      perform_enqueued_jobs do
+        # Expect 2 events - the outage change and the overdue event
+        assert_difference "Event.count", 2 do
           assert_difference "Notification.count" do
+            outage.watches.create(active: true, user: user)
+            outage.end_time = outage.end_time + 1.minute
+            Services::SaveOutage.call(outage)
+
+            assert_equal 1,
+              Event.where(outage: outage, event_type: :outage).size
+
+            assert_equal 1,
+              Event.where(outage: outage, event_type: :overdue).size
+
+            assert_enqueued_jobs 0
+
             user = sign_in_for_system_tests(users(:edit_ci_outages))
-            # After login we should be on the Outage index page
-            # There should be 1 notification and the outage name show be there
-            assert_check_notifications [outage.name]
+
+            expected = { outage: outage.name,
+                         text: "Outage Not Completed As Scheduled" }
+            assert_check_notifications expected
           end
         end
       end
+      assert_enqueued_jobs 0
     end
   end
 
@@ -171,6 +274,39 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       user.notify_me_on_overdue_outage = false
       user.save!
 
+      assert_enqueued_jobs 0
+
+      # Pick an outage, any outage and create a watch on it
+      outage = Outage.where(account: user.account).first
+
+      perform_enqueued_jobs do
+        # Expect 2 events - the outage change and the reminder event
+        assert_difference "Event.count", 2 do
+          assert_difference "Notification.count" do
+            outage.watches.create(active: true, user: user)
+            outage.end_time = outage.end_time + 1.minute
+            Services::SaveOutage.call(outage)
+
+            assert_equal 1,
+              Event.where(outage: outage, event_type: :outage).size,
+              "Should Be 1 :outage event from saved changes"
+
+            assert_equal 1,
+              Event.where(outage: outage, event_type: :reminder).size,
+              "Should Be 1 :reminder event"
+            assert_enqueued_jobs 0
+
+            user = sign_in_for_system_tests(users(:edit_ci_outages))
+
+            expected = { outage: outage.name,
+                         text: "Outaged Scheduled to Begin at " \
+                         "#{outage.start_time.to_s(:iso8601)}" }
+            assert_check_notifications expected
+          end
+        end
+      end
+      assert_enqueued_jobs 0
+
       # TODO: This test needs to be fixed for the "Job" approach to reminders.
       # LCR moved the assert_difference up here to catch the fact that the
       # reminder can get generated simply by adding the watch. But if we add
@@ -180,42 +316,54 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       # Because the generation of the notification now depends on the job,
       # this whole testing approach has to be changed to force the job to
       # run.
-      assert_difference "Event.count" do
-        assert_difference "Notification.count" do
-          # Pick an outage, any outage and create a watch on it
-          outage = Outage.where(account: user.account).first
-          outage.watches.create(active: true, user: user)
-
-          # Be sure that time travelling will only pick up an event and notification
-          # for the outage we are watching in this test
-          mark_all_but_selected_outage_complete(outage.id)
-
-          # TODO: The next comment doesn't seem to match the code.
-          # Time travel past the end date of the outage
-          travel_to outage.start_time - 1.minute do
-            user = sign_in_for_system_tests(users(:edit_ci_outages))
-            # After login we should be on the Outage index page
-            # There should be 1 notification and the outage name show be there
-            assert_check_notifications [outage.name]
-          end
-        end
-      end
+      # assert_difference "Event.count" do
+      #   assert_difference "Notification.count" do
+      #     # Pick an outage, any outage and create a watch on it
+      #     outage = Outage.where(account: user.account).first
+      #     outage.watches.create(active: true, user: user)
+      #
+      #     # Be sure that time travelling will only pick up an event and notification
+      #     # for the outage we are watching in this test
+      #     mark_all_but_selected_outage_complete(outage.id)
+      #     puts "----------------------------------#{__LINE__}-----------------------------"
+      #
+      #     # TODO: The next comment doesn't seem to match the code.
+      #     # Time travel past the end date of the outage
+      #     travel_to outage.start_time - 1.minute do
+      #       puts "----------------------------------#{__LINE__}-----------------------------"
+      #       user = sign_in_for_system_tests(users(:edit_ci_outages))
+      #       # After login we should be on the Outage index page
+      #       # There should be 1 notification and the outage name show be there
+      #       puts "----------------------------------#{__LINE__}-----------------------------"
+      #       assert_check_notifications [outage.name]
+      #       puts "----------------------------------#{__LINE__}-----------------------------"
+      #       assert false
+      #     end
+      #   end
+      # end
     end
   end
 
   private
 
   def assert_check_notifications(expected = [])
+    expected = [expected] unless expected.is_a?(Array)
     num = expected.size
     within(".notifications") do
       assert_selector "h3", text: "Notifications"
 
       content = "You have #{num} un-read #{'notification'.pluralize(num)}."
-      assert_content content
+      assert_text content
 
       expected.each do |e|
+        assert e.is_a?(Hash), "Test Code Error, pass an array of hashes"
         assert_not e.blank?, "Test Code Error, name cannot be blank"
-        assert_content e
+        # assert_content e
+        outage_element = find("a", text: e[:outage])
+        grandparent_element = outage_element.find(:xpath, "..").find(:xpath, "..")
+        text_element = grandparent_element.find(".notification-text")
+
+        assert_equal e[:text], text_element.text
       end
     end
   end

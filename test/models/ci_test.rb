@@ -163,6 +163,20 @@ class CiTest < ActiveSupport::TestCase
       .include?(@unrelated)
   end
 
+  test "outages list is complete for a ci" do
+    expected_outages = [make_outage, make_outage]
+    other_outage = make_outage
+
+    expected_outages[0].cis << @ci
+    expected_outages[0].save!
+    expected_outages[1].cis << @grandchild
+    expected_outages[1].save!
+    other_outage.cis << @parent
+    other_outage.save!
+
+    assert_equal expected_outages.sort, @ci.affected_by_outages.sort
+  end
+
   def setup
     @account = Account.new(name: "No CIs")
     @ci = Ci.create(account: @account, name: "Me")
@@ -177,4 +191,13 @@ class CiTest < ActiveSupport::TestCase
     @greatgrandchild =
       @grandchild.children.create(account: @account, name: "Great-grandchild")
   end
+
+  def make_outage(start_time = Time.zone.now.round)
+    @account.outages.build(name: "Outage",
+                           start_time: start_time,
+                           end_time: start_time + 30.minutes,
+                           causes_loss_of_service: true,
+                           completed: false)
+  end
+
 end

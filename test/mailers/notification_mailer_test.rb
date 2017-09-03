@@ -5,7 +5,7 @@ class NotificationMailerTest < ActionMailer::TestCase
   #   assert true
   # end
   test "notifications" do
-    user = users(:test_mail_recepient)
+    user = users(:test_mail_recepient_1)
 
     email = NotificationMailer. notification_email(user)
 

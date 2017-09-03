@@ -25,7 +25,9 @@ class OutagesController < ApplicationController
     params[:earliest] = start_date.to_date.to_s(:browser)
     params[:latest] = start_date.to_date.to_s(:browser)
     params[:start_date] = start_date.to_s(:ymd)
+    # Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
     outages
+    # Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
   end
 
   def destroy
