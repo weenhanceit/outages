@@ -129,22 +129,23 @@
       <%= f.form_group :privileges do %>
       <%# Add hidden fields when disabled because browser won't return
           valudes for disabled fields. %>
-        <%= f.hidden_field :privilege_account unless @user.privilege_account? %>
+          <%# FIXME: change @user to current_user %>
+        <%= f.hidden_field :privilege_account unless current_user.privilege_account? %>
         <%= f.check_box :privilege_account,
               {label: "Manage Account",
-              disabled: !@user.privilege_account?} %>
-        <%= f.hidden_field :privilege_manage_users unless @user.privilege_manage_users? %>
+              disabled: !current_user.privilege_account?} %>
+        <%= f.hidden_field :privilege_manage_users unless current_user.privilege_manage_users? %>
         <%= f.check_box :privilege_manage_users,
               {label: "Add/Change/Delete Users",
-              disabled: !@user.privilege_manage_users?} %>
-        <%= f.hidden_field :privilege_edit_cis unless @user.privilege_manage_users? %>
+              disabled: !current_user.privilege_manage_users?} %>
+        <%= f.hidden_field :privilege_edit_cis unless current_user.privilege_manage_users? %>
         <%= f.check_box :privilege_edit_cis,
               {label: "Add/Change/Delete Services",
-              disabled: !@user.privilege_manage_users?} %>
-        <%= f.hidden_field :privilege_edit_outages unless @user.privilege_manage_users? %>
+              disabled: !current_user.privilege_manage_users?} %>
+        <%= f.hidden_field :privilege_edit_outages unless current_user.privilege_manage_users? %>
         <%= f.check_box :privilege_edit_outages,
               {label: "Add/Change/Delete Outages",
-              disabled: !@user.privilege_manage_users?} %>
+              disabled: !current_user.privilege_manage_users?} %>
       <% end %>
     </div>
   </div>
