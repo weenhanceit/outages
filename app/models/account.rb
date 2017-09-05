@@ -6,4 +6,6 @@ class Account < ApplicationRecord
   has_many :cis, inverse_of: :account
   has_many :outages, inverse_of: :account
   has_many :users, inverse_of: :account
+
+  default_scope { where(active: true) }
 end

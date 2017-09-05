@@ -1,0 +1,183 @@
+<%= bootstrap_form_for(@user,
+      url: url_for_user_form(@account, @user),
+      builder: WeitFormBuilder) do |f| %>
+<%= f.hidden_field :account_id %>
+<div class="mb-3">
+  <div class="row">
+    <h3>Preferences</h3>
+  </div>
+  <div class="row">
+    <div class="col">
+      <%= f.text_field :name, layout: :horizontal %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <%= f.email_field :email, layout: :horizontal %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <%= f.time_zone_select :time_zone, nil, layout: :horizontal %>
+    </div>
+    <div class="col content-note">
+      Should default to the current time zone, which if not set in the user profile, should be set in a cookie by Javascript based on the code to guess time zone in the browser.
+      <!-- NOTE: Don't need to let the user set a preference.
+      <hr/>
+      <p>
+        <%= check_box_tag "highlight", 1, true %>
+        <%= label_tag "highlight", "Highlight outages that are new or changed" %>
+        This might be show it in bold in the list or calendar views until
+        the user has read the outage. But what does "read the outage" mean?
+      </p> -->
+    </div>
+  </div>
+</div>
+
+<div class="mb-3">
+  <div class="row">
+    <h3>Notification Preferences</h3>
+  </div>
+  <div class="row">
+    <div class="col">
+      <%= f.check_box :notify_me_on_outage_changes,
+          label: "Notify me about new or changed outages associated with anything I'm watching." %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <%= f.check_box :notify_me_on_note_changes,
+          label: "Notify me when notes are added, changed, or deleted." %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <%= f.check_box :notify_me_on_outage_complete,
+          label: "Notify me when the outage is completed." %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <%= f.check_box :notify_me_on_overdue_outage,
+          label: "Notify me when the outage is not completed by its scheduled end time." %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <%= f.form_group :notify_me_before_outage do %>
+      <%= f.check_box :notify_me_before_outage do %>
+        <%= f.number_field :notification_periods_before_outage,
+            label: "Notify me",
+            layout: :horizontal,
+            label_col: "col",
+            control_col: "col" %>
+        <%= f.select :notification_period_interval,
+            [ "hours", "days", "weeks", "months" ],
+            label: "before outage starts.",
+            layout: :horizontal,
+            label_col: "col",
+            control_col: "col" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="mb-3">
+  <div class="row">
+    <h3>E-Mail Notification Preferences</h3>
+  </div>
+  <div class="row">
+    <div class="col">
+      <%= f.check_box :preference_notify_me_by_email,
+          label: "Also notify me by e-mail." %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <%= f.form_group :preference_individual_email_notifications do %>
+      <%= f.radio_button :preference_individual_email_notifications,
+            1,
+            checked: f.object.preference_individual_email_notifications?,
+            label: " Individual e-mail for each outage "%>
+      <%= f.radio_button :preference_individual_email_notifications,
+            0,
+            checked: !f.object.preference_individual_email_notifications?,
+            label: " One e-mail per day ",
+            layout: :horizontal %>
+      <%= f.time_field :preference_email_time,
+            label: "at",
+            layout: :horizontal %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%# NOTE: Should we show disabled fields for users without privileges, or
+    nothing at all? %>
+<%# if current_user.privilege_manage_users? %>
+<div class="mb-3">
+  <div class="row">
+    <h3>Privileges</h3>
+  </div>
+  <div class="row">
+    <div class="col">
+      <%= f.form_group :privileges do %>
+      <%# Add hidden fields when disabled because browser won't return
+          valudes for disabled fields. %>
+          <%# FIXME: change @user to current_user %>
+        <%= f.hidden_field :privilege_account unless current_user.privilege_account? %>
+        <%= f.check_box :privilege_account,
+              {label: "Manage Account",
+              disabled: !current_user.privilege_account?} %>
+        <%= f.hidden_field :privilege_manage_users unless current_user.privilege_manage_users? %>
+        <%= f.check_box :privilege_manage_users,
+              {label: "Add/Change/Delete Users",
+              disabled: !current_user.privilege_manage_users?} %>
+        <%= f.hidden_field :privilege_edit_cis unless current_user.privilege_manage_users? %>
+        <%= f.check_box :privilege_edit_cis,
+              {label: "Add/Change/Delete Services",
+              disabled: !current_user.privilege_manage_users?} %>
+        <%= f.hidden_field :privilege_edit_outages unless current_user.privilege_manage_users? %>
+        <%= f.check_box :privilege_edit_outages,
+              {label: "Add/Change/Delete Outages",
+              disabled: !current_user.privilege_manage_users?} %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<%# end %>
+
+<div class="mb-3">
+  <%= f.primary "Save" %>
+  <% if current_user.privilege_manage_users? &&
+      current_user != @user &&
+      @user.persisted? %>
+  <% unless @user.invitation_accepted? %>
+  <%= link_to "Send Invitation",
+        resend_invitation_admin_user_path(@user),
+        method: :post,
+        class: "btn btn-secondary" %>
+  <% end %>
+  <%= link_to "Delete",
+        admin_user_path(@user),
+        method: :delete,
+        class: "btn btn-danger",
+        data: { confirm: "Really delete the account? This can't be undone." } %>
+  <% end %>
+</div>
+<% end %>
+
+<%if controller_name == "users" || current_user.privilege_manage_users? %>
+<div class="mb-3">
+  <h3>Change Password</h3>
+  <p>
+    <%= link_to "Change Password or Cancel Registration",
+          edit_user_registration_path %>
+  </p>
+</div>
+<% end %>

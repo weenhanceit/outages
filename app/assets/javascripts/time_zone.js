@@ -34,6 +34,7 @@ $(document).on('turbolinks:load', function() {
 
     link_to_settings = '<a href="/user/edit">preferences page</a>';
     // FIXME: Better check of browser timezone, AKA the Havana problem
+    // FIXME: Only show time zone messages when logged in
     if (current_user_tz === "") {
       msg = '<p>Using the ' +
         browser_tz +

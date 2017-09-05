@@ -1,17 +1,22 @@
 company_a:
   name: Company A
+  active: true
 
 company_b:
   name: Company B
+  active: true
 
 # Company C contains a hierarchy of CIs and is for testing
 # hierarchies of CIs.
 company_c:
   name: Company C
+  active: true
 
 # Outages to test filtering.
 company_d:
   name: Company D
+  active: true
 
 company_mailer_test:
   name: Company Doing Mailer Tests
+  active: true

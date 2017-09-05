@@ -2,15 +2,17 @@ class ApplicationController < ActionController::Base
   # require 'lib/user.rb'
   protect_from_forgery with: :exception
   before_action :authenticate_user!
+  before_action :account_exists!, if: :current_user
+  skip_before_action :account_exists!, if: :devise_controller?
   around_action :use_user_time_zone, if: :current_user
   before_action :online_notifications,
     if: :current_user,
     except: [:create, :destroy, :update]
 
   ##
-  # Run all controllers in the current user's time zone.
-  def use_user_time_zone(&block)
-    Time.use_zone(current_user.time_zone, &block)
+  # If user doesn't yet have an account, all they can do is create one.
+  def account_exists!
+    redirect_to new_account_url unless current_account
   end
 
   ##
@@ -49,6 +51,7 @@ class ApplicationController < ActionController::Base
   # See: https://stackoverflow.com/a/4983354/3109926
   def not_found
     raise ActionController::RoutingError.new("Not Found")
+    # raise ActiveRecord::RecordNotFound
   end
 
   ##
@@ -56,5 +59,11 @@ class ApplicationController < ActionController::Base
   # the controller, so it's available to the notification partial.
   def online_notifications
     @online_notifications ||= current_user.outstanding_notifications(:online)
+  end
+
+  ##
+  # Run all controllers in the current user's time zone.
+  def use_user_time_zone(&block)
+    Time.use_zone(current_user.time_zone, &block)
   end
 end

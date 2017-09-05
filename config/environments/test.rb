@@ -23,7 +23,10 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
 
   # Raise exceptions instead of rendering exception templates.
-  config.action_dispatch.show_exceptions = false
+  # NOTE: LCR changed this to true to make system tests render the page.
+  # For some reason, assert_raises wasn't working in system tests.
+  # TODO: Put this in system-test specific configuration.
+  config.action_dispatch.show_exceptions = true
 
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false

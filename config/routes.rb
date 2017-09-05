@@ -1,13 +1,25 @@
 Rails.application.routes.draw do
-  # Put this before Devise during the transition so the old tests still work.
-  devise_for :users, controllers: { registrations: :registrations }
+  devise_for :users, controllers: {
+    invitations: :invitations,
+    registrations: :registrations
+  }
   # The following should be where Devise goes after login.
   get "user_root", to: "outages#index"
 
   root "welcome#index"
 
   # get "/outages", to: "outages#index", as: "outages_index"
-  # resources :cis, only: [:index, :edit, :update, :destroy, :show, :new]
+  resources :accounts do
+    namespace :admin do
+      resources :users,
+        shallow: true,
+        only: [:destroy, :edit, :index, :update] do
+          member do
+            post "resend_invitation"
+          end
+        end
+    end
+  end
   resources :cis do
     resources :notes, shallow: true, only: [:create, :destroy, :edit, :update]
   end

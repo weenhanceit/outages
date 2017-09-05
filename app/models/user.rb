@@ -3,9 +3,9 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  devise :invitable, :database_authenticatable, :registerable, :confirmable,
     :recoverable, :rememberable, :trackable, :validatable
-  belongs_to :account
+  belongs_to :account, optional: true
   has_many :contributors, inverse_of: :user
   has_many :notes, inverse_of: :user
   has_many :watches, inverse_of: :user
@@ -30,9 +30,14 @@ class User < ApplicationRecord
     :privilege_manage_users,
     inclusion: { in: [true, false], message: "can't be blank" }
 
+  validate :at_least_one_account_admin
+  validate :at_least_one_user_admin
+
   validates_presence_of :email
 
   default_scope { where(active: true) }
+
+  before_validation :set_defaults
 
   def can_edit_outages?
     privilege_edit_outages
@@ -49,7 +54,7 @@ class User < ApplicationRecord
   # Also, one day is added if the date is a string.
   # FIXME: We should really change the test cases.
   def filter_outages(params)
-    # puts " ------------------#{__LINE__}--------------------------------------"
+    # puts " ------------------#{__LINE__}-------------------------------------"
     # logger.debug "user.rb #{__LINE__}: PARAMS: #{params.inspect}"
     scope = account.outages.where(active: true, completed: false)
     # FIXME: Make this case-insensitive
@@ -128,4 +133,51 @@ class User < ApplicationRecord
                  .order(created_at: :desc)
   end
 
+  ##
+  # Set the defaults so validations will pass when someone signs up.
+  # This is in the model so it would happen when Devise creates a user.
+  def set_defaults
+    # puts "SETTING DEFAULTS"
+    # FIXME: Add default for time of daily e-mail.
+    self.notify_me_before_outage = false if notify_me_before_outage.nil?
+    self.notify_me_on_note_changes = false if notify_me_on_note_changes.nil?
+    self.notify_me_on_outage_changes = true if notify_me_on_outage_changes.nil?
+    self.notify_me_on_outage_complete = true if notify_me_on_outage_complete.nil?
+    self.notify_me_on_overdue_outage = false if notify_me_on_overdue_outage.nil?
+    self.preference_individual_email_notifications = false if preference_individual_email_notifications.nil?
+    self.preference_notify_me_by_email = false if preference_notify_me_by_email.nil?
+    # NOTE: User created by signing up is a super-user. This mignt not always
+    # be true.
+    self.privilege_account = true if privilege_account.nil?
+    self.privilege_edit_cis = true if privilege_edit_cis.nil?
+    self.privilege_edit_outages = true if privilege_edit_outages.nil?
+    self.privilege_manage_users = true if privilege_manage_users.nil?
+    # puts "self.inspect: #{inspect}"
+  end
+
+  private
+
+  def at_least_one_account_admin
+    if removing_account_admin &&
+       account &&
+       account.users.where(privilege_account: true).where.not(id: id).empty?
+      errors[:base] << "This is the last account manager."
+    end
+  end
+
+  def at_least_one_user_admin
+    if removing_user_admin &&
+       account &&
+       account.users.where(privilege_manage_users: true).where.not(id: id).empty?
+      errors[:base] << "This is the last user manager."
+    end
+  end
+
+  def removing_account_admin
+    changed_attributes[:privilege_account] || changed_attributes[:active]
+  end
+
+  def removing_user_admin
+    changed_attributes[:privilege_manage_users] || changed_attributes[:active]
+  end
 end
