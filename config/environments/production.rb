@@ -62,7 +62,25 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "vagrant_#{Rails.env}"
   config.action_mailer.perform_caching = false
 
-  # Ignore bad email addresses and do not raise email delivery errors.
+  ## Required by devise set up ################################################
+config.action_mailer.default_url_options = { host: 'outages.weenhanceit.com' }
+
+config.action_mailer.delivery_method = :smtp
+config.action_mailer.smtp_settings = {
+  address:                ENV['EMAIL_SMTP_ADDRESS'] || 'smtp.fastmail.com',
+  port:                   465,
+  # domain:               ENV["EMAIL_DOMAIN"],
+  user_name:              ENV['EMAIL_USERNAME'] || 'outages@weenhanceit.com',
+  password:               ENV['EMAIL_PASSWORD'],
+  authentication:         :plain,
+  default_mailer_options: { from: 'outages@weenhanceit.com' },
+  enable_starttls_auto:   false,
+  tls:                    true,
+  ssl:                    true
+}
+##############################################################################
+
+# Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
