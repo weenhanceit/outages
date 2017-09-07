@@ -11,7 +11,7 @@ sudo chmod 660 $logs
 
 # need to set up the database (the user)
 # need rails db:create the first time
-bin/bundle install # --path vendor/bundle
+bin/bundle install --deployment # --path vendor/bundle
 bin/rails db:migrate
 bin/rails assets:clobber
 bin/rails assets:precompile
