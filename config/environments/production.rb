@@ -67,7 +67,7 @@ config.action_mailer.default_url_options = { host: 'outages.weenhanceit.com' }
 
 config.action_mailer.delivery_method = :smtp
 config.action_mailer.smtp_settings = {
-  address:                ENV['EMAIL_SMTP_ADDRESS'] || 'smtp.fastmail.com',
+  address:                ENV['EMAIL_SMTP_ADDRESS'] || 'smtp.misk.com',
   port:                   465,
   # domain:               ENV["EMAIL_DOMAIN"],
   user_name:              ENV['EMAIL_USERNAME'] || 'outages@weenhanceit.com',
