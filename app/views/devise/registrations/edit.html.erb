@@ -1,9 +1,10 @@
 <h3>Change Password</h3>
 
-<%= bootstrap_form_for(resource,
+<%= bootstrap_form_with(model: resource,
       as: resource_name,
       url: registration_path(resource_name),
-      html: { method: :put }) do |f| %>
+      html: { method: :put },
+      local: true) do |f| %>
   <%= devise_error_messages! %>
 
   <div class="field">
@@ -19,7 +20,7 @@
     <%#= f.label :password %>
     <%= f.password_field :password,
           label: "Password <i>(leave blank if you don't want to change it)</i>".html_safe,
-          autocomplete: "off" %>
+          autocomplete: "off", id: :user_password %>
     <% if @minimum_password_length %>
       <em><%= @minimum_password_length %> characters minimum</em>
     <% end %>
@@ -27,12 +28,12 @@
 
   <div class="field">
     <%#= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off" %>
+    <%= f.password_field :password_confirmation, autocomplete: "off", id: :user_password_confirmation %>
   </div>
 
   <div class="field">
     <%#= f.label :current_password %>
-    <%= f.password_field :current_password, autocomplete: "off" %>
+    <%= f.password_field :current_password, autocomplete: "off", id: :user_current_password %>
     <i>(we need your current password to confirm your changes)</i><br />
   </div>
 

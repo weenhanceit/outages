@@ -14,7 +14,7 @@
     <% end %>
   </h1>
 
-  <%= bootstrap_form_for(@ci, builder: WeitFormBuilder) do |f| %>
+  <%= bootstrap_form_with(model: @ci, local: true) do |f| %>
   <%= f.hidden_field :active %>
   <div class="row">
     <div class="col">

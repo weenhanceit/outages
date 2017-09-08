@@ -66,8 +66,7 @@ class CisShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
     assert_note_a(1)
     assert_note_c(0)
 
-    # TODO: Put this in, make it fail, then make it pass:
-    within("form#new_note") { assert_no_text "Note C." }
+    assert_no_field "New Note", with: "Note C."
   end
 
   test "add a note ascending order" do

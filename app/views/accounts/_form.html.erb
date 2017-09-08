@@ -1,5 +1,5 @@
-<%= bootstrap_form_for @account do |f| %>
-  <%= f.text_field :name %>
+<%= bootstrap_form_with(model: @account, local: true) do |f| %>
+  <%= f.text_field :name, id: :account_name %>
   <%= f.primary "Save" %>
   <% if @account.persisted? %>
   <%= link_to "Add User",

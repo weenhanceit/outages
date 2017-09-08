@@ -1,8 +1,6 @@
-<%= bootstrap_form_for([@notable, @note],
-      builder: WeitFormBuilder,
+<%= bootstrap_form_with(model: [@notable, @note],
       format: :js,
-      remote: true,
-      html: { class: "note " + css_note_id(@note) }) do |f| %>
+      class: "note " + css_note_id(@note)) do |f| %>
   <%= f.text_area :note,
         rows: "6",
         label: "#{@note.new_record? ? "New" : "Edit"} Note",

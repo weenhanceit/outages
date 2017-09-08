@@ -1,6 +1,6 @@
-<%= bootstrap_form_for(@user,
+<%= bootstrap_form_with(model: @user,
       url: url_for_user_form(@account, @user),
-      builder: WeitFormBuilder) do |f| %>
+      local: true) do |f| %>
 <%= f.hidden_field :account_id %>
 <div class="mb-3">
   <div class="row">
@@ -8,17 +8,20 @@
   </div>
   <div class="row">
     <div class="col">
-      <%= f.text_field :name, layout: :horizontal %>
+      <%= f.text_field :name, layout: :horizontal, id: :user_name %>
     </div>
   </div>
   <div class="row">
     <div class="col">
-      <%= f.email_field :email, layout: :horizontal %>
+      <%= f.email_field :email, layout: :horizontal, id: :user_email %>
     </div>
   </div>
   <div class="row">
     <div class="col">
-      <%= f.time_zone_select :time_zone, nil, layout: :horizontal %>
+      <%= f.time_zone_select :time_zone,
+            nil,
+            { layout: :horizontal },
+            id: :user_time_zone %>
     </div>
     <div class="col content-note">
       Should default to the current time zone, which if not set in the user profile, should be set in a cookie by Javascript based on the code to guess time zone in the browser.

@@ -14,9 +14,9 @@
     </small>
     <% end %>
   </h1>
-  <%= bootstrap_form_for(@outage,
-    builder: WeitFormBuilder,
-    html: { class: "js-submit-on-change" }) do |f| %>
+  <%= bootstrap_form_with(model: @outage,
+        local: true,
+        class: "js-submit-on-change") do |f| %>
   <%= f.hidden_field :active %>
   <div class="row">
     <div class="col-sm-8">
