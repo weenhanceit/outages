@@ -8,13 +8,13 @@ class CisTest < ApplicationSystemTestCase
     assert_selector "h1", text: "Services"
 
     within("tr.test-#{cis(:company_a_ci_a).id}") do
-      assert_checked_field "Watched"
+      assert_checked_field "watch[active]"
       assert_difference "Watch.count", -1 do
-        uncheck "Watched"
+        uncheck "watch[active]"
         sleep 2
       end
       assert_difference "Watch.count" do
-        check "Watched"
+        check "watch[active]"
         sleep 2
       end
     end

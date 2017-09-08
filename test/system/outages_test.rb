@@ -10,15 +10,15 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
         assert_selector ".test-home-page"
 
         within("tr.test-#{outages(:company_a_outage_a).id}") do
-          assert_unchecked_field "Watched"
+          assert_unchecked_field "watch[active]"
           assert_difference "Watch.count" do
-            check "Watched"
-            assert_checked_field "Watched"
+            check "watch[active]"
+            assert_checked_field "watch[active]"
             sleep 2
           end
           assert_difference "Watch.count", -1 do
-            uncheck "Watched"
-            assert_unchecked_field "Watched"
+            uncheck "watch[active]"
+            assert_unchecked_field "watch[active]"
             sleep 2
           end
         end

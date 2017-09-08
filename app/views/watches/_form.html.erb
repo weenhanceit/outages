@@ -1,4 +1,4 @@
-<%= form_with(model: watch,
+<%= bootstrap_form_with(model: watch,
       format: :js,
       id: "js-watch-row-#{row_index}",
       class: "js-submit-on-change") do |f| %>
@@ -6,8 +6,5 @@
   <%= f.hidden_field :watched_id %>
   <%= f.hidden_field :user_id %>
   <%= hidden_field_tag "row_index", row_index %>
-  <%= label_tag "Watched" do %>
-    <span class="hidden">Watched</span>
-    <%= f.check_box :active %>
-  <% end %>
+  <%= f.check_box :active, label: "" %>
 <% end %>

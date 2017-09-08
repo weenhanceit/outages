@@ -36,7 +36,7 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
 end
 #gem 'popper_js'
-gem 'bootstrap_form', git: "https://github.com/bootstrap-ruby/rails-bootstrap-forms.git", branch: "bootstrap-v4"
+gem 'bootstrap_form', git: "https://github.com/lcreid/rails-bootstrap-forms.git", branch: "bootstrap-4-rails-5-1"
 
 gem 'jquery-ui-rails'
 

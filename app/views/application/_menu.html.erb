@@ -44,8 +44,7 @@
         <ul class="navbar-nav ml-auto">
           <% if current_user %>
           <li class="nav-item">
-            <!-- TODO: Turn the below into a WEIT Bootstrap Forms helper. -->
-            <%= form_with url: searches_path,
+            <%= bootstrap_form_with url: searches_path,
               method: :get,
               local: true,
               class: "form-inline my-2 my-lg-0" do |search_form| %>
@@ -53,14 +52,15 @@
               after submitting the search, which is good if the search bar
               is still on the screen after the search. -->
             <%= search_form.text_field :criteria,
-              value: params[:criteria],
-              class: "form-control mr-sm-2",
-                placeholder: "Search" %>
+                  value: params[:criteria],
+                  class: "form-control mr-sm-2",
+                  hide_label: true,
+                  placeholder: "Search" %>
             <!--  Set the name: "" so we don't pass the search button text as a
                 parameter. -->
             <%= search_form.submit "Search",
-                name: "",
-                class: "btn btn-outline-success my-2 my-sm-0" %>
+                  name: "",
+                  class: "btn btn-outline-success my-2 my-sm-0" %>
             <% end %>
           </li>
           <li class="nav-item">

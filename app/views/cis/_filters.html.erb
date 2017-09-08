@@ -1,6 +1,6 @@
 <div class="mb-3">
   <h3>Filters</h3>
-  <%= form_with url: "#",
+  <%= bootstrap_form_with url: "#",
       method: :get,
       html: { class: "js-submit-on-change" } do |f| %>
   <div class="form-group">
@@ -13,9 +13,7 @@
   </div>
   <div class="form-group">
     <div class="form-check">
-      <%= label_tag :cis_watching,
-          value: "Interested",
-          class: "form-check-label" do %>
+      <%= content_tag :label, class: "form-check-label" do %>
       <%= radio_button_tag :cis_watching,
             cis_of_interest,
             cis_of_interest?,
@@ -23,9 +21,7 @@
       Of interest to me<% end %>
     </div>
     <div class="form-check">
-      <%= label_tag :cis_watching,
-          value: "All",
-          class: "form-check-label" do %>
+      <%= content_tag :label, class: "form-check-label" do %>
       <%= radio_button_tag :cis_watching,
             "All",
             !cis_of_interest?,

@@ -1,6 +1,6 @@
 <div class="mb-3">
   <h3>Filters</h3>
-<%= form_with url: "#",
+<%= bootstrap_form_with url: "#",
       local: true,
       method: :get do |f| %>
   <div class="form-group">
@@ -19,9 +19,7 @@
     <%= yield :latest %>
     <div class="col form-group">
       <div class="form-check">
-        <%= label_tag :watching,
-              value: "Interested",
-              class: "col-form-label form-check-label" do %>
+        <%= content_tag :label, class: "col-form-label form-check-label" do %>
           <%= radio_button_tag :watching,
                 of_interest,
                 of_interest?,
@@ -29,9 +27,7 @@
         <% end %>
       </div>
       <div class="form-check">
-        <%= label_tag :watching,
-              value: "All",
-              class: "col-form-label form-check-label" do %>
+        <%= content_tag :label, class: "col-form-label form-check-label" do %>
           <%= radio_button_tag :watching,
                 "All",
                 !of_interest?,
