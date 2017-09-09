@@ -103,6 +103,8 @@ module Services
         end
       when "reminder"
         create_notification(event, watch, "online") if watch.user.notify_me_before_outage
+      when "outage_note"
+        create_notifications(event, watch) if watch.user.notify_me_on_note_changes
       else
         puts "-xxyeh-: WTF! #{event.event_type}"
       end
