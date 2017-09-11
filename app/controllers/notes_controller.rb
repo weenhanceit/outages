@@ -7,7 +7,7 @@ class NotesController < ApplicationController
       current_account.cis.find(params[:ci_id])
     end
     @note = @notable.notes.build(notes_params.merge(user: current_user))
-    if @note.save
+    if Services::SaveNote.call(@note)
       respond_to do |format|
         format.js
       end
@@ -23,7 +23,8 @@ class NotesController < ApplicationController
 
   def destroy
     @note = current_user.notes.find(params[:id])
-    if @note.destroy
+    # puts "nc #{__LINE__}: DESTROY !!!! #{@note.note}"
+    if Services::SaveNote.destroy(@note)
       respond_to do |format|
         format.js
       end
@@ -44,7 +45,8 @@ class NotesController < ApplicationController
   def update
     # puts "UPDATE PARAMS: #{params.inspect}"
     @note = current_user.notes.find(params[:id])
-    if @note.update(notes_params)
+    @note.assign_attributes(notes_params)
+    if Services::SaveNote.call(@note)
       respond_to do |format|
         format.js
       end
