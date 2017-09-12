@@ -2,9 +2,9 @@
 # Represents a user.
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
+  # :lockable and :omniauthable
   devise :invitable, :database_authenticatable, :registerable, :confirmable,
-    :recoverable, :rememberable, :trackable, :validatable
+    :recoverable, :rememberable, :timeoutable, :trackable, :validatable
   belongs_to :account, optional: true
   has_many :contributors, inverse_of: :user
   has_many :notes, inverse_of: :user
