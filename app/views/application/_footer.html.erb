@@ -1,3 +1,5 @@
+<% if current_user &&
+  %w(carillo.ca jadesystems.ca weenhanceit.com).include?(Mail::Address.new(current_user.email).domain) %>
 <div class="container">
   <hr/>
   <small>
@@ -24,3 +26,4 @@
     </p>
   </small>
 </div>
+<% end %>
