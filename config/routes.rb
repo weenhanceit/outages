@@ -36,5 +36,8 @@ Rails.application.routes.draw do
   resources :searches, only: [:index]
   resource :user, only: [:edit, :update]
   resources :watches, only: [:create, :edit, :update]
-  resources :welcome, only: [:index]
+  get "welcome", to: "welcome#index", as: :welcome
+  get "documentation", to: "welcome#documentation", as: :documentation
+  get "features", to: "welcome#features", as: :features
+  get "pricing", to: "welcome#pricing", as: :pricing
 end

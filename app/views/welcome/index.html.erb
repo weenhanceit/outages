@@ -1,6 +1,60 @@
-<div class="text-center">
-  <h1>Welcome to Outages</h1>
-  <p class="test-sign-in">
-    <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary btn-large" %>
-  </p>
-</div>
+
+  <div class="jumbotron">
+    <h1 class="text-center">Welcome to Outages</h1>
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <p>
+          Outages is an application that helps your orgnization manage and communicate planned maintenance to services your business and your customers use.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <h4 class="text-center">Features</h4>
+      </div>
+      <div class="col-sm-4">
+        <h4 class="text-center">Documentation and Training</h4>
+      </div>
+      <div class="col-sm-4">
+        <h4 class="text-center">Pricing</h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <ul>
+          <li>Automatically calculates services affected by maintenance work.</li>
+          <li>Recipient controls how much information to receive, how, and when.</li>
+        </ul>
+      </div>
+      <div class="col-sm-4">
+      </div>
+      <div class="col-sm-4">
+        <p>
+          While we're in alpha release stage, it's
+          <em>free!</em>
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <p class="text-center">
+          <%= link_to "View details", features_path, class: "btn btn-secondary btn-large" %>
+        </p>
+      </div>
+      <div class="col-sm-4">
+        <p class="text-center">
+          <%= link_to "View details", documentation_path, class: "btn btn-secondary btn-large" %>
+        </p>
+      </div>
+      <div class="col-sm-4">
+        <p class="text-center">
+          <%= link_to "View details", pricing_path, class: "btn btn-secondary btn-large" %>
+        </p>
+      </div>
+    </div>
+    <p class="test-sign-in text-center">
+      <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary btn-large" %>
+    </p>
+  </div>
