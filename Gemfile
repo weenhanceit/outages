@@ -44,6 +44,7 @@ gem "simple_calendar", "~> 2.0", git: "https://github.com/lcreid/simple_calendar
 gem 'detect_timezone_rails'
 gem "devise"
 gem 'devise_invitable'
+gem 'redcarpet'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
