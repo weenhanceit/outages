@@ -381,6 +381,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     # save_screenshot "tmp/screenshots/x_debug_shot.png"
     #  Check that we have a notification
     expected = { outage: outage.name, text: "Note Added" }
+    # NOTE: Tests can fail because of timing.
     assert_check_notifications expected
 
     mark_all_existing_notifications_notified
