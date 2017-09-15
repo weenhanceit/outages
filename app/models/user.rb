@@ -34,6 +34,8 @@ class User < ApplicationRecord
   validate :at_least_one_user_admin
 
   validates_presence_of :email
+  validates_presence_of :preference_email_time,
+    if: -> { preference_notify_me_by_email && !preference_individual_email_notifications }
 
   default_scope { where(active: true) }
 
