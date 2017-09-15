@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= render "head" %>
+  </head>
+  <body>
+    <%= render "header" %>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-sm-10">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+    <%= render "footer" %>
+  </body>
+</html>

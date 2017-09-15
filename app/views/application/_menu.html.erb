@@ -68,6 +68,13 @@
                     edit_user_path,
                     class: "nav-link" %>
           </li>
+          <% end %>
+          <li class="nav-item">
+            <%= link_to "Documentation",
+                  documentation_introduction_path,
+                  class: "nav-link" %>
+          </li>
+          <% if current_user %>
           <li class="nav-item">
             <%= link_to "Sign Out",
                     destroy_user_session_path,
