@@ -8,7 +8,7 @@ Most organizations communicate planned service outages
 in two ways:
 
 * E-mails to everyone for every outage,
-leading to a full inbox, and meesages that are ignored
+leading to a full inbox, and messages that are ignored
 * Posting them on a web site that no one remembers to look at
 
 Outages aims to solve the problem

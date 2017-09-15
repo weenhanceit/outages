@@ -39,6 +39,7 @@ Rails.application.routes.draw do
   [
     "introduction",
     "outages",
+    "preferences",
     "services",
     "set_up_account",
     "watches"
