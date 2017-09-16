@@ -6,11 +6,13 @@ module Jobs
       # notifications by email and wants those notifications sent
       # in a single daily batch
       def schedule(user)
+        # puts "ej.rb #{__LINE__}:"
         if user.preference_notify_me_by_email &&
            !user.preference_individual_email_notifications
           t = Time.zone.now.change(hour: user.preference_email_time.hour,
                                    min: user.preference_email_time.min,
                                    sec: user.preference_email_time.sec)
+          # puts "ej.rb #{__LINE__}: #{t}"
           t += 1.day if t.past?
           set(wait_until: t).perform_later(user)
         end
@@ -35,12 +37,12 @@ module Jobs
     end
 
     def perform(user)
-      puts " ---- email_job.rb #{__LINE__} ----S"
+      # puts " ---- email_job.rb #{__LINE__} ----S"
       user_now = User.find(user.id)
       return if EmailJob.job_invalid?(user, user_now)
-      puts "Job is valid."
+      # puts "Job is valid."
       email = NotificationMailer.notification_email(user_now)
-      puts "Emails created."
+      # puts "Emails created."
       EmailJob.schedule(user)
       email
     end

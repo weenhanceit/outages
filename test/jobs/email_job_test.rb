@@ -1,20 +1,6 @@
 require "test_helper"
 
 class EmailJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
-  test "user asks for batch e-mail notifications" do
-    @user.preference_individual_email_notifications = true
-    @user.save!
-    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to Time.zone.local(2017, 7, 28, 9) do
-        assert_enqueued_with(job: Jobs::EmailJob,
-                             at: Time.zone.local(2017, 7, 29, 8)) do
-          @user.preference_individual_email_notifications = false
-          assert Services::SaveUser.call(@user)
-        end
-      end
-    end
-  end
-
   test "user turns on batch e-mail after e-mail time" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       # Ensure that the save of the user in the test is turning batch
@@ -84,29 +70,22 @@ class EmailJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength, 
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       # Ensure that the save of the user in the test is turning batch
       # emails on
+      the_hour = 12
+      @user.preference_email_time = Time.zone.local(2000, 1, 1, the_hour, 0, 0)
       @user.preference_notify_me_by_email = true
       @user.preference_individual_email_notifications = false
       @user.save!
-      the_hour = @user.preference_email_time.hour
-      the_min = @user.preference_email_time.min
-      the_sec = @user.preference_email_time.sec
-      # Time travel to a future date and a time that is earlier in the day then
-      # the user's email preference.  The next job should be scheduled the
+
+      # Time travel to a date and a time that is earlier in the day then
+      # the user's email preference.  Check that the job is scheduled the
       # same day at the correct time
-      the_day = Time.zone.now.day
-      the_month = Time.zone.now.month
-      the_year = Time.zone.now.year + 1
-      travel_to Time.zone.local(the_year, the_month, the_day, the_hour - 1, the_min, the_sec) do
+      travel_to Time.zone.local(2017, 7, 28, the_hour - 1) do
         assert_enqueued_with(job: Jobs::EmailJob,
-                             at: Time.zone.local(2017, 7, 28,
-                               the_hour,
-                               the_min, the_sec)) do
+                             at: Time.zone.local(2017, 7, 28, the_hour)) do
           assert Jobs::EmailJob.perform_now(@user)
         end
       end
     end
-
-    flunk
   end
 
   test "change batch e-mail time earlier" do
