@@ -1,1 +1,12 @@
 # See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+User-agent: *
+Disallow: /admin
+Disallow: /accounts
+Disallow: /cis
+Disallow: /notes
+Disallow: /notifications
+Disallow: /outages
+Disallow: /searches
+Disallow: /user
+Disallow: /users
+Disallow: /watchesr

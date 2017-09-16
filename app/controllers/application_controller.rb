@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   ##
   # Get the current user's account.
   def current_account
-    current_user.account
+    current_user&.account
   end
 
   helper_method :current_account
