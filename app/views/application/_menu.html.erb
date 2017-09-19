@@ -16,10 +16,8 @@
 
     <div class="container">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <%= home_link %>
         <ul class="navbar-nav">
-          <li>
-            <%= home_link %>
-          </li>
           <% if current_user %>
           <li class="nav-item">
             <%= link_to "Outages", outages_path, class: "nav-link" %>
@@ -43,15 +41,20 @@
           </li>
           <% end %>
           <% end %>
+          <li class="nav-item">
+            <%= link_to "Documentation",
+            documentation_introduction_path,
+            class: "nav-link" %>
+          </li>
         </ul>
         <ul class="navbar-nav ml-auto">
           <% if current_user %>
-          <li class="nav-item">
+          <li class="nav-item my-auto">
             <!-- TODO: Turn the below into a WEIT Bootstrap Forms helper. -->
             <%= form_with url: searches_path,
               method: :get,
               local: true,
-              class: "form-inline my-2 my-lg-0" do |search_form| %>
+              class: "form-inline my-auto" do |search_form| %>
             <!--  value: params... below keeps the search criteria in the field
               after submitting the search, which is good if the search bar
               is still on the screen after the search. -->
@@ -66,23 +69,21 @@
                 class: "btn btn-outline-success my-2 my-sm-0" %>
             <% end %>
           </li>
-          <li class="nav-item">
-            <%= link_to current_user.name,
-                    edit_user_path,
-                    class: "nav-link" %>
-          </li>
           <% end %>
-          <li class="nav-item">
-            <%= link_to "Documentation",
-                  documentation_introduction_path,
-                  class: "nav-link" %>
-          </li>
           <% if current_user %>
-          <li class="nav-item">
-            <%= link_to "Sign Out",
+          <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" id="gear-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <%= octicon "gear", class: "right left mx-auto", "aria-label": "Settings" %>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="gear-dropdown">
+              <%= link_to "Preferences",
+                    edit_user_path,
+                    class: "dropdown-item" %>
+              <%= link_to "Sign Out " + current_user.name,
                     destroy_user_session_path,
                     method: :delete,
-                    class: "nav-link" %>
+                    class: "dropdown-item" %>
+            </div>
           </li>
           <% else %>
           <li class="nav-item">
