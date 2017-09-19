@@ -4,7 +4,7 @@
   <%# bg-primary needed also on nav for fixed manu to show up. %>
   <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
     <!-- Don't put this in the container -->
-    <button class="navbar-toggler collapsed"
+    <button class="navbar-toggler"
             type="button"
             data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -30,13 +30,6 @@
           <li class="nav-item">
             <%= link_to "Users",
               account_admin_users_path(current_account),
-              class: "nav-link" %>
-          </li>
-          <% end %>
-          <% if current_user.privilege_account? %>
-          <li class="nav-item">
-            <%= link_to "Account",
-              current_account ? edit_account_path(current_account) : new_account_path,
               class: "nav-link" %>
           </li>
           <% end %>
@@ -72,14 +65,20 @@
           <% end %>
           <% if current_user %>
           <li class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" id="gear-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <%= octicon "gear", class: "right left mx-auto", "aria-label": "Settings" %>
+            <a href="#" class="nav-link dropdown-toggle py-0" id="gear-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <%= octicon "gear", height: 32, class: "right left mx-auto", "aria-label": "Settings" %>
             </a>
-            <div class="dropdown-menu" aria-labelledby="gear-dropdown">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gear-dropdown">
+              <% if current_user.privilege_account? %>
+              <%= link_to "Account Settings",
+                    current_account ? edit_account_path(current_account) : new_account_path,
+                    class: "dropdown-item" %>
+              <% end %>
               <%= link_to "Preferences",
                     edit_user_path,
                     class: "dropdown-item" %>
-              <%= link_to "Sign Out " + current_user.name,
+              <%# TODO: Put the user name in once Phil has the method ready. %>
+              <%= link_to "Sign Out",
                     destroy_user_session_path,
                     method: :delete,
                     class: "dropdown-item" %>
