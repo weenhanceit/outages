@@ -50,6 +50,23 @@ class User < ApplicationRecord
   end
 
   ##
+  # User name to be displayed by the application
+  def display_name
+    # puts "u.rb #{__LINE__}: name: #{name} name.blank?: #{name.blank?}"
+    # # if !name.nil?
+    #   # puts "u.rb #{__LINE__}: name: #{name} name.blank?: #{name.blank?} strip [#{name.strip}]"
+    #   puts "u.rb #{__LINE__}: name: #{name} name.nil?: #{name.nil?}"
+    #   unless name.nil?
+    #     puts "u.rb #{__LINE__}: name: #{name} name.nil?: #{name.nil?}  strip [#{name.strip}]"
+    #     self.name = name.strip
+    #   end
+    #   # name = " xd"
+    # # end
+    # puts "u.rb #{__LINE__}: name: #{name} name.blank?: #{name.blank?}"
+    name.blank? ? email : name
+  end
+
+  ##
   # Filter outages based on criteria specified by the user, passed in the
   # params hash. If the earliest and latest are strings, they're now
   # considered to be dates, and are forced to dates if they're not.
