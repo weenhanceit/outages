@@ -78,7 +78,7 @@
                     edit_user_path,
                     class: "dropdown-item" %>
               <%# TODO: Put the user name in once Phil has the method ready. %>
-              <%= link_to "Sign Out",
+              <%= link_to "Sign Out " + current_user.display_name,
                     destroy_user_session_path,
                     method: :delete,
                     class: "dropdown-item" %>

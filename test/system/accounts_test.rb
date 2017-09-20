@@ -3,16 +3,18 @@ require "application_system_test_case"
 class AccountsTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
   test "create account" do
     sign_up_new_user
-    current_window.maximize
-    take_screenshot
+    # current_window.maximize
+    # take_screenshot
     create_account
   end
 
   test "delete account" do
     user = sign_up_new_user
-    create_account
-    click_link "gear-dropdown"
-    click_link "Account Settings"
+    account = create_account
+    # TODO: Go back to clicking links when we get off PhantomJS
+    visit edit_account_path(account)
+    # click_link "gear-dropdown"
+    # click_link "Account Settings"
     click_link "Delete"
     user.reload
     assert_nil user.account
@@ -29,9 +31,11 @@ class AccountsTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLe
 
   test "change account name" do
     sign_up_new_user
-    create_account
-    click_link "gear-dropdown"
-    click_link "Account Settings"
+    account = create_account
+    # TODO: Go back to clicking links when we get off PhantomJS
+    visit edit_account_path(account)
+    # click_link "gear-dropdown"
+    # click_link "Account Settings"
     fill_in "Name", with: "Tested Account"
     assert_no_difference "Account.count" do
       click_button "Save"
