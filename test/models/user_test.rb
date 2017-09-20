@@ -61,9 +61,23 @@ class UserTest < ActiveSupport::TestCase
     assert ["This is the last user manager"], user.errors
   end
 
+  test "user display name is name if name present" do
+    user = new_user
+    user.name = "My Name"
+    user.email = "test@example.com"
+    assert_equal user.name, user.display_name
+  end
+
+  test "user display name is email if name not present" do
+    user = new_user
+    user.email = "test@example.com"
+    user.name = nil
+    assert_equal user.email, user.display_name
+  end
+
   private
 
-  def new_user(attrs)
+  def new_user(attrs={})
     account = Account.create!(name: "Test")
     account.users.create!({ email: "a@example.com",
                             name: "A",
