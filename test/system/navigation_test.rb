@@ -10,9 +10,9 @@ class NavigationTest < ApplicationSystemTestCase
     user = sign_in_for_system_tests(users(:edit_ci_outages))
 
     assert_selector ".test-home-page"
-    assert_link "Can Edit CIs/Outages"
+    assert_selector "span", text: "Can Edit CIs/Outages", visible: :hidden
     click_link "Services"
-    assert_link "Can Edit CIs/Outages"
+    assert_selector "span", text: "Can Edit CIs/Outages", visible: :hidden
   end
 
   test "outages view defaulst to last one used" do

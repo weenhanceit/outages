@@ -1,0 +1,16 @@
+// Formatting for display of errors, warnings, and info.
+%no-bullets {
+  list-style: none inside;
+  margin: 0;
+  padding: 0;
+}
+
+.messages {
+  ul, li {
+    @extend %no-bullets;
+  }
+}
+
+ul.messages {
+  @extend %no-bullets;
+}

@@ -1,10 +1,11 @@
+<span class="d-none"><%= current_user.display_name if current_user -%></span>
 <!-- The trick seems to be, if you want colour that goes all the way across
     the viewport, just use a div, not a container. Doh! -->
 <div class="bg-primary menu-wrap">
   <%# bg-primary needed also on nav for fixed manu to show up. %>
-  <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
     <!-- Don't put this in the container -->
-    <button class="navbar-toggler collapsed"
+    <button class="navbar-toggler"
             type="button"
             data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -16,10 +17,8 @@
 
     <div class="container">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <%= home_link %>
         <ul class="navbar-nav">
-          <li>
-            <%= home_link %>
-          </li>
           <% if current_user %>
           <li class="nav-item">
             <%= link_to "Outages", outages_path, class: "nav-link" %>
@@ -27,7 +26,7 @@
           <li class="nav-item">
             <%= link_to "Services", cis_path, class: "nav-link" %>
           </li>
-          <%# TODO: Put this in a drop-down for settings. %>
+          <%# TODO: Maybe put this in a drop-down for settings. %>
           <% if current_user.privilege_manage_users? && current_account %>
           <li class="nav-item">
             <%= link_to "Users",
@@ -35,54 +34,59 @@
               class: "nav-link" %>
           </li>
           <% end %>
-          <% if current_user.privilege_account? %>
+          <% end %>
           <li class="nav-item">
-            <%= link_to "Account",
-              current_account ? edit_account_path(current_account) : new_account_path,
-              class: "nav-link" %>
+            <%= link_to "Documentation",
+            documentation_introduction_path,
+            class: "nav-link" %>
           </li>
-          <% end %>
-          <% end %>
         </ul>
         <ul class="navbar-nav ml-auto">
           <% if current_user %>
-          <li class="nav-item">
+          <li class="nav-item my-auto">
             <!-- TODO: Turn the below into a WEIT Bootstrap Forms helper. -->
             <%= form_with url: searches_path,
               method: :get,
               local: true,
-              class: "form-inline my-2 my-lg-0" do |search_form| %>
+              class: "form-inline my-auto" do |search_form| %>
             <!--  value: params... below keeps the search criteria in the field
               after submitting the search, which is good if the search bar
               is still on the screen after the search. -->
             <%= search_form.text_field :criteria,
               value: params[:criteria],
               class: "form-control mr-sm-2",
-                placeholder: "Search" %>
+              placeholder: "Search" %>
             <!--  Set the name: "" so we don't pass the search button text as a
                 parameter. -->
-            <%= search_form.submit "Search",
+            <%= button_tag name: "", class: "btn btn-primary" do %>
+                  <% octicon "search", "aria-label": "Search" %>
+            <% end %>
+            <%#= search_form.submit "Search",
                 name: "",
                 class: "btn btn-outline-success my-2 my-sm-0" %>
             <% end %>
           </li>
-          <li class="nav-item">
-            <%= link_to current_user.name,
-                    edit_user_path,
-                    class: "nav-link" %>
-          </li>
           <% end %>
-          <li class="nav-item">
-            <%= link_to "Documentation",
-                  documentation_introduction_path,
-                  class: "nav-link" %>
-          </li>
           <% if current_user %>
-          <li class="nav-item">
-            <%= link_to "Sign Out",
+          <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle py-0" id="gear-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <%= octicon "gear", height: 32, class: "right left mx-auto", "aria-label": "Settings" %>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gear-dropdown">
+              <% if current_user.privilege_account? %>
+              <%= link_to "Account Settings",
+                    current_account ? edit_account_path(current_account) : new_account_path,
+                    class: "dropdown-item" %>
+              <% end %>
+              <%= link_to "Preferences",
+                    edit_user_path,
+                    class: "dropdown-item" %>
+              <%# TODO: Put the user name in once Phil has the method ready. %>
+              <%= link_to "Sign Out " + current_user.display_name,
                     destroy_user_session_path,
                     method: :delete,
-                    class: "nav-link" %>
+                    class: "dropdown-item" %>
+            </div>
           </li>
           <% else %>
           <li class="nav-item">

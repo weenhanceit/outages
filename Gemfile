@@ -37,6 +37,7 @@ source 'https://rails-assets.org' do
 end
 #gem 'popper_js'
 gem 'bootstrap_form', git: "https://github.com/bootstrap-ruby/rails-bootstrap-forms.git", branch: "bootstrap-v4"
+gem 'octicons_helper'
 
 gem 'jquery-ui-rails'
 
