@@ -66,24 +66,18 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col">
-      <%= f.form_group :notify_me_before_outage do %>
-      <%= f.check_box :notify_me_before_outage, label: "Notify me" %>
-      <%= f.number_field :notification_periods_before_outage,
-          hide_label: true,
-          layout: :horizontal,
-          label_col: "col",
-          control_col: "col" %>
-      <%= f.select :notification_period_interval,
-          [ "hours", "days", "weeks", "months" ],
-          hide_label: true,
-          layout: :horizontal,
-          label_col: "col",
-          control_col: "col" %>
-      before outage starts.
+  <div class="form-row">
+    <span class="col-form-label">
+      <%= f.check_box :notify_me_before_outage do %>
+        Notify me&nbsp;
       <% end %>
-    </div>
+    </span>
+    <%= f.number_field :notification_periods_before_outage,
+        hide_label: true %>
+    <%= f.select :notification_period_interval,
+        [ "hours", "days", "weeks", "months" ],
+        hide_label: true %>
+    <span class="col-form-label">&nbsp;before outage starts.</span>
   </div>
 </div>
 
@@ -91,29 +85,27 @@
   <div class="row">
     <h3>E-Mail Notification Preferences</h3>
   </div>
-  <div class="row">
-    <div class="col">
+  <div class="form-row">
       <%= f.check_box :preference_notify_me_by_email,
           label: "Also notify me by e-mail." %>
-    </div>
   </div>
-  <div class="row">
-    <div class="col">
-      <%= f.form_group :preference_individual_email_notifications do %>
+  <div class="form-row">
       <%= f.radio_button :preference_individual_email_notifications,
             1,
             checked: f.object.preference_individual_email_notifications?,
             label: " Individual e-mail for each outage "%>
+  </div>
+  <div class="form-row">
       <%= f.radio_button :preference_individual_email_notifications,
             0,
             checked: !f.object.preference_individual_email_notifications?,
-            label: " One e-mail per day ",
-            layout: :horizontal %>
+            label: "One e-mail per day ",
+            label_col: "col",
+            control_col: "col" %>
       <%= f.time_field :preference_email_time,
             label: "at",
-            layout: :horizontal %>
-      <% end %>
-    </div>
+            label_col: "col",
+            control_col: "col" %>
   </div>
 </div>
 
