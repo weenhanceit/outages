@@ -20,14 +20,17 @@
 @import "list_maintenance";
 @import "grid";
 @import "bootstrap";
+@import "messages";
 @import "notes";
+@import "features";
 @import "events";
 @import "menu";
 @import "simple_calendar";
 @import "outages_simple_calendar";
+@import "octicons";
 
 /*
- * User normal asset pipeline require because that's what jquery-ui-rails
+ * Use normal asset pipeline require because that's what jquery-ui-rails
  * supports.
  *= require jquery-ui/selectable
  *= require jquery-ui/sortable

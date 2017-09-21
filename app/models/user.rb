@@ -2,9 +2,9 @@
 # Represents a user.
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
+  # :lockable and :omniauthable
   devise :invitable, :database_authenticatable, :registerable, :confirmable,
-    :recoverable, :rememberable, :trackable, :validatable
+    :recoverable, :rememberable, :timeoutable, :trackable, :validatable
   belongs_to :account, optional: true
   has_many :contributors, inverse_of: :user
   has_many :notes, inverse_of: :user
@@ -34,6 +34,8 @@ class User < ApplicationRecord
   validate :at_least_one_user_admin
 
   validates_presence_of :email
+  validates_presence_of :preference_email_time,
+    if: -> { preference_notify_me_by_email && !preference_individual_email_notifications }
 
   default_scope { where(active: true) }
 
@@ -45,6 +47,23 @@ class User < ApplicationRecord
 
   def can_edit_cis?
     privilege_edit_cis
+  end
+
+  ##
+  # User name to be displayed by the application
+  def display_name
+    # puts "u.rb #{__LINE__}: name: #{name} name.blank?: #{name.blank?}"
+    # # if !name.nil?
+    #   # puts "u.rb #{__LINE__}: name: #{name} name.blank?: #{name.blank?} strip [#{name.strip}]"
+    #   puts "u.rb #{__LINE__}: name: #{name} name.nil?: #{name.nil?}"
+    #   unless name.nil?
+    #     puts "u.rb #{__LINE__}: name: #{name} name.nil?: #{name.nil?}  strip [#{name.strip}]"
+    #     self.name = name.strip
+    #   end
+    #   # name = " xd"
+    # # end
+    # puts "u.rb #{__LINE__}: name: #{name} name.blank?: #{name.blank?}"
+    name.blank? ? email : name
   end
 
   ##
@@ -106,22 +125,6 @@ class User < ApplicationRecord
     (direct_outages +
       cis.map(&:outages).flatten +
       cis.map(&:descendants).flatten.map(&:outages).flatten).uniq
-  end
-
-  # Provide an array of outstanding (notified false) online notifications
-  # for the user
-  def outstanding_online_notifications
-    puts "outstanding_online_notifications #{__LINE__} Notifications: #{Notification.all.size}"
-    ## TODO: This class method generates notifications.  It is anticipated
-    ## this will be run as a background task.  It is places here during
-    ## development and NEED to re-evaluate where this should wind up
-    # logger.debug "HERE !!!!"
-    Services::GenerateBackgroundEvents.call
-    Services::GenerateNotifications.call
-    puts "outstanding_online_notifications #{__LINE__} Notifications: #{Notification.all.size}"
-    notifications.where(notified: false,
-                        notification_type: "online")
-                 .order(created_at: :desc)
   end
 
   # Returns all outstanding notifications of a given notificaton type

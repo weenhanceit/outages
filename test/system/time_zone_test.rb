@@ -1,10 +1,10 @@
 require "application_system_test_case"
 
 class TimeZoneTest < ApplicationSystemTestCase
-  test "show user's time zone" do
-    user = sign_in_for_system_tests(users(:edit_ci_outages))
-    assert_text user.time_zone
-  end
+  # test "show user's time zone" do
+  #   user = sign_in_for_system_tests(users(:edit_ci_outages))
+  #   assert_text user.time_zone
+  # end
 
   test "warn user if browser time zone is different than preference" do
     user = sign_in_for_system_tests(users(:edit_ci_outages))
@@ -37,7 +37,7 @@ class TimeZoneTest < ApplicationSystemTestCase
     sign_in_for_system_tests(user)
     execute_script "delete_cookie('tz');"
     visit root_url
-    assert_text user.time_zone
+    # assert_text user.time_zone
     assert_no_text "You appear to be in "
   end
 

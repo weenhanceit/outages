@@ -103,6 +103,9 @@ module Services
         end
       when "reminder"
         create_notification(event, watch, "online") if watch.user.notify_me_before_outage
+      when "outage_note"
+        # puts "#{__FILE__} Line #{__LINE__}: ---"
+        create_notifications(event, watch) if watch.user.notify_me_on_note_changes
       else
         puts "-xxyeh-: WTF! #{event.event_type}"
       end
@@ -115,7 +118,7 @@ module Services
                             watch: watch,
                             notification_type: notification_type)
                      .size.zero?
-
+        # puts "#{__FILE__} Line #{__LINE__}: ---#{event.outage.name}"
         Notification.create(watch: watch,
                             event: event,
                             notification_type: notification_type,
@@ -124,9 +127,15 @@ module Services
     end
 
     def self.create_notifications(event, watch)
+      # puts "#{__FILE__} Line #{__LINE__}: ---"
       create_notification(event, watch, "online")
       create_notification(event, watch, "email") if watch.user.preference_notify_me_by_email
       # TODO: And trigger the e-mail here if the user wants immediate e-mails.
+      if watch.user.preference_individual_email_notifications
+        email = NotificationMailer.notification_email(watch.user)
+        email.deliver_now
+        # puts " ---- #{__LINE__}:  #{ActionMailer::Base.deliveries.inspect}"
+      end
     end
   end
 end

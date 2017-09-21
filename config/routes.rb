@@ -36,5 +36,22 @@ Rails.application.routes.draw do
   resources :searches, only: [:index]
   resource :user, only: [:edit, :update]
   resources :watches, only: [:create, :edit, :update]
-  resources :welcome, only: [:index]
+  [
+    "introduction",
+    "outages",
+    "preferences",
+    "services",
+    "set_up_account",
+    "watches"
+  ].each do |page|
+    get "documentation/#{page}",
+      to: "documentation##{page}",
+      as: "documentation_#{page}".to_sym
+  end
+  # get "documentation/set_up_account",
+  #   to: "documentation#set_up_account",
+  #   as: :set_up_account
+  get "features", to: "welcome#features", as: :features
+  get "pricing", to: "welcome#pricing", as: :pricing
+  get "welcome", to: "welcome#index", as: :welcome
 end

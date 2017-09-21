@@ -37,6 +37,7 @@ source 'https://rails-assets.org' do
 end
 #gem 'popper_js'
 gem 'bootstrap_form', git: "https://github.com/lcreid/rails-bootstrap-forms.git", branch: "bootstrap-4-rails-5-1"
+gem 'octicons_helper'
 
 gem 'jquery-ui-rails'
 
@@ -44,6 +45,9 @@ gem "simple_calendar", "~> 2.0", git: "https://github.com/lcreid/simple_calendar
 gem 'detect_timezone_rails'
 gem "devise"
 gem 'devise_invitable'
+# Markdown processor:
+gem 'redcarpet'
+# There is this for rendering Markdown, but I choose to roll my own: gem 'emd'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

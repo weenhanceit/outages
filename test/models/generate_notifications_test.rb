@@ -31,6 +31,59 @@ class GenerateNotificationsTest < ActiveSupport::TestCase
     end
   end
 
+  test "emails generated when individual email preference" do
+    # Prepare a user who wants outage change notifications,
+    # online and email (Should generate 2 notifications)
+    user = users(:basic)
+    user.notify_me_on_outage_changes = true
+    user.preference_notify_me_by_email = true
+    user.preference_individual_email_notifications = true
+    user.save
+
+    # Create an outage, and a watch on that outage
+    outage = Outage.create(test_outage_defaults.merge(account_id: user.account_id))
+    watch = Watch.create(active: true, user: user, watched: outage)
+
+    mark_all_existing_events_handled
+    assert_difference "ActionMailer::Base.deliveries.size" do
+      Services::GenerateNotifications.create_event_and_notifications(outage,
+        :outage,
+        "A test event")
+    end
+    the_email = ActionMailer::Base.deliveries.last
+    # puts "[#{__LINE__}]: #{the_email.inspect}"
+    assert_equal "Latest Notifications from Outages App", the_email.subject
+    assert_equal user.email, the_email.to[0]
+    expected = user.name.gsub("(","\\(").gsub(")","\\)")
+    assert_match(Regexp.new(expected), the_email.body.to_s)
+  end
+
+  test "no emails generated when individual email preference" do
+    # Prepare a user who wants outage change notifications,
+    # online and email (Should generate 2 notifications)
+    user = users(:basic)
+    user.notify_me_on_outage_changes = true
+    user.preference_notify_me_by_email = true
+    user.preference_individual_email_notifications = false
+    user.save
+
+    # Create an outage, and a watch on that outage
+    outage = Outage.create(test_outage_defaults.merge(account_id: user.account_id))
+    watch = Watch.create(active: true, user: user, watched: outage)
+
+    mark_all_existing_events_handled
+    assert_no_difference "ActionMailer::Base.deliveries.size" do
+      Services::GenerateNotifications.create_event_and_notifications(outage,
+        :outage,
+        "A test event")
+
+      assert_check_notifications(%i[online email],
+        watch, "outage", outage)
+
+    end
+  end
+
+
   test "notifications for outage event, outage watched by two users" do
     # Prepare a user who wants outage change notifications,
     # online and email (Should generate 2 notifications)

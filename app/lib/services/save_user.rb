@@ -39,6 +39,14 @@ module Services
         Jobs::EmailJob.schedule(user)
       end
 
+      if changes[:preference_individual_email_notifications].present? &&
+        user.preference_notify_me_by_email &&
+        user.preference_individual_email_notifications
+        # User has changed to individual emails."
+        Services::SendNotificationEmail.call(user)
+      end
+
+
       user
     end
   end

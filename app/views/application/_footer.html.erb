@@ -1,3 +1,7 @@
+<%= render "application/developer" %>
+
+<% if current_user &&
+  %w(carillo.ca jadesystems.ca weenhanceit.com).include?(Mail::Address.new(current_user.email).domain) %>
 <div class="container">
   <hr/>
   <small>
@@ -7,7 +11,7 @@
     </p>
     <p>
       Current User:
-      <%= current_user ? current_user.name : "Nil"  %>
+      <%= current_user ? current_user.display_name : "Nil"  %>
     </p>
     <p>
       Time Zone Cookie:
@@ -17,10 +21,16 @@
       <span class="js-user-time-zone-rails">
         <%= current_user.time_zone %>
       </span>
-      <span class="js-user-time-zone-iana hidden">
-        <%= Time.find_zone(current_user.time_zone).tzinfo.name if current_user.time_zone.present? %>
-      </span>
       <% end %>
     </p>
   </small>
 </div>
+<% end %>
+<% if current_user %>
+<span class="js-user-time-zone-rails hidden">
+  <%= current_user.time_zone %>
+</span>
+<span class="js-user-time-zone-iana hidden">
+  <%= Time.find_zone(current_user.time_zone).tzinfo.name if current_user.time_zone.present? %>
+</span>
+<% end %>

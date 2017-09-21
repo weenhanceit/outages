@@ -344,6 +344,97 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     end
   end
 
+  test "notification generated for notes on watched outage" do
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+    end
+    sleep_period = 1
+    mark_all_existing_notifications_notified
+    note_text = "This is text for a note"
+
+    user = users(:edit_ci_outages)
+    user.notify_me_before_outage = false
+    user.notify_me_on_outage_changes = false
+    user.notify_me_on_note_changes = true
+    user.notify_me_on_outage_complete = false
+    user.notify_me_on_overdue_outage = false
+    user.save!
+
+    user = sign_in_for_system_tests(users(:edit_ci_outages))
+    assert_enqueued_jobs 0
+
+    # Grab an outage from the fixtures that this user is watching
+    outage = user.watches.where(watched_type: "Outage").first.watched
+    assert outage.is_a?(Outage)
+    visit outage_path(outage.id)
+    # wh = save_screenshot "tmp/screenshots/debug_shot.png"
+    # puts "----------- [#{wh}] -----------"
+    assert_current_path outage_path(outage.id)
+
+    # There should be no notifications viewed
+    expected = []
+    assert_check_notifications expected
+
+    #  Notification for a new note
+    fill_in "New Note", with: note_text
+    click_button "Save Note"
+    visit outages_path
+    # save_screenshot "tmp/screenshots/x_debug_shot.png"
+    #  Check that we have a notification
+    expected = { outage: outage.name, text: "Note Added" }
+    # NOTE: Tests can fail because of timing.
+    assert_check_notifications expected
+
+    mark_all_existing_notifications_notified
+
+    #  Notification for a modified note
+    visit outage_path(outage.id)
+    assert_current_path outage_path(outage.id)
+
+    note = outage.notes.where(note: note_text).first
+    class_of_interest = ".note-#{note.id}"
+    # puts "CLASS: #{class_of_interest}"
+    within(class_of_interest) do
+      assert_text note_text
+      click_link "Edit"
+      sleep sleep_period
+      # save_screenshot "tmp/screenshots/x_debug_shot.png"
+    end
+    note_text = "#{note_text} -- changed"
+    fill_in "Edit Note", with: note_text
+    click_button "Update Note"
+    sleep sleep_period
+
+    #  Check that we now have 1 notification for modified note
+    visit outages_path
+    expected = { outage: outage.name, text: "Note Modified" }
+    assert_check_notifications expected
+
+    mark_all_existing_notifications_notified
+
+    #  Notification for a deleted note
+    visit outage_path(outage.id)
+    assert_current_path outage_path(outage.id)
+
+    note = outage.notes.where(note: note_text).first
+    class_of_interest = ".note-#{note.id}"
+    # puts "CLASS: #{class_of_interest}"
+    # save_screenshot "tmp/screenshots/x_debug_shot.png"
+    within(class_of_interest) do
+      assert_text note_text
+      accept_confirm("Are you sure you want to delete this note?") do
+        click_link "Delete"
+      end
+      # sleep sleep_period
+      # save_screenshot "tmp/screenshots/x_debug_shot.png"
+    end
+
+    # save_screenshot "tmp/screenshots/x_debug_shot.png"
+    #  Check that we have a notification
+    visit outages_path
+    expected = { outage: outage.name, text: "Note Deleted" }
+    assert_check_notifications expected
+  end
+
   private
 
   def assert_check_notifications(expected = [])

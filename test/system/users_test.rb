@@ -129,7 +129,7 @@ class UsersTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLengt
     # Rails.logger.debug "*" * 20 + "User signed up."
     # Rails.logger.debug "*" * 20 + "New user can manage users? #{@admin_user.privilege_manage_users?}"
     @account = create_account
-    click_link "Account"
+    click_link "Users"
     click_link "Add User"
     # Rails.logger.debug "*" * 20 + "Adding other user."
     assert_current_path new_user_invitation_path

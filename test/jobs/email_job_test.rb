@@ -1,13 +1,25 @@
 require "test_helper"
 
 class EmailJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
-  test "user asks for batch e-mail notifications" do
-    @user.preference_individual_email_notifications = true
-    @user.save!
+  test "user turns on batch e-mail after e-mail time" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to Time.zone.local(2017, 07, 28, 9) do
+      # Ensure that the save of the user in the test is turning batch
+      # emails on
+      # Ensure we pick an email time in mid-day so we can add and subtract hours
+      # from it
+      the_hour = 12
+      @user.preference_email_time = Time.zone.local(2000, 1, 1, the_hour, 0, 0)
+      @user.preference_notify_me_by_email = true
+      @user.preference_individual_email_notifications = true
+      @user.save!
+
+      # Time travel to a date and a time that is later in the day then
+      # the user's email preference.  Check that the job is scheduled the
+      # next day at the correct time
+      travel_to Time.zone.local(2017, 7, 28, the_hour + 1, 0, 0) do
         assert_enqueued_with(job: Jobs::EmailJob,
-                             at: Time.zone.local(2017, 07, 29, 8)) do
+                             at: Time.zone.local(2017, 7, 29, the_hour,
+                               0, 0)) do
           @user.preference_individual_email_notifications = false
           assert Services::SaveUser.call(@user)
         end
@@ -15,16 +27,63 @@ class EmailJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength, 
     end
   end
 
-  test "job actually runs" do
-    @user.preference_individual_email_notifications = true
-    @user.save!
+  test "user turns on batch e-mail before e-mail time" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to Time.zone.local(2017, 07, 28, 9) do
-        perform_enqueued_jobs(only: Jobs::EmailJob) do
+      # Ensure that the save of the user in the test is turning batch
+      # emails on
+      # Ensure we pick an email time in mid-day so we can add and subtract hours
+      # from it
+      the_hour = 12
+      @user.preference_email_time = Time.zone.local(2000, 1, 1, the_hour, 0, 0)
+      @user.preference_notify_me_by_email = true
+      @user.preference_individual_email_notifications = true
+      @user.save!
+
+      # Time travel to a date and a time that is earlier in the day then
+      # the user's email preference.  Check that the job is scheduled the
+      # same day at the correct time
+      travel_to Time.zone.local(2017, 7, 28, the_hour - 1) do
+        assert_enqueued_with(job: Jobs::EmailJob,
+                             at: Time.zone.local(2017, 7, 28, the_hour)) do
           @user.preference_individual_email_notifications = false
           assert Services::SaveUser.call(@user)
         end
-        assert_performed_jobs 1
+      end
+    end
+  end
+
+  # test "job actually runs" do
+  #   @user.preference_individual_email_notifications = true
+  #   @user.save!
+  #   Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+  #     travel_to Time.zone.local(2017, 07, 28, 9) do
+  #       perform_enqueued_jobs(only: Jobs::EmailJob) do
+  #         @user.preference_individual_email_notifications = false
+  #         assert Services::SaveUser.call(@user)
+  #       end
+  #       assert_performed_jobs 1
+  #     end
+  #   end
+  # end
+
+  test "job reschedules itself after running" do
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      # Ensure that the save of the user in the test is turning batch
+      # emails on
+      the_hour = 12
+      @user.preference_email_time = Time.zone.local(2000, 1, 1, the_hour, 0, 0)
+      @user.preference_notify_me_by_email = true
+      @user.preference_individual_email_notifications = false
+      @user.save!
+
+      # Time travel to a date and a time that is earlier in the day then
+      # the user's email preference.  Check that the job is scheduled the
+      # same day at the correct time
+      travel_to Time.zone.local(2017, 7, 28, the_hour - 1) do
+        assert_enqueued_with(job: Jobs::EmailJob,
+                             at: Time.zone.local(2017, 7, 28, the_hour)) do
+          assert Jobs::EmailJob.perform_now(@user)
+        end
       end
     end
   end
@@ -32,9 +91,9 @@ class EmailJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength, 
   test "change batch e-mail time earlier" do
     original_user = @user.dup
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to Time.zone.local(2017, 07, 28, 9) do
+      travel_to Time.zone.local(2017, 7, 28, 9) do
         assert_enqueued_with(job: Jobs::EmailJob,
-                             at: Time.zone.local(2017, 07, 29, 7)) do
+                             at: Time.zone.local(2017, 7, 29, 7)) do
           @user.preference_email_time = "7:00"
           assert Services::SaveUser.call(@user)
         end
@@ -47,9 +106,9 @@ class EmailJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength, 
   test "change batch e-mail time later" do
     original_user = @user.dup
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to Time.zone.local(2017, 07, 28, 9) do
+      travel_to Time.zone.local(2017, 7, 28, 9) do
         assert_enqueued_with(job: Jobs::EmailJob,
-                             at: Time.zone.local(2017, 07, 28, 11)) do
+                             at: Time.zone.local(2017, 7, 28, 11)) do
           @user.preference_email_time = "11:00"
           assert Services::SaveUser.call(@user)
         end
@@ -62,7 +121,7 @@ class EmailJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength, 
   test "user stops e-mail notifications" do
     original_user = @user.dup
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to Time.zone.local(2017, 07, 28, 9) do
+      travel_to Time.zone.local(2017, 7, 28, 9) do
         assert_no_enqueued_jobs(only: Jobs::EmailJob) do
           @user.preference_notify_me_by_email = false
           assert Services::SaveUser.call(@user)
@@ -76,7 +135,7 @@ class EmailJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength, 
   test "user stops batch e-mail notifications" do
     original_user = @user.dup
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to Time.zone.local(2017, 07, 28, 9) do
+      travel_to Time.zone.local(2017, 7, 28, 9) do
         assert_no_enqueued_jobs(only: Jobs::EmailJob) do
           @user.preference_individual_email_notifications = true
           assert Services::SaveUser.call(@user)
@@ -116,7 +175,7 @@ class EmailJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength, 
   #   outage
   # end
 
-  def setup # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+  def setup # rubocop:disable Metrics/MethodLength
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       @account = Account.create!(name: "Reminders")
       @user = @account
@@ -153,10 +212,9 @@ class EmailJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength, 
                        confirmed_at: Time.zone.now - 1.hour,
                        confirmation_sent_at: Time.zone.now - 2.hours,
                        # unconfirmed_email:,
-                       failed_attempts: 0,
-                      # unlock_token:,
-                      # locked_at:
-                      )
+                       failed_attempts: 0)
+      # unlock_token:,
+      # locked_at:
       # @ci = @account.cis.create!(name: "CI")
       # @user.watches.create!(watched: @ci)
     end
