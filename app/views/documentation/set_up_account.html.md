@@ -23,9 +23,9 @@ You have to be invited to join an existing account.
 Once you're created the account,
 you can invite other people in your organization
 by going to the
-<%= link_to_if_logged_in "Users", account_admin_users_path(current_account) %>
+<%= link_to_admin_users_path_if_logged_in %>
 page
 and clicking the "Add User" button,
 or by going straight to the
-<%= link_to_if_logged_in "Add User", new_user_invitation_path(current_account) %>
+<%= link_to_new_user_invitation_path_if_logged_in %>
 page.
