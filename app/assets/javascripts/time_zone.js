@@ -36,15 +36,15 @@ $(document).on('turbolinks:load', function() {
     // FIXME: Better check of browser timezone, AKA the Havana problem
     // FIXME: Only show time zone messages when logged in
     if (current_user_tz === "") {
-      msg = '<p>Using the ' +
+      msg = '<li>Using the ' +
         browser_tz +
         ' time zone. ' +
         'If you want to change your time zone, ' +
         'go to the ' +
         link_to_settings +
-        '.</p>';
+        '.</li>';
     } else if (browser_tz !== current_user_tz) {
-      msg = '<p>You appear to be in ' +
+      msg = '<li>You appear to be in ' +
         browser_tz +
         ' time zone, but your preference is set to ' +
         current_user_tz_rails +
@@ -52,7 +52,7 @@ $(document).on('turbolinks:load', function() {
         browser_tz +
         ', go to the ' +
         link_to_settings +
-        '.</p>';
+        '.</li>';
     }
 
     if (typeof msg !== 'undefined') {

@@ -1,7 +1,8 @@
-<div class="container">
-  <p class="text-warning js-time-zone-warning"><%= notice %></p>
-  <p class="text-danger js-error-messages"><%= alert %></p>
-
-  <%# TODO: Combine this with the above, but have to change the Javascript %>
-  <div class="text-warning"></div>
+<div class="container messages">
+  <ul class="text-warning js-time-zone-warning">
+    <%= content_tag(:li, notice) unless notice.blank? %>
+  </ul>
+  <ul class="text-danger js-error-messages">
+    <%= content_tag(:li, alert) unless alert.blank? %>
+  </ul>
 </div>
