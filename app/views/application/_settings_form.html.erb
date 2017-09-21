@@ -69,19 +69,19 @@
   <div class="row">
     <div class="col">
       <%= f.form_group :notify_me_before_outage do %>
-      <%= f.check_box :notify_me_before_outage do %>
-        <%= f.number_field :notification_periods_before_outage,
-            label: "Notify me",
-            layout: :horizontal,
-            label_col: "col",
-            control_col: "col" %>
-        <%= f.select :notification_period_interval,
-            [ "hours", "days", "weeks", "months" ],
-            label: "before outage starts.",
-            layout: :horizontal,
-            label_col: "col",
-            control_col: "col" %>
-        <% end %>
+      <%= f.check_box :notify_me_before_outage, label: "Notify me" %>
+      <%= f.number_field :notification_periods_before_outage,
+          hide_label: true,
+          layout: :horizontal,
+          label_col: "col",
+          control_col: "col" %>
+      <%= f.select :notification_period_interval,
+          [ "hours", "days", "weeks", "months" ],
+          hide_label: true,
+          layout: :horizontal,
+          label_col: "col",
+          control_col: "col" %>
+      before outage starts.
       <% end %>
     </div>
   </div>
