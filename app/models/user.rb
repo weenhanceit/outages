@@ -41,6 +41,13 @@ class User < ApplicationRecord
 
   before_validation :set_defaults
 
+  ##
+  # Is the user an administrator for the application?
+  def application_admin?
+    %w(carrillo.ca jadesystems.ca weenhanceit.com)
+      .include?(Mail::Address.new(email).domain)
+  end
+
   def can_edit_outages?
     privilege_edit_outages
   end

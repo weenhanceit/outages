@@ -1,7 +1,6 @@
 <%= render "application/developer" %>
 
-<% if current_user &&
-  %w(carrillo.ca jadesystems.ca weenhanceit.com).include?(Mail::Address.new(current_user.email).domain) %>
+<% if current_user&.application_admin? %>
 <div class="container">
   <hr/>
   <small>
