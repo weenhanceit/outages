@@ -66,6 +66,7 @@
     </div>
   </div>
 
+  <%# TODO: This row and the "email at" row are very hacky. Fix the bootstrap. %>
   <div class="form-row">
     <span class="col-form-label">
       <%= f.check_box :notify_me_before_outage do %>
@@ -96,16 +97,16 @@
             label: " Individual e-mail for each outage "%>
   </div>
   <div class="form-row">
+    <span class="col-form-label">
       <%= f.radio_button :preference_individual_email_notifications,
             0,
             checked: !f.object.preference_individual_email_notifications?,
-            label: "One e-mail per day ",
-            label_col: "col",
-            control_col: "col" %>
-      <%= f.time_field :preference_email_time,
-            label: "at",
-            label_col: "col",
-            control_col: "col" %>
+            label: "One e-mail per day " %>
+    </span>
+    <%= f.time_field :preference_email_time,
+          label: "&nbsp;at&nbsp;".html_safe,
+          label_class: "col-form-label",
+          layout: :horizontal %>
   </div>
 </div>
 
