@@ -144,6 +144,13 @@ class User < ApplicationRecord
   end
 
   ##
+  # Per Devise docs, to use ActiveJob
+  # https://github.com/plataformatec/devise#activejob-integration
+  def send_devise_notification(notification, *args)
+    devise_mailer.send(notification, self, *args).deliver_later
+  end
+
+  ##
   # Set the defaults so validations will pass when someone signs up.
   # This is in the model so it would happen when Devise creates a user.
   def set_defaults
