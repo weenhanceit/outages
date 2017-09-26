@@ -45,4 +45,7 @@ Rails.application.configure do
 
   # Devise
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+  # Don't use Sidekiq for automated tests.
+  config.active_job.queue_adapter = :async
 end

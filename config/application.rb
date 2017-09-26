@@ -15,6 +15,9 @@ module Vagrant
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    # Automated tests run with the :async adapter. Otherwise, we need to run
+    # Sidekiq for tests, and some tests won't work, since Sidekiq can't see
+    # what's run within the testing transaction.
     config.active_job.queue_adapter = :sidekiq
   end
 end
