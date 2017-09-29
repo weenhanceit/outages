@@ -1,3 +1,4 @@
+<%= object_error_messages(@user) %>
 <%= bootstrap_form_for(@user,
       url: url_for_user_form(@account, @user),
       builder: WeitFormBuilder) do |f| %>
