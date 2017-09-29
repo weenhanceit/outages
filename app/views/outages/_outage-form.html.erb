@@ -19,6 +19,7 @@
   <li>Causes outage or not</li>
 </ul> -->
 
+<%= object_error_messages(outage) %>
 <%= bootstrap_form_for(outage, builder: WeitFormBuilder) do |f| %>
   <%= f.hidden_field :active %>
   <div class="row">
