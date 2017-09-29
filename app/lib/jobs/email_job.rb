@@ -41,10 +41,11 @@ module Jobs
       user_now = User.find(user.id)
       return if EmailJob.job_invalid?(user, user_now)
       # puts "Job is valid."
-      email = NotificationMailer.notification_email(user_now)
+      # email = NotificationMailer.notification_email(user_now)
       # puts "Emails created."
+      Services::SendNotificationEmail.call(user)
       EmailJob.schedule(user)
-      email
+      # email
     end
   end
 end

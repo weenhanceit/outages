@@ -83,10 +83,45 @@ class EmailJobTest < ActiveJob::TestCase # rubocop:disable Metrics/ClassLength, 
         assert_enqueued_with(job: Jobs::EmailJob,
                              at: Time.zone.local(2017, 7, 28, the_hour)) do
           assert Jobs::EmailJob.perform_now(@user)
+          assert_equal 0, @user.outstanding_notifications(:email).size
         end
       end
     end
   end
+
+  test "job handles outstanding notifications" do
+    Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
+      # Do not set individual emails so we can test the notification is created
+      # and later check that email was sent and notified is set to true
+      @user.preference_notify_me_by_email = true
+      @user.preference_individual_email_notifications = false
+      @user.notify_me_on_outage_changes = true
+      @user.save!
+
+      # Create an outage, and a watch on that outage
+      outage = Outage.create(account: @user.account,
+                             active: true,
+                             causes_loss_of_service: true,
+                             completed: false,
+                             description: "A test outage",
+                             end_time: Time.find_zone("Samoa").now + 26.hours,
+                             name: "Test Outage",
+                             start_time: Time.find_zone("Samoa").now + 24.hours)
+      watch = Watch.create(active: true, user: @user, watched: outage)
+
+      #  Create an event that will generate an email notification
+      assert_difference "@user.outstanding_notifications(:email).size" do
+        # Change the outage
+        outage.description = "#{outage.description} -- changed"
+        events = Services::SaveOutage.call(outage)
+        assert_equal 1, events.size
+      end
+      assert_difference "@user.outstanding_notifications(:email).size", -1 do
+        assert Jobs::EmailJob.perform_now(@user)
+      end
+    end
+  end
+
 
   test "change batch e-mail time earlier" do
     original_user = @user.dup
