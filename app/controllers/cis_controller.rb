@@ -18,6 +18,7 @@ class CisController < ApplicationController
     end
 
     logger.warn @ci.errors.full_messages
+    online_notifications
     render :new
   end
 
@@ -28,6 +29,7 @@ class CisController < ApplicationController
       redirect_to cis_path
     else
       logger.warn @ci.errors.full_messages
+      online_notifications
       render :edit
     end
   end
@@ -81,6 +83,7 @@ class CisController < ApplicationController
       redirect_to cis_path
     else
       logger.warn @ci.errors.full_messages
+      online_notifications
       render :edit
     end
   end
