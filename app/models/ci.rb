@@ -22,9 +22,11 @@ class Ci < ApplicationRecord
   has_many :outages, through: :cis_outages
   has_many :notes, as: :notable
   has_many :tags, as: :taggable
-  has_many :watches, as: :watched, autosave: true, dependent: :destroy
+  # TODO: need `after_add :schedule_reminders`?
   # FIXME: Need to think about callback for watches added to ci to generate
   # reminder job.  This possibly should be a callback on create watch
+  has_many :watches, as: :watched, dependent: :destroy
+  accepts_nested_attributes_for :watches
 
   validates :active,
     inclusion: { in: [true, false], message: "can't be blank" }

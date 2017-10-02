@@ -18,9 +18,9 @@ class Outage < ApplicationRecord
   has_many :tags, as: :taggable
   has_many :watches,
     as: :watched,
-    autosave: true,
     dependent: :destroy,
     after_add: :schedule_reminders
+  accepts_nested_attributes_for :watches
 
   validates :active,
     :causes_loss_of_service,
