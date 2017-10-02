@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CisController < ApplicationController
   include TestSuite
 
@@ -6,17 +7,21 @@ class CisController < ApplicationController
     # I fear it's a problem with associations again.
     # @ci = Ci.new(ci_params)
     # @ci.account = current_user.account
+    # puts params.inspect
     @ci = Ci.new(ci_params_without_dag)
     @ci.account = current_user.account
     update_watches
 
     if @ci.save
+      # puts @ci.watches.inspect
+      # puts ci_dag_params.inspect
       if @ci.update(ci_dag_params)
         redirect_to cis_path
         return
       end
     end
 
+    puts "SAVE FAILED"
     logger.warn @ci.errors.full_messages
     online_notifications
     render :new
@@ -38,20 +43,21 @@ class CisController < ApplicationController
     not_found unless current_user.can_edit_cis?
     # puts "IN EDI"
     @ci = current_user.account.cis.find_by(id: params[:id])
-    @ci.watched_by(current_user)
+    # Put in an Array even though there's only one, to trick Rails into generating the right view
+    @watched = [@ci.watched_by_or_new(current_user)]
   end
 
   def index
     # puts "INDEX PARAMS: #{params.inspect}"
     session[:cis_watching] = params[:cis_watching] if params[:cis_watching].present?
     # if session[:cis_watching].present? && session[:cis_watching] == "Of interest to me"
-    if helpers.cis_of_interest?
-      # puts "CIs watching: #{session[:cis_watching]}"
-      @cis = current_user.cis
-      # puts "FOUND WATCHED CIS: #{@cis.inspect}"
-    else
-      @cis = current_account.cis.where(active: true)
-    end
+    @cis = if helpers.cis_of_interest?
+             # puts "CIs watching: #{session[:cis_watching]}"
+             current_user.cis
+           # puts "FOUND WATCHED CIS: #{@cis.inspect}"
+           else
+             current_account.cis.where(active: true)
+           end
     session[:cis_text] = params[:text] if params[:text]
     if session[:cis_text].present?
       # puts "CIs only: #{session[:cis_text]}"
@@ -64,6 +70,9 @@ class CisController < ApplicationController
 
   def new
     @ci = Ci.new(ci_defaults)
+    # Put in an Array even though there's only one, to trick Rails into generating the right view
+    @watched = [@ci.watched_by_or_new(current_user)]
+    # puts "@watched: #{@watched.inspect}"
   end
 
   def show
@@ -82,6 +91,7 @@ class CisController < ApplicationController
     if @ci.update(ci_params)
       redirect_to cis_path
     else
+      puts "SAVE FAILED"
       logger.warn @ci.errors.full_messages
       online_notifications
       render :edit
@@ -107,7 +117,14 @@ class CisController < ApplicationController
       .permit(parent_links_attributes: [:child_id, :id, :parent_id, :_destroy],
               available_for_parents_attributes: [:parent_id, :_destroy],
               child_links_attributes: [:child_id, :id, :parent_id, :_destroy],
-              available_for_children_attributes: [:child_id, :_destroy])
+              available_for_children_attributes: [:child_id, :_destroy],
+              watches_attributes: [
+                :id,
+                :watched_type,
+                :watched_id,
+                :user_id,
+                :active
+              ])
   end
 
   def ci_params
@@ -121,7 +138,14 @@ class CisController < ApplicationController
       parent_links_attributes: [:child_id, :id, :parent_id, :_destroy],
       available_for_parents_attributes: [:parent_id, :_destroy],
       child_links_attributes: [:child_id, :id, :parent_id, :_destroy],
-      available_for_children_attributes: [:child_id, :_destroy])
+      available_for_children_attributes: [:child_id, :_destroy],
+      watches_attributes: [
+        :id,
+        :watched_type,
+        :watched_id,
+        :user_id,
+        :active
+      ])
   end
 
   def ci_params_without_dag

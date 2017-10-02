@@ -34,6 +34,7 @@ class CisTest < ApplicationSystemTestCase
         fill_in "Description",
           with: "This is the server in the seventh ring of you know where."
         click_on "Save"
+        sleep 2
       end
     end
 

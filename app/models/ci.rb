@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 ##
 # A configuration item, which can be hardware, software, service, etc.
 class Ci < ApplicationRecord
@@ -26,7 +27,10 @@ class Ci < ApplicationRecord
   # FIXME: Need to think about callback for watches added to ci to generate
   # reminder job.  This possibly should be a callback on create watch
   has_many :watches, as: :watched, dependent: :destroy
-  accepts_nested_attributes_for :watches
+  accepts_nested_attributes_for :watches,
+    reject_if: lambda { |attrs|
+      !ActiveModel::Type::Boolean.new.cast(attrs[:active]) && attrs[:id].blank?
+    }
 
   validates :active,
     inclusion: { in: [true, false], message: "can't be blank" }

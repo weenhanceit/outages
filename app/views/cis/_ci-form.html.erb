@@ -9,8 +9,16 @@
     <%= f.number_field :minimum_children_to_maintain_service,
           wrapper: { class: "ft-min-max-service-disruption" },
           column_width: 2 %>
-    <%= f.check_box :watched,
+    <%#= f.check_box :watched,
           column_width: 2 %>
+    <div class="col-sm-2">
+      <%= f.fields_for :watches, @watched do |watch_fields| %>
+      <%= watch_fields.hidden_field :watched_type %>
+      <%= watch_fields.hidden_field :watched_id %>
+      <%= watch_fields.hidden_field :user_id %>
+      <%= watch_fields.check_box :active, label: "Watched" %>
+      <% end %>
+    </div>
   </div>
   <div class="row">
     <%= f.text_area :description, column_width: 12 %>
