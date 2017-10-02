@@ -123,7 +123,6 @@
       <%= f.form_group :privileges do %>
       <%# Add hidden fields when disabled because browser won't return
           valudes for disabled fields. %>
-          <%# FIXME: change @user to current_user %>
         <%= f.hidden_field :privilege_account unless current_user.privilege_account? %>
         <%= f.check_box :privilege_account,
               {label: "Manage Account",
