@@ -1,0 +1,6 @@
+<%= f.fields_for :watches, @watched do |watch_fields| %>
+<%= watch_fields.hidden_field :watched_type %>
+<%= watch_fields.hidden_field :watched_id %>
+<%= watch_fields.hidden_field :user_id %>
+<%= watch_fields.check_box :active, label: "Watched" %>
+<% end %>
