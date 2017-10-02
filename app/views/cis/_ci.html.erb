@@ -6,16 +6,14 @@
       <%= ci.description %>
   </td>
   <td>
-    <p>
-      <%# NOTE: You often have to specify formats when switching back and forth
-                between protocols (e.g. js and html) in views. %>
-      <%= render partial: "watches/form",
-            formats: [:html],
-            locals: {
-              watch: ci.watched_by_or_new(current_user),
-              row_index: ci_counter
-              } %>
-      <!-- All watches have same properties, which come from user preferences -->
-    </p>
+    <%# NOTE: You often have to specify formats when switching back and forth
+              between protocols (e.g. js and html) in views. %>
+    <%= render partial: "watches/form",
+          formats: [:html],
+          locals: {
+            watch: ci.watched_by_or_new(current_user),
+            row_index: ci_counter
+            } %>
+    <!-- All watches have same properties, which come from user preferences -->
   </td>
 </tr>

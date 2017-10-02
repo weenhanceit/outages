@@ -15,6 +15,7 @@ class OutagesController < ApplicationController
       redirect_to outages_path
     else
       logger.warn @outage.errors.full_messages
+      online_notifications
       render :new
     end
   end
@@ -37,6 +38,7 @@ class OutagesController < ApplicationController
       redirect_to outages_path
     else
       logger.warn @outage.errors.full_messages
+      online_notifications
       render :edit
     end
   end
@@ -133,6 +135,7 @@ class OutagesController < ApplicationController
     else
       # puts "Failed to save"
       logger.warn @outage.errors.full_messages
+      online_notifications
       render :edit
     end
   end
