@@ -10,7 +10,6 @@ class CisController < ApplicationController
     # puts params.inspect
     @ci = Ci.new(ci_params_without_dag)
     @ci.account = current_user.account
-    update_watches
 
     if @ci.save
       # puts @ci.watches.inspect
@@ -82,7 +81,6 @@ class CisController < ApplicationController
 
   def update
     @ci = current_user.account.cis.find_by(id: params[:id])
-    update_watches
     #  TODO: This was a test that I was trying to create a save error.  But the
     # ci was saved with a null account id
     # @ci.account_id = nil
