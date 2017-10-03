@@ -14,10 +14,6 @@
     </small>
     <% end %>
   </h1>
-  <%= bootstrap_form_with(model: @outage,
-        local: true,
-        class: "js-submit-on-change") do |f| %>
-  <%= f.hidden_field :active %>
   <div class="row">
     <div class="col-sm-8">
       <div class="row">
@@ -25,7 +21,7 @@
           Start Time:
         </div>
         <div class="col">
-          <%= f.object.start_time&.to_s(:wall) %>
+          <%= @outage.start_time&.to_s(:wall) %>
         </div>
       </div>
       <div class="row">
@@ -33,12 +29,16 @@
           End Time:
         </div>
         <div class="col">
-          <%= f.object.end_time&.to_s(:wall) %>
+          <%= @outage.end_time&.to_s(:wall) %>
         </div>
       </div>
     </div>
     <div class="col">
       <ul class="list-unstyled">
+        <%= bootstrap_form_with(model: @outage,
+              local: true,
+              class: "js-submit-on-change") do |f| %>
+        <%= f.hidden_field :active %>
         <%# FIXME: These don't seem to work. %>
         <li>
           <%= f.check_box :completed,
@@ -47,9 +47,14 @@
         <li>
           <%= f.check_box :causes_loss_of_service, disabled: "disabled" %>
         </li>
+        <% end %>
         <li>
-          <%# FIXME: ajaxize this. %>
-          <%= render partial: "watch_form", locals: { f: f } %>
+          <%= render partial: "watches/form",
+                formats: [:html],
+                locals: {
+                  row_index: 0,
+                  watch: @outage.watched_by_or_new(current_user)
+                  } %>
         </li>
       </ul>
     </div>
@@ -75,12 +80,6 @@
       </div>
     </div>
   </div>
-  <!-- <div class="row">
-      <div class="col">
-        <%= f.primary "Save" %>
-      </div>
-    </div> -->
-  <% end %>
 </div>
 
 <h2>

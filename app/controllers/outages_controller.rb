@@ -116,6 +116,8 @@ class OutagesController < ApplicationController
     # puts "IN SHOW"
     @notable = @outage
     @watched = [@outage.watched_by_or_new(current_user)]
+    # UGH: This trick is to put a label in the partial way down in the view.
+    @label = "Watched"
     session[:sort_order] = params[:sort_order] if params[:sort_order].present?
   end
 

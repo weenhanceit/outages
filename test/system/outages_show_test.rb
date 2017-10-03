@@ -151,7 +151,6 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       check "Watched"
       sleep 2
     end
-    skip "TODO: Don't forget to finish this test."
     assert_difference "Watch.count", -1 do
       uncheck "Watched"
       sleep 2
