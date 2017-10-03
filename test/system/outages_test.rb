@@ -29,13 +29,14 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
   test "create a new outage" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 07, 28, 20, 17, 21) do
-        user = sign_in_for_system_tests(users(:edit_ci_outages))
+        user = sign_in_for_system_tests(users(:edit_ci_outages)) # rubocop:disable Lint/UselessAssignment
 
         visit new_outage_url
         assert_selector "h1", text: "New Outage"
 
         assert_difference "Outage.where(account: user.account).size" do
-          assert_no_difference "Watch.count" do
+          assert_difference "Watch.count" do
+            assert_checked_field "Watched"
             fill_in "Name", with: "Outage 7"
             fill_in "Description",
               with: "This is the outage in the seventh ring of your know where."
@@ -48,20 +49,21 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
     end
   end
 
-  test "create a new outage with watch" do
+  test "create a new outage with no watch" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 07, 28, 20, 17, 21) do
-        user = sign_in_for_system_tests(users(:edit_ci_outages))
+        user = sign_in_for_system_tests(users(:edit_ci_outages)) # rubocop:disable Lint/UselessAssignment
 
         visit new_outage_url
         assert_selector "h1", text: "New Outage"
 
         assert_difference "Outage.where(account: user.account).size" do
-          assert_difference "Watch.count" do
+          assert_no_difference "Watch.unscope(where: :active).count" do
+            assert_checked_field "Watched"
             fill_in "Name", with: "Outage 7"
             fill_in "Description",
               with: "This is the outage in the seventh ring of you know where."
-            check "Watched"
+            uncheck "Watched"
             click_on "Save"
           end
         end
@@ -74,7 +76,7 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
   test "edit an existing outage" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 07, 28, 20, 17, 21) do
-        user = sign_in_for_system_tests(users(:edit_ci_outages))
+        user = sign_in_for_system_tests(users(:edit_ci_outages)) # rubocop:disable Lint/UselessAssignment
 
         outage = outages(:company_a_outage_a)
         visit edit_outage_url(outage)
@@ -92,7 +94,7 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
   test "add a watch on edit page" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 07, 28, 20, 17, 21) do
-        user = sign_in_for_system_tests(users(:edit_ci_outages))
+        user = sign_in_for_system_tests(users(:edit_ci_outages)) # rubocop:disable Lint/UselessAssignment
 
         outage = outages(:company_a_outage_a)
         visit edit_outage_url(outage)
@@ -111,7 +113,7 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
   test "remove a watch on edit page" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 07, 28, 20, 17, 21) do
-        user = sign_in_for_system_tests(users(:edit_ci_outages))
+        user = sign_in_for_system_tests(users(:edit_ci_outages)) # rubocop:disable Lint/UselessAssignment
 
         outage = outages(:company_a_outage_watched_by_edit)
         visit edit_outage_url(outage)
@@ -145,7 +147,7 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
   test "assign a CI" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 07, 28, 20, 17, 21) do
-        user = sign_in_for_system_tests(users(:edit_ci_outages))
+        user = sign_in_for_system_tests(users(:edit_ci_outages)) # rubocop:disable Lint/UselessAssignment
 
         outage = outages(:company_a_outage_c)
         visit edit_outage_url(outage)
@@ -164,7 +166,7 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
   test "assign a CI in a new outage" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 07, 28, 20, 17, 21) do
-        user = sign_in_for_system_tests(users(:edit_ci_outages))
+        sign_in_for_system_tests(users(:edit_ci_outages))
 
         visit new_outage_url
 
@@ -180,7 +182,7 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
   test "remove a CI" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 07, 28, 20, 17, 21) do
-        user = sign_in_for_system_tests(users(:edit_ci_outages))
+        sign_in_for_system_tests(users(:edit_ci_outages))
 
         outage = outages(:company_a_outage_c)
         visit edit_outage_url(outage)
@@ -200,7 +202,7 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
   test "remove a CI and then assign it" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 07, 28, 20, 17, 21) do
-        user = sign_in_for_system_tests(users(:edit_ci_outages))
+        sign_in_for_system_tests(users(:edit_ci_outages))
 
         outage = outages(:company_a_outage_c)
         visit edit_outage_url(outage)
@@ -222,7 +224,7 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
     skip "I can't figure out how to get this test to select more than one"
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 07, 28, 20, 17, 21) do
-        user = sign_in_for_system_tests(users(:edit_ci_outages))
+        sign_in_for_system_tests(users(:edit_ci_outages))
 
         outage = outages(:company_a_outage_c)
         visit edit_outage_url(outage)

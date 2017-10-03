@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class OutagesController < ApplicationController
   before_action :outage, only: [
-    :update, :edit, :show, :destroy
+    :edit, :show, :destroy
   ]
   after_action :set_view, only: [
     :day, :fourday, :index, :month, :week
@@ -8,13 +9,16 @@ class OutagesController < ApplicationController
 
   def create
     # puts "IN CREATE"
-    @outage = Outage.new(outage_params)
+    @outage = Outage.new(outage_params_with_watches)
     @outage.account = current_user.account
-    update_watches
+
     if Services::SaveOutage.call(@outage)
+      # puts "Saved outage"
       redirect_to outages_path
     else
-      logger.warn @outage.errors.full_messages
+      # puts "Failed to save"
+      logger.warn "Failed to save outage #{@outage.inspect}, #{@outage.errors.full_messages}"
+      online_notifications
       render :new
     end
   end
@@ -36,7 +40,8 @@ class OutagesController < ApplicationController
     if Services::SaveOutage.call(@outage)
       redirect_to outages_path
     else
-      logger.warn @outage.errors.full_messages
+      logger.warn "Failed to save outage #{outage.inspect}, #{@outage.errors.full_messages}"
+      online_notifications
       render :edit
     end
   end
@@ -46,6 +51,8 @@ class OutagesController < ApplicationController
     not_found unless current_user.can_edit_outages?
     # TODO: This hack to make watches work was ugly. Hopefully Ajax can fix.
     @outage.watched_by(current_user)
+    # Put in an Array even though there's only one, to trick Rails into generating the right view
+    @watched = [@outage.watched_by_or_new(current_user)]
   end
 
   def fourday
@@ -101,39 +108,48 @@ class OutagesController < ApplicationController
   def new
     # puts "IN NEW"
     @outage = Outage.new(outage_defaults.merge(account: current_account))
+    # Put in an Array even though there's only one, to trick Rails into generating the right view
+    @watched = [@outage.watched_by_or_new(current_user)]
   end
 
   def show
     # puts "IN SHOW"
     @notable = @outage
-    # TODO: This hack to make watches work was ugly. Hopefully Ajax can fix.
-    @outage.watched_by(current_user)
+    @watched = [@outage.watched_by_or_new(current_user)]
     session[:sort_order] = params[:sort_order] if params[:sort_order].present?
   end
 
   def update
     # puts "IN UPDATE"
     # puts params.inspect
-    update_watches
     # puts "params.require(:outage): #{params.require(:outage).inspect}"
     # puts "outage_params: #{outage_params.inspect}"
     # logger.debug "outages_controller.rb TP_#{__LINE__} Is this an outage? #{@outage.is_a?(Outage)}   #{@outage.inspect}"
 
     # puts "@outage.completed before: #{@outage.completed}"
-    @outage.assign_attributes(outage_params)
-    # puts "@outage.completed after: #{@outage.completed}"
-    # logger.debug "outages_controller.rb TP_#{__LINE__} changed: #{@outage.changed?}"
-    # @outage.attributes= outage_params
-    # o = Outage.find(@outage.id)
-    # puts "outages_controller.rb TP_#{__LINE__} #{o.inspect}"
-    # puts "outages_controller.rb TP_#{__LINE__} #{@outage.inspect} changed: #{@outage.changed?}"
-    if Services::SaveOutage.call(@outage)
-      # puts "Saved"
-      redirect_to outages_path
-    else
-      # puts "Failed to save"
-      logger.warn @outage.errors.full_messages
-      render :edit
+    Watch.unscoped do
+      # TODO: Figure out why Rails ignores unscoped in the includes.
+      @outage = current_user
+                .account
+                .outages
+                .includes(:cis_outages, :cis) # including watches seems to ignore unscoped
+                .find(params[:id])
+      @outage.assign_attributes(outage_params_with_watches)
+      # puts "@outage.completed after: #{@outage.completed}"
+      # logger.debug "outages_controller.rb TP_#{__LINE__} changed: #{@outage.changed?}"
+      # @outage.attributes= outage_params
+      # o = Outage.find(@outage.id)
+      # puts "outages_controller.rb TP_#{__LINE__} #{o.inspect}"
+      # puts "outages_controller.rb TP_#{__LINE__} #{@outage.inspect} changed: #{@outage.changed?}"
+      if Services::SaveOutage.call(@outage)
+        # puts "Saved outage"
+        redirect_to outages_path
+      else
+        # puts "Failed to save"
+        logger.warn "Failed to save outage #{@outage.inspect}, #{@outage.errors.full_messages}"
+        online_notifications
+        render :edit
+      end
     end
   end
 
@@ -141,7 +157,7 @@ class OutagesController < ApplicationController
     # puts "WEEK PARAMS: #{params.inspect}"
     start_date = normalize_params
     params[:earliest] = start_date.beginning_of_week.to_date.to_s(:browser)
-    params[:latest] = (start_date.end_of_week).to_date.to_s(:browser)
+    params[:latest] = start_date.end_of_week.to_date.to_s(:browser)
     params[:start_date] = start_date.to_s(:ymd)
     outages
   end
@@ -180,16 +196,17 @@ class OutagesController < ApplicationController
   ##
   # Set the default view in a cookie.
   def set_view
-    if params[:view].present?
-      # puts "Setting default view to grid"
-      cookies.signed[:default_view] = params[:view]
-    else
-      cookies.signed[:default_view] = action_name
-    end
+    cookies.signed[:default_view] = if params[:view].present?
+                                      # puts "Setting default view to grid"
+                                      params[:view]
+                                    else
+                                      action_name
+                                    end
   end
 
   ##
   # Set up the @outage instance variable for the single-instance actions.
+  # #update has its own, because it has to do this in the unscoped block.
   def outage
     @outage = current_user
               .account
@@ -219,9 +236,28 @@ class OutagesController < ApplicationController
       :description,
       :end_time,
       :name,
+      :start_time)
+  end
+
+  def outage_params_with_watches
+    params.require(:outage).permit(:id,
+      :account_id,
+      :active,
+      :causes_loss_of_service,
+      :completed,
+      :description,
+      :end_time,
+      :name,
       :start_time,
       cis_outages_attributes: [:id, :ci_id, :outage_id, :_destroy],
-      available_cis_attributes: [:ci_id, :_destroy])
+      available_cis_attributes: [:ci_id, :_destroy],
+      watches_attributes: [
+        :id,
+        :watched_type,
+        :watched_id,
+        :user_id,
+        :active
+      ])
   end
 
   ##
@@ -245,12 +281,5 @@ class OutagesController < ApplicationController
         frag: session[:frag],
         completed: session[:completed],
         earliest: helpers.default_earliest.to_s(:browser)))
-  end
-
-  def update_watches
-    # puts "Contoller updating watch #{params[:outage][:watched]}"
-    # puts "params[:outage][:watched].in?(%w(1 true)): #{params[:outage][:watched].in?(%w(1 true))}"
-    @outage.update_watches(current_user,
-      params[:outage][:watched].in?(%w(1 true)))
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "test_helper"
 
 class CiTest < ActiveSupport::TestCase
@@ -177,6 +178,37 @@ class CiTest < ActiveSupport::TestCase
     assert_equal expected_outages.sort, @ci.affected_by_outages.sort
   end
 
+  test "add watch to unwatched" do
+    assert_difference "Watch.count" do
+      @ci.update_attributes!(watch_parameters)
+    end
+  end
+
+  test "add inactive watch to unwatched" do
+    assert_no_difference "Watch.count" do
+      @ci.update_attributes!(watch_parameters("active" => false))
+    end
+  end
+
+  test "disable active watch" do
+    watch = @ci.watches.create!(user: user, active: true)
+    assert_difference "Watch.count", -1 do
+      @ci.update_attributes!(watch_parameters(watch.attributes.merge("active" => false)))
+    end
+  end
+
+  test "enable inactive watch" do
+    watch = @ci.watches.create!(user: user, active: false)
+    assert_difference "Watch.count" do
+      # https://stackoverflow.com/questions/37353039/temporarily-unscope-model-associations
+      Watch.unscoped do
+        @ci.update_attributes!(watch_parameters(watch.attributes.merge("active" => true)))
+      end
+    end
+  end
+
+  private
+
   def setup
     @account = Account.new(name: "No CIs")
     @ci = Ci.create(account: @account, name: "Me")
@@ -200,4 +232,34 @@ class CiTest < ActiveSupport::TestCase
                            completed: false)
   end
 
+  def new_user(attrs = {})
+    @user = @account.users.create!({ email: "a@example.com",
+                                     name: "A",
+                                     notification_periods_before_outage: 1,
+                                     notification_period_interval: "hours",
+                                     notify_me_before_outage: false,
+                                     notify_me_on_note_changes: false,
+                                     notify_me_on_outage_changes: true,
+                                     notify_me_on_outage_complete: true,
+                                     notify_me_on_overdue_outage: false,
+                                     password: "password",
+                                     preference_email_time: "8:00",
+                                     preference_individual_email_notifications: false,
+                                     preference_notify_me_by_email: false,
+                                     privilege_account: false,
+                                     privilege_edit_cis: false,
+                                     privilege_edit_outages: false,
+                                     privilege_manage_users: false }.merge(attrs))
+  end
+
+  def user
+    @user ||= new_user
+  end
+
+  def watch_parameters(attrs = {})
+    watch_attributes = attrs.reverse_merge(active: true, user: user)
+    params = ActionController::Parameters.new(watches_attributes: [watch_attributes])
+    # puts "PARAMS.INSPECT: #{params.inspect}"
+    params.permit!
+  end
 end

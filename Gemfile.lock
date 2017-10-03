@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/lcreid/rails-bootstrap-forms.git
-  revision: 608ed5a998526d5180b49f3ebc9e5d73158e26a1
+  revision: f9ebdec00d9ea4fb6b11c28afd8e52783c9fc852
   branch: bootstrap-4-rails-5-1
   specs:
     bootstrap_form (2.7.0)

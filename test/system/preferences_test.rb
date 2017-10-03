@@ -24,4 +24,42 @@ class PreferencesTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     click_button "Update"
     assert_current_path edit_user_path
   end
+
+  test "user can't change email" do
+    user = users(:basic)
+    sign_in_for_system_tests(user)
+    present_email = user.email
+    changed_email = "achange_#{present_email}"
+    visit edit_user_path
+
+    element = find_field("Email")
+    assert_equal present_email, element.value
+
+    fill_in "Email", with: changed_email
+
+    element = find_field("Email")
+    assert_equal present_email, element.value
+  end
+
+  test "user manager  can't change user email" do
+    admin = users(:user_admin)
+    user = users(:basic)
+    sign_in_for_system_tests(admin)
+    present_email = user.email
+    changed_email = "achange_#{present_email}"
+
+    click_link "Users"
+    # visit admin_user_path
+
+    within(".user-#{user.id}") do
+      click_link "Edit"
+    end
+    element = find_field("Email")
+    assert_equal present_email, element.value
+
+    fill_in "Email", with: changed_email
+
+    element = find_field("Email")
+    assert_equal present_email, element.value
+  end
 end

@@ -193,6 +193,21 @@ class SaveOutageTest < ActiveSupport::TestCase
     end
   end
 
+  test "create a watched outage" do
+    attrs = {
+      account: accounts(:company_a),
+      causes_loss_of_service: true,
+      completed: false,
+      watches_attributes: [{
+        user: users(:basic),
+        active: true
+      }]
+    }
+    outage = Outage.new(attrs)
+    Services::SaveOutage.call(outage)
+    assert_equal [], outage.errors.full_messages
+  end
+
   # test "event_text method" do
   #   skip
   #   test_case = [

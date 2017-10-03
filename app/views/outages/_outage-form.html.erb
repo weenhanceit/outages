@@ -19,6 +19,7 @@
   <li>Causes outage or not</li>
 </ul> -->
 
+<%= object_error_messages(outage) %>
 <%= bootstrap_form_with(model: outage, builder: WeitFormBuilder, local: true) do |f| %>
   <%= f.hidden_field :active %>
   <div class="row">
@@ -29,7 +30,10 @@
   <div class="row">
     <%= f.check_box :completed, column_width: 4 %>
     <%= f.check_box :causes_loss_of_service, column_width: 4 %>
-    <%= f.check_box :watched, column_width: 4 %>
+    <%#= f.check_box :watched, column_width: 4 %>
+    <div class="col-sm-4">
+      <%= render partial: "watch_form", locals: { f: f } %>
+    </div>
   </div>
   <div class="row">
     <%= f.text_area :description, column_width: 12 %>

@@ -25,7 +25,7 @@
           Start Time:
         </div>
         <div class="col">
-          <%= f.object.start_time.to_s(:wall) %>
+          <%= f.object.start_time&.to_s(:wall) %>
         </div>
       </div>
       <div class="row">
@@ -33,7 +33,7 @@
           End Time:
         </div>
         <div class="col">
-          <%= f.object.end_time.to_s(:wall) %>
+          <%= f.object.end_time&.to_s(:wall) %>
         </div>
       </div>
     </div>
@@ -48,7 +48,8 @@
           <%= f.check_box :causes_loss_of_service, disabled: "disabled" %>
         </li>
         <li>
-          <%= f.check_box :watched %>
+          <%# FIXME: ajaxize this. %>
+          <%= render partial: "watch_form", locals: { f: f } %>
         </li>
       </ul>
     </div>

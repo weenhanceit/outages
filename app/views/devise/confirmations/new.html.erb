@@ -5,7 +5,7 @@
       url: confirmation_path(resource_name),
       html: { method: :post },
       local: true) do |f| %>
-  <%= devise_error_messages! %>
+      <%= devise_error_messages!(:confirmation_token) %>
 
   <div class="field">
     <%#= f.label :email %><br />

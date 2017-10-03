@@ -4,9 +4,11 @@ module Services
     # Method Checks if user has outstanding email notifications and, if so,
     # sends an email to the user including all outstanding notifications
     def self.call(user)
+      # puts "sne.rb #{__LINE__}:"
       email = nil
       Notification.transaction do
         notifications = user.outstanding_notifications(:email)
+        # puts "sne.rb #{__LINE__}: #{notifications.inspect}"
         if user.preference_notify_me_by_email && !notifications.empty?
           # puts "nm.rb - #{__LINE__}: #{user.email}"
           email = NotificationMailer.notification_email(user)

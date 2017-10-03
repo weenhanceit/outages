@@ -1,3 +1,4 @@
+<%= object_error_messages(@user) %>
 <%= bootstrap_form_with(model: @user,
       url: url_for_user_form(@account, @user),
       local: true) do |f| %>
@@ -13,7 +14,11 @@
   </div>
   <div class="row">
     <div class="col">
-      <%= f.email_field :email, layout: :horizontal, id: :user_email %>
+      <% if @user.new_record? %>
+        <%= f.email_field :email, layout: :horizontal, id: :user_email %>
+      <% else %>
+        <%= f.email_field :email, layout: :horizontal, id: :user_email, readonly: true %>
+      <% end %>
     </div>
   </div>
   <div class="row">
@@ -69,24 +74,19 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col">
-      <%= f.form_group :notify_me_before_outage do %>
+  <%# TODO: This row and the "email at" row are very hacky. Fix the bootstrap. %>
+  <div class="form-row">
+    <span class="col-form-label">
       <%= f.check_box :notify_me_before_outage do %>
-        <%= f.number_field :notification_periods_before_outage,
-            label: "Notify me",
-            layout: :horizontal,
-            label_col: "col",
-            control_col: "col" %>
-        <%= f.select :notification_period_interval,
-            [ "hours", "days", "weeks", "months" ],
-            label: "before outage starts.",
-            layout: :horizontal,
-            label_col: "col",
-            control_col: "col" %>
-        <% end %>
+        Notify me&nbsp;
       <% end %>
-    </div>
+    </span>
+    <%= f.number_field :notification_periods_before_outage,
+        hide_label: true %>
+    <%= f.select :notification_period_interval,
+        [ "hours", "days", "weeks", "months" ],
+        hide_label: true %>
+    <span class="col-form-label">&nbsp;before outage starts.</span>
   </div>
 </div>
 
@@ -94,29 +94,27 @@
   <div class="row">
     <h3>E-Mail Notification Preferences</h3>
   </div>
-  <div class="row">
-    <div class="col">
+  <div class="form-row">
       <%= f.check_box :preference_notify_me_by_email,
           label: "Also notify me by e-mail." %>
-    </div>
   </div>
-  <div class="row">
-    <div class="col">
-      <%= f.form_group :preference_individual_email_notifications do %>
+  <div class="form-row">
       <%= f.radio_button :preference_individual_email_notifications,
             1,
             checked: f.object.preference_individual_email_notifications?,
             label: " Individual e-mail for each outage "%>
+  </div>
+  <div class="form-row">
+    <span class="col-form-label">
       <%= f.radio_button :preference_individual_email_notifications,
             0,
             checked: !f.object.preference_individual_email_notifications?,
-            label: " One e-mail per day ",
-            layout: :horizontal %>
-      <%= f.time_field :preference_email_time,
-            label: "at",
-            layout: :horizontal %>
-      <% end %>
-    </div>
+            label: "One e-mail per day " %>
+    </span>
+    <%= f.time_field :preference_email_time,
+          label: "&nbsp;at&nbsp;".html_safe,
+          label_class: "col-form-label",
+          layout: :horizontal %>
   </div>
 </div>
 
@@ -132,7 +130,6 @@
       <%= f.form_group :privileges do %>
       <%# Add hidden fields when disabled because browser won't return
           valudes for disabled fields. %>
-          <%# FIXME: change @user to current_user %>
         <%= f.hidden_field :privilege_account unless current_user.privilege_account? %>
         <%= f.check_box :privilege_account,
               {label: "Manage Account",

@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   resource :user, only: [:edit, :update]
   resources :watches, only: [:create, :edit, :update]
   [
+    "contact_us",
     "introduction",
     "outages",
     "preferences",

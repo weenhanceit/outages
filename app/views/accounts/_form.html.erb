@@ -1,3 +1,4 @@
+<%= object_error_messages(@account) %>
 <%= bootstrap_form_with(model: @account, local: true) do |f| %>
   <%= f.text_field :name, id: :account_name %>
   <%= f.primary "Save" %>

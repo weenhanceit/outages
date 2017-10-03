@@ -1,3 +1,4 @@
+<%= object_error_messages(ci) %>
 <%= bootstrap_form_with(model: ci, builder: WeitFormBuilder, local: true) do |f| %>
   <%= f.hidden_field :active %>
   <div class="row">
@@ -8,8 +9,11 @@
     <%= f.number_field :minimum_children_to_maintain_service,
           wrapper: { class: "ft-min-max-service-disruption" },
           column_width: 2 %>
-    <%= f.check_box :watched,
+    <%#= f.check_box :watched,
           column_width: 2 %>
+    <div class="col-sm-2">
+      <%= render partial: "watch_form", locals: { f: f } %>
+    </div>
   </div>
   <div class="row">
     <%= f.text_area :description, column_width: 12 %>

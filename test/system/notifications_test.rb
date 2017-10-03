@@ -26,7 +26,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
     assert_difference "Event.count" do
       assert_difference "Outage.where(account: user.account).size" do
-        assert_no_difference "Watch.count" do
+        assert_difference "Watch.count" do
           fill_in "Name", with: outage_name
           fill_in "Description",
             with: "Outage to generate online notification"
@@ -377,11 +377,12 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     #  Notification for a new note
     fill_in "New Note", with: note_text
     click_button "Save Note"
+    # Synchronize on the saved note.
+    assert_field "New Note", text: ""
     visit outages_path
     # save_screenshot "tmp/screenshots/x_debug_shot.png"
     #  Check that we have a notification
     expected = { outage: outage.name, text: "Note Added" }
-    # NOTE: Tests can fail because of timing.
     assert_check_notifications expected
 
     mark_all_existing_notifications_notified

@@ -125,6 +125,22 @@ class CisShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
     skip "Failed to destroy note"
   end
 
+  test "set and unset watched" do
+    sign_in_for_system_tests(users(:basic))
+    visit ci_url(@ci)
+
+    assert_checked_field "Watch"
+    assert_difference "Watch.count", -1 do
+      uncheck "Watched"
+      sleep 2
+    end
+    skip "TODO: Don't forget to finish this test."
+    assert_difference "Watch.count", -1 do
+      check "Watched"
+      sleep 2
+    end
+  end
+
   def setup
     @ci = Ci.find_by(account: accounts(:company_a), name: "Server A")
     @ci.notes.create([

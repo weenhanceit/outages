@@ -146,6 +146,7 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     sign_in_for_system_tests(users(:basic))
     visit outage_url(@outage)
 
+    assert_no_checked_field "Watch"
     assert_difference "Watch.count" do
       check "Watched"
       sleep 2

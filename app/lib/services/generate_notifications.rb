@@ -132,8 +132,9 @@ module Services
       create_notification(event, watch, "email") if watch.user.preference_notify_me_by_email
       # TODO: And trigger the e-mail here if the user wants immediate e-mails.
       if watch.user.preference_individual_email_notifications
-        email = NotificationMailer.notification_email(watch.user)
-        email.deliver_now
+        Services::SendNotificationEmail.call(watch.user)
+        # email = NotificationMailer.notification_email(watch.user)
+        # email.deliver_now
         # puts " ---- #{__LINE__}:  #{ActionMailer::Base.deliveries.inspect}"
       end
     end

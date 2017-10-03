@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 ##
 # A configuration item, which can be hardware, software, service, etc.
 class Ci < ApplicationRecord
@@ -22,9 +23,14 @@ class Ci < ApplicationRecord
   has_many :outages, through: :cis_outages
   has_many :notes, as: :notable
   has_many :tags, as: :taggable
-  has_many :watches, as: :watched, autosave: true, dependent: :destroy
+  # TODO: need `after_add :schedule_reminders`?
   # FIXME: Need to think about callback for watches added to ci to generate
   # reminder job.  This possibly should be a callback on create watch
+  has_many :watches, as: :watched, inverse_of: :watched, dependent: :destroy
+  accepts_nested_attributes_for :watches,
+    reject_if: lambda { |attrs|
+      !ActiveModel::Type::Boolean.new.cast(attrs[:active]) && attrs[:id].blank?
+    }
 
   validates :active,
     inclusion: { in: [true, false], message: "can't be blank" }

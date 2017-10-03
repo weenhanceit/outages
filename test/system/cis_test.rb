@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "application_system_test_case"
 
 class CisTest < ApplicationSystemTestCase
@@ -21,33 +22,38 @@ class CisTest < ApplicationSystemTestCase
   end
 
   test "create a new CI" do
-    user = sign_in_for_system_tests(users(:edit_ci_outages))
-
-    visit new_ci_url
-    assert_selector "h1", text: "New Service"
-
-    assert_difference "Ci.where(account: user.account).size" do
-      fill_in "Name", with: "Server 7"
-      fill_in "Description",
-        with: "This is the server in the seventh ring of your know where."
-      click_on "Save"
-    end
-
-    assert_not Ci.where(name: "Server 7").empty?
-  end
-
-  test "create a new CI with watch" do
-    user = sign_in_for_system_tests(users(:edit_ci_outages))
+    user = sign_in_for_system_tests(users(:edit_ci_outages)) # rubocop:disable Lint/UselessAssignment
 
     visit new_ci_url
     assert_selector "h1", text: "New Service"
 
     assert_difference "Ci.where(account: user.account).size" do
       assert_difference "Watch.count" do
+        assert_checked_field "Watched"
+        fill_in "Name", with: "Server 7"
+        fill_in "Description",
+          with: "This is the server in the seventh ring of you know where."
+        click_on "Save"
+        sleep 2
+      end
+    end
+
+    assert_not Ci.where(name: "Server 7").empty?
+  end
+
+  test "create a new CI with no watch" do
+    user = sign_in_for_system_tests(users(:edit_ci_outages)) # rubocop:disable Lint/UselessAssignment
+
+    visit new_ci_url
+    assert_selector "h1", text: "New Service"
+
+    assert_difference "Ci.where(account: user.account).size" do
+      assert_no_difference "Watch.unscope(where: :active).count" do
+        assert_checked_field "Watched"
         fill_in "Name", with: "Service 7"
         fill_in "Description",
           with: "This is the watch in the seventh ring of you know where."
-        check "Watched"
+        uncheck "Watched"
         click_on "Save"
       end
     end
@@ -56,7 +62,7 @@ class CisTest < ApplicationSystemTestCase
   end
 
   test "edit an existing CI" do
-    user = sign_in_for_system_tests(users(:edit_ci_outages))
+    user = sign_in_for_system_tests(users(:edit_ci_outages)) # rubocop:disable Lint/UselessAssignment
 
     ci = cis(:company_a_ci_a)
     visit edit_ci_url(ci)
@@ -70,7 +76,7 @@ class CisTest < ApplicationSystemTestCase
   end
 
   test "add a watch on edit page" do
-    user = sign_in_for_system_tests(users(:edit_ci_outages))
+    user = sign_in_for_system_tests(users(:edit_ci_outages)) # rubocop:disable Lint/UselessAssignment
 
     ci = cis(:company_a_ci_a)
     visit edit_ci_url(ci)
@@ -85,7 +91,7 @@ class CisTest < ApplicationSystemTestCase
   end
 
   test "remove a watch on edit page" do
-    user = sign_in_for_system_tests(users(:edit_ci_outages))
+    user = sign_in_for_system_tests(users(:edit_ci_outages)) # rubocop:disable Lint/UselessAssignment
 
     ci = cis(:company_a_ci_watched_by_edit)
     visit edit_ci_url(ci)
@@ -158,11 +164,11 @@ class CisTest < ApplicationSystemTestCase
     visit new_ci_url
 
     fill_in "Name", with: "Test Router"
-      within '#test-parents' do
-        click_list_item "Server A"
-        click_on "<"
-        within('#js-dependent-assigned') { assert_text "Server A" }
-      end
+    within '#test-parents' do
+      click_list_item "Server A"
+      click_on "<"
+      within('#js-dependent-assigned') { assert_text "Server A" }
+    end
     assert_difference "CisCi.count" do
       click_on "Save"
     end
