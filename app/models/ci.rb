@@ -26,7 +26,7 @@ class Ci < ApplicationRecord
   # TODO: need `after_add :schedule_reminders`?
   # FIXME: Need to think about callback for watches added to ci to generate
   # reminder job.  This possibly should be a callback on create watch
-  has_many :watches, as: :watched, dependent: :destroy
+  has_many :watches, as: :watched, inverse_of: :watched, dependent: :destroy
   accepts_nested_attributes_for :watches,
     reject_if: lambda { |attrs|
       !ActiveModel::Type::Boolean.new.cast(attrs[:active]) && attrs[:id].blank?

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 ##
 # A single outage.
 class Outage < ApplicationRecord
@@ -18,6 +19,7 @@ class Outage < ApplicationRecord
   has_many :tags, as: :taggable
   has_many :watches,
     as: :watched,
+    inverse_of: :watched,
     dependent: :destroy,
     after_add: :schedule_reminders
   accepts_nested_attributes_for :watches,
@@ -156,7 +158,7 @@ class Outage < ApplicationRecord
       (cis + cis.map(&:ancestors).flatten)
         .map(&:watches)
         .flatten)
-    .uniq(&:user)
+      .uniq(&:user)
   end
 
   ##

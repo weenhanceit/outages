@@ -9,21 +9,18 @@ class OutagesController < ApplicationController
 
   def create
     # puts "IN CREATE"
-    @outage = Outage.new(outage_params)
+    @outage = Outage.new(outage_params_with_watches)
     @outage.account = current_user.account
 
     if Services::SaveOutage.call(@outage)
-      # TODO: Confirm it's okay to just call update here.
-      if @outage.update(outage_params_with_watches)
-        redirect_to outages_path
-        return
-      end
+      # puts "Saved outage"
+      redirect_to outages_path
+    else
+      # puts "Failed to save"
+      logger.warn "Failed to save outage #{@outage.inspect}, #{@outage.errors.full_messages}"
+      online_notifications
+      render :new
     end
-
-    # puts "Failed to save"
-    logger.warn @outage.errors.full_messages
-    online_notifications
-    render :new
   end
 
   def day
@@ -43,7 +40,7 @@ class OutagesController < ApplicationController
     if Services::SaveOutage.call(@outage)
       redirect_to outages_path
     else
-      logger.warn @outage.errors.full_messages
+      logger.warn "Failed to save outage #{outage.inspect}, #{@outage.errors.full_messages}"
       online_notifications
       render :edit
     end
@@ -132,7 +129,7 @@ class OutagesController < ApplicationController
 
     # puts "@outage.completed before: #{@outage.completed}"
     Watch.unscoped do
-      @outage.assign_attributes(outage_params)
+      @outage.assign_attributes(outage_params_with_watches)
       # puts "@outage.completed after: #{@outage.completed}"
       # logger.debug "outages_controller.rb TP_#{__LINE__} changed: #{@outage.changed?}"
       # @outage.attributes= outage_params
@@ -140,17 +137,15 @@ class OutagesController < ApplicationController
       # puts "outages_controller.rb TP_#{__LINE__} #{o.inspect}"
       # puts "outages_controller.rb TP_#{__LINE__} #{@outage.inspect} changed: #{@outage.changed?}"
       if Services::SaveOutage.call(@outage)
-        if @outage.update(outage_params_with_watches)
-          redirect_to outages_path
-          return
-        end
+        # puts "Saved outage"
+        redirect_to outages_path
+      else
+        # puts "Failed to save"
+        logger.warn "Failed to save outage #{@outage.inspect}, #{@outage.errors.full_messages}"
+        online_notifications
+        render :edit
       end
     end
-
-    puts "Failed to save"
-    logger.warn @outage.errors.full_messages
-    online_notifications
-    render :edit
   end
 
   def week
