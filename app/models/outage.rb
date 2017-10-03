@@ -20,7 +20,10 @@ class Outage < ApplicationRecord
     as: :watched,
     dependent: :destroy,
     after_add: :schedule_reminders
-  accepts_nested_attributes_for :watches
+  accepts_nested_attributes_for :watches,
+    reject_if: lambda { |attrs|
+      !ActiveModel::Type::Boolean.new.cast(attrs[:active]) && attrs[:id].blank?
+    }
 
   validates :active,
     :causes_loss_of_service,

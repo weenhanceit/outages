@@ -26,7 +26,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
     assert_difference "Event.count" do
       assert_difference "Outage.where(account: user.account).size" do
-        assert_no_difference "Watch.count" do
+        assert_difference "Watch.count" do
           fill_in "Name", with: outage_name
           fill_in "Description",
             with: "Outage to generate online notification"
