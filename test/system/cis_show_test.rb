@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 require "application_system_test_case"
 
-class CisShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
+class CisShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength
   test "show two notes default order" do
     sign_in_for_system_tests(users(:basic))
     visit ci_url(@ci)
@@ -129,32 +130,33 @@ class CisShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
     sign_in_for_system_tests(users(:basic))
     visit ci_url(@ci)
 
-    assert_checked_field "Watch"
+    assert_checked_field "Watched"
     assert_difference "Watch.count", -1 do
       uncheck "Watched"
       sleep 2
+      puts "woke up once"
     end
-    skip "TODO: Don't forget to finish this test."
-    assert_difference "Watch.count", -1 do
+    assert_difference "Watch.count" do
       check "Watched"
       sleep 2
+      puts "woke up twice"
     end
   end
 
   def setup
     @ci = Ci.find_by(account: accounts(:company_a), name: "Server A")
     @ci.notes.create([
-                           {
-                             note: "Note A",
-                             user: users(:basic),
-                             created_at: Time.zone.now - 1.hour
-                           },
-                           {
-                             note: "Note B",
-                             user: users(:edit_ci_outages),
-                             created_at: Time.zone.now - 1.day
-                           }
-                         ])
+                       {
+                         note: "Note A",
+                         user: users(:basic),
+                         created_at: Time.zone.now - 1.hour
+                       },
+                       {
+                         note: "Note B",
+                         user: users(:edit_ci_outages),
+                         created_at: Time.zone.now - 1.day
+                       }
+                     ])
     assert @ci.save, "Save of notes failed #{@ci.errors.full_messages}"
   end
 

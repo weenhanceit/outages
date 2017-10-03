@@ -6,5 +6,5 @@
   <%= f.hidden_field :watched_id %>
   <%= f.hidden_field :user_id %>
   <%= hidden_field_tag "row_index", row_index %>
-  <%= f.check_box :active, label: "" %>
+  <%= f.check_box(:active, label: (local_assigns[:label] || "")) %>
 <% end %>
