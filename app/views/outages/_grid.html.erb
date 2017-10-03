@@ -68,15 +68,13 @@
         <% end %>
       </td>
       <td>
-        <p>
-          <%= render partial: "watches/form",
-                locals: {
-                  watch: outage.watched_by_or_new(current_user),
-                  row_index: index
-                  } %>
-          <!-- <input type="checkbox" name="watch" value="Yes" checked> -->
-          <!-- All watches have same properties, which come from user preferences -->
-        </p>
+        <%= render partial: "watches/form",
+              locals: {
+                watch: outage.watched_by_or_new(current_user),
+                row_index: index
+                } %>
+        <!-- <input type="checkbox" name="watch" value="Yes" checked> -->
+        <!-- All watches have same properties, which come from user preferences -->
       </td>
     </tr>
     <% end %>
