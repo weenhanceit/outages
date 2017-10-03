@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 class CisController < ApplicationController
-  include TestSuite
-
   def create
     # The following commented-out lines didn't work, but I think they should.
     # I fear it's a problem with associations again.
