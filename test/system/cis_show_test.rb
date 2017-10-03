@@ -130,14 +130,14 @@ class CisShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
     sign_in_for_system_tests(users(:basic))
     visit ci_url(@ci)
 
-    assert_no_checked_field "Watch"
-    assert_difference "Watch.count" do
-      check "Watched"
+    assert_checked_field "Watch"
+    assert_difference "Watch.count", -1 do
+      uncheck "Watched"
       sleep 2
     end
     skip "TODO: Don't forget to finish this test."
     assert_difference "Watch.count", -1 do
-      uncheck "Watched"
+      check "Watched"
       sleep 2
     end
   end

@@ -14,7 +14,9 @@
     <% end %>
   </h1>
 
-  <%= bootstrap_form_for(@ci, builder: WeitFormBuilder) do |f| %>
+  <%= bootstrap_form_for(@ci,
+        builder: WeitFormBuilder,
+        html: { class: "js-submit-on-change" }) do |f| %>
   <%= f.hidden_field :active %>
   <div class="row">
     <div class="col">
@@ -22,7 +24,7 @@
       <%= @ci.description %>
     </div>
     <div class="col">
-      <%= f.check_box :watched %>
+      <%= render partial: "watch_form", locals: { f: f } %>
     </div>
     <div class="col">
       <% if @ci.maximum_unavailable_children_with_service_maintained.present? %>

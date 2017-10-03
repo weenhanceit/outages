@@ -76,6 +76,7 @@ class CisController < ApplicationController
 
   def show
     @notable = @ci = current_user.account.cis.find_by(id: params[:id])
+    @watched = [@ci.watched_by_or_new(current_user)]
     session[:sort_order] = params[:sort_order] if params[:sort_order].present?
   end
 
@@ -86,13 +87,15 @@ class CisController < ApplicationController
     # @ci.account_id = nil
     # phil = "Name: #{@ci.name} Valid: #{@ci.valid?} AccountID: #{@ci.account_id}"
     # render plain: phil
-    if @ci.update(ci_params)
-      redirect_to cis_path
-    else
-      puts "SAVE FAILED"
-      logger.warn @ci.errors.full_messages
-      online_notifications
-      render :edit
+    Watch.unscoped do
+      if @ci.update(ci_params)
+        redirect_to cis_path
+      else
+        puts "SAVE FAILED"
+        logger.warn @ci.errors.full_messages
+        online_notifications
+        render :edit
+      end
     end
   end
 

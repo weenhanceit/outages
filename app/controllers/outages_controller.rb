@@ -119,7 +119,7 @@ class OutagesController < ApplicationController
     # puts "IN SHOW"
     @notable = @outage
     # TODO: This hack to make watches work was ugly. Hopefully Ajax can fix.
-    @outage.watched_by(current_user)
+    @outage.watched_by_or_new(current_user)
     session[:sort_order] = params[:sort_order] if params[:sort_order].present?
   end
 
@@ -131,22 +131,23 @@ class OutagesController < ApplicationController
     # logger.debug "outages_controller.rb TP_#{__LINE__} Is this an outage? #{@outage.is_a?(Outage)}   #{@outage.inspect}"
 
     # puts "@outage.completed before: #{@outage.completed}"
-    @outage.assign_attributes(outage_params)
-    # puts "@outage.completed after: #{@outage.completed}"
-    # logger.debug "outages_controller.rb TP_#{__LINE__} changed: #{@outage.changed?}"
-    # @outage.attributes= outage_params
-    # o = Outage.find(@outage.id)
-    # puts "outages_controller.rb TP_#{__LINE__} #{o.inspect}"
-    # puts "outages_controller.rb TP_#{__LINE__} #{@outage.inspect} changed: #{@outage.changed?}"
-    if Services::SaveOutage.call(@outage)
-      # puts "Saved"
-      if @outage.update(outage_params_with_watches)
-        redirect_to outages_path
-        return
+    Watch.unscoped do
+      @outage.assign_attributes(outage_params)
+      # puts "@outage.completed after: #{@outage.completed}"
+      # logger.debug "outages_controller.rb TP_#{__LINE__} changed: #{@outage.changed?}"
+      # @outage.attributes= outage_params
+      # o = Outage.find(@outage.id)
+      # puts "outages_controller.rb TP_#{__LINE__} #{o.inspect}"
+      # puts "outages_controller.rb TP_#{__LINE__} #{@outage.inspect} changed: #{@outage.changed?}"
+      if Services::SaveOutage.call(@outage)
+        if @outage.update(outage_params_with_watches)
+          redirect_to outages_path
+          return
+        end
       end
     end
 
-    # puts "Failed to save"
+    puts "Failed to save"
     logger.warn @outage.errors.full_messages
     online_notifications
     render :edit
