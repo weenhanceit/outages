@@ -8,6 +8,8 @@ class WatchesController < ApplicationController
 
     respond_to do |format|
       format.js do
+        # UGH: This trick puts the same label back as the page had.
+        @label = params[:label] || ""
         render "edit", locals: { row_index: params[:row_index] }
       end
     end
@@ -23,6 +25,8 @@ class WatchesController < ApplicationController
 
     respond_to do |format|
       format.js do
+        # UGH: This trick puts the same label back as the page had.
+        @label = params[:label] || ""
         render "edit", locals: { row_index: params[:row_index] }
       end
     end

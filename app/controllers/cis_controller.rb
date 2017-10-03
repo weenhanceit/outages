@@ -74,6 +74,8 @@ class CisController < ApplicationController
   def show
     @notable = @ci = current_user.account.cis.find_by(id: params[:id])
     @watched = [@ci.watched_by_or_new(current_user)]
+    # UGH: This trick is to put a label in the partial way down in the view.
+    @label = "Watched"
     session[:sort_order] = params[:sort_order] if params[:sort_order].present?
   end
 
