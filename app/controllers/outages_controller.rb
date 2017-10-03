@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class OutagesController < ApplicationController
   before_action :outage, only: [
-    :update, :edit, :show, :destroy
+    :edit, :show, :destroy
   ]
   after_action :set_view, only: [
     :day, :fourday, :index, :month, :week
@@ -128,6 +128,12 @@ class OutagesController < ApplicationController
 
     # puts "@outage.completed before: #{@outage.completed}"
     Watch.unscoped do
+      # TODO: Figure out why Rails ignores unscoped in the includes.
+      @outage = current_user
+                .account
+                .outages
+                .includes(:cis_outages, :cis) # including watches seems to ignore unscoped
+                .find(params[:id])
       @outage.assign_attributes(outage_params_with_watches)
       # puts "@outage.completed after: #{@outage.completed}"
       # logger.debug "outages_controller.rb TP_#{__LINE__} changed: #{@outage.changed?}"
@@ -200,6 +206,7 @@ class OutagesController < ApplicationController
 
   ##
   # Set up the @outage instance variable for the single-instance actions.
+  # #update has its own, because it has to do this in the unscoped block.
   def outage
     @outage = current_user
               .account

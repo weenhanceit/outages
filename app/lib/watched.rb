@@ -1,14 +1,7 @@
+# frozen_string_literal: true
 ##
 # Common code for anything that can be watched.
 module Watched
-  ##
-  # Indicates if the watched item is being watched by the user referenced in
-  # the last call to `#watched_by`. This little hack is to make things work
-  # in the view.
-  def watched
-    !!@watched
-  end
-
   ##
   # Checked if the user is watching this watched item.
   def watched_by(user)
