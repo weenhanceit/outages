@@ -160,8 +160,4 @@ class CisController < ApplicationController
       :maximum_unavailable_children_with_service_maintained,
       :minimum_children_to_maintain_service)
   end
-
-  def update_watches
-    @ci.update_watches(current_user, params[:ci][:watched].in?(%w(1 true)))
-  end
 end

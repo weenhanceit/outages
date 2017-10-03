@@ -276,11 +276,4 @@ class OutagesController < ApplicationController
         completed: session[:completed],
         earliest: helpers.default_earliest.to_s(:browser)))
   end
-
-  def update_watches
-    # puts "Contoller updating watch #{params[:outage][:watched]}"
-    # puts "params[:outage][:watched].in?(%w(1 true)): #{params[:outage][:watched].in?(%w(1 true))}"
-    @outage.update_watches(current_user,
-      params[:outage][:watched].in?(%w(1 true)))
-  end
 end
