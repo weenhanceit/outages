@@ -1,9 +1,14 @@
+# frozen_string_literal: true
 require "test_helper"
 require "capybara/poltergeist"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # For capybara-email https://github.com/DockYard/capybara-email
   include Capybara::Email::DSL
+
+  # The next one is ours, in app/lib
+  # Capybara::Session.include CapybaraExtensions::SessionMatchers
+
   # The docs said do the following, but it borks things big-time:
   # Capybara.app_host = "http://localhost:3000"
 
