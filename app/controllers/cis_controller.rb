@@ -18,7 +18,6 @@ class CisController < ApplicationController
       end
     end
 
-    puts "SAVE FAILED"
     logger.warn @ci.errors.full_messages
     online_notifications
     render :new
@@ -89,7 +88,6 @@ class CisController < ApplicationController
       if @ci.update(ci_params)
         redirect_to cis_path
       else
-        puts "SAVE FAILED"
         logger.warn @ci.errors.full_messages
         online_notifications
         render :edit

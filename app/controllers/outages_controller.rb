@@ -115,8 +115,7 @@ class OutagesController < ApplicationController
   def show
     # puts "IN SHOW"
     @notable = @outage
-    # TODO: This hack to make watches work was ugly. Hopefully Ajax can fix.
-    @outage.watched_by_or_new(current_user)
+    @watched = [@outage.watched_by_or_new(current_user)]
     session[:sort_order] = params[:sort_order] if params[:sort_order].present?
   end
 

@@ -1,23 +1,6 @@
+##
+# Common code for anything that can be watched.
 module Watched
-  def update_watches(user, active)
-    watch = watches.unscope(where: :active).find_by(user: user)
-
-    if !active
-      # puts "Remove watch" if watch
-      watch.update_attribute(:active, false) if watch
-    elsif watch
-      watch.update_attribute(:active, true)
-      # puts "Set watch, watches: #{@outage.watches.inspect}"
-    else
-      # The usual Rails dance: set both sides of the association so the
-      # autosave will work.
-      watch = watches.build(user: user)
-      watch.watched = self
-      # puts "Created watch, watches: #{@outage.watches.inspect}"
-    end
-    # puts "update_watches watches.size after: #{watches.size}"
-  end
-
   ##
   # Indicates if the watched item is being watched by the user referenced in
   # the last call to `#watched_by`. This little hack is to make things work
@@ -29,7 +12,7 @@ module Watched
   ##
   # Checked if the user is watching this watched item.
   def watched_by(user)
-    @watched = watches.unscope(where: :active).find_by(user: user)
+    watches.unscope(where: :active).find_by(user: user)
   end
 
   ##
