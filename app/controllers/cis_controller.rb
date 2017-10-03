@@ -112,6 +112,10 @@ class CisController < ApplicationController
     }
   end
 
+  # TODO: Fix the use of different parameter filters.
+  # I put these in because saving wasn't working. It turns out, saving
+  # probably wasn't working because I didn't have the `inverse_of` that
+  # are needed in the `has_many` associations to allow the validations to pass.
   def ci_dag_params
     params
       .require(:ci)
