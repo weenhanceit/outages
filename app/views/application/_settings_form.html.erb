@@ -6,6 +6,11 @@
 <div class="mb-3">
   <div class="row">
     <h3>Preferences</h3>
+    <br>HI?
+    <br>Controller: <%= params[:controller] %>
+    <br>Action: <%= params[:action] %>
+    <br>New: <%= @user.new_record? %>
+    <br>
   </div>
   <div class="row">
     <div class="col">
@@ -14,7 +19,11 @@
   </div>
   <div class="row">
     <div class="col">
-      <%= f.email_field :email, layout: :horizontal %>
+      <% if @user.new_record? %>
+        <%= f.email_field :email, layout: :horizontal %>
+      <% else %>
+        <%= f.email_field :email, layout: :horizontal, readonly: true %>
+      <% end %>
     </div>
   </div>
   <div class="row">
