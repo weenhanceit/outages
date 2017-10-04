@@ -21,7 +21,6 @@
     </div>
     <div class="col">
       <%= render partial: "watches/form",
-            formats: [:html],
             locals: {
               row_index: 0,
               watch: @ci.watched_by_or_new(current_user)

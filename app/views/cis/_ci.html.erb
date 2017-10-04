@@ -7,7 +7,8 @@
   </td>
   <td>
     <%# NOTE: You often have to specify formats when switching back and forth
-              between protocols (e.g. js and html) in views. %>
+              between protocols (e.g. js and html) in views. In other places
+              I don't need the `formats`, but here I do. ??? %>
     <%= render partial: "watches/form",
           formats: [:html],
           locals: {
