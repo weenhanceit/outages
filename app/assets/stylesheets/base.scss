@@ -6,3 +6,14 @@
 .hidden {
   display: none;
 }
+
+label.required:after {
+  content: " *";
+  // TODO: The following expands the container, but otherwise works.
+  vertical-align: sub;
+  @extend .text-danger;
+}
+
+.has-danger {
+  @extend .text-danger;
+}

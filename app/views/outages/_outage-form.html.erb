@@ -20,7 +20,7 @@
 </ul> -->
 
 <%= object_error_messages(outage) %>
-<%= bootstrap_form_with(model: outage, builder: WeitFormBuilder, local: true) do |f| %>
+<%= bootstrap_form_with(model: outage, builder: WeitFormBuilder, local: true, label_errors: true) do |f| %>
   <%= f.hidden_field :active %>
   <div class="row">
     <%= f.text_field :name, column_width: 4 %>
