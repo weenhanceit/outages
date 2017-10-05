@@ -78,7 +78,7 @@ class User < ApplicationRecord
     scope = account.outages.where(active: true, completed: false)
     # FIXME: Make this case-insensitive
     if params[:frag].present?
-      scope = scope.where("name like ?", "%#{params[:frag]}%")
+      scope = scope.where("lower(name) like ?", "%#{params[:frag].downcase}%")
     end
 
     scope = scope.unscope(where: :completed) if get_completed_too?(params)
