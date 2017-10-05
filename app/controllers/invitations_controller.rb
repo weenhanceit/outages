@@ -5,9 +5,11 @@
 # See: https://github.com/plataformatec/devise/wiki/How-To:-Customize-the-redirect-after-a-user-edits-their-profile
 class InvitationsController < Devise::InvitationsController
   before_action :configure_permitted_parameters, only: [:create, :update]
+  layout "application"
 
   def new
     @user = current_account.users.build(invitation_user_defaults)
+    @title = "Invite a User"
   end
 
   protected
