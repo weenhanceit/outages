@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 require "application_system_test_case"
 require "test_helper"
 
-class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
+class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength
   include ActiveJob::TestHelper
 
   test "notification generated for new outage on watched ci" do
@@ -64,7 +65,6 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
         visit day_outages_path
         assert_check_notifications expected
-
       end
     end
   end
@@ -116,13 +116,11 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     perform_enqueued_jobs do
       assert_no_difference "Event.count" do
         assert_no_difference "Notification.count" do
-
           # now go back to the day of our outage
           # puts outage.inspect
           goto = outage.end_time.strftime("%Y-%m-%d")
           # puts "#{__LINE__}: #{goto}"
           fill_in "Outages After", with: goto
-          click_on "Refresh"
           # puts "--#{__LINE__}--"
           assert_check_notifications expected
 
@@ -160,8 +158,6 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         end
       end
     end
-
-
   end
 
   test "mark a notification read" do
@@ -207,7 +203,6 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
   # create notifications for overdue and reminders.  There is a time element
   # and we should review whether these tests should incorporate time travel to
   # ensure that jobs operate as expected with different timing.
-
 
   test "notification generated for overdue outage on watched outage" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do

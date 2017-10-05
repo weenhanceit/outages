@@ -2,7 +2,8 @@
   <h3>Filters</h3>
 <%= bootstrap_form_with url: "#",
       local: true,
-      method: :get do |f| %>
+      method: :get,
+      html: { class: "js-submit-on-change" }  do |f| %>
   <div class="form-group">
     <%= label_tag "frag", class: "col col-form-label" do %>
       Fragment
@@ -50,9 +51,6 @@
   <div class="content-note">
     Still not sure that this would be "logically" clear to users (because it is a bit of an "AND/OR". Wondering if this should simply be 'all' or 'watched/edited by me' radio button)
   </div>
-
-
-  <%= button_tag "Refresh", class: "btn btn-primary" %>
 
   <div class="content-note">
     <p>
