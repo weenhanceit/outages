@@ -1,6 +1,6 @@
 require "application_system_test_case"
 
-class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
+class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength
   test "show two notes default order" do
     sign_in_for_system_tests(users(:basic))
     visit outage_url(@outage)
@@ -131,13 +131,10 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
 
     assert_difference "Outage.unscoped.where(completed: true).count" do
       check "Completed"
-      # TODO: There has to be a better way for these ajax things
       sleep 2
     end
-    skip "TODO: Don't forget to finish this test."
     assert_difference "Outage.unscoped.where(completed: true).count", -1 do
       uncheck "Completed"
-      # TODO: There has to be a better way for these ajax things
       sleep 2
     end
   end

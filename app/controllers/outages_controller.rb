@@ -145,12 +145,18 @@ class OutagesController < ApplicationController
       # puts "outages_controller.rb TP_#{__LINE__} #{@outage.inspect} changed: #{@outage.changed?}"
       if Services::SaveOutage.call(@outage)
         # puts "Saved outage"
-        redirect_to outages_path
+        respond_to do |format|
+          format.html { redirect_to outages_path }
+          format.js { head :ok }
+        end
       else
         # puts "Failed to save"
         logger.warn "Failed to save outage #{@outage.inspect}, #{@outage.errors.full_messages}"
         online_notifications
-        render :edit
+        respond_to do |format|
+          format.html { render :edit }
+          format.js { head :error }
+        end
       end
     end
   end

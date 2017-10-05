@@ -29,7 +29,9 @@
   </div>
   <div class="row">
     <%= f.check_box :completed, column_width: 4 %>
-    <%= f.check_box :causes_loss_of_service, column_width: 4 %>
+    <%# This is needed while the checkbox is disabled, since disabled sends nothing for the parameter, breaking validations. %>
+    <%= f.hidden_field :causes_loss_of_service, value: "0" %>
+    <%= f.check_box :causes_loss_of_service, disabled: "disabled", column_width: 4 %>
     <%#= f.check_box :watched, column_width: 4 %>
     <div class="col-sm-4">
       <%= render partial: "watch_form", locals: { f: f } %>

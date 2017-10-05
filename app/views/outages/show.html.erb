@@ -35,8 +35,9 @@
     </div>
     <div class="col">
       <ul class="list-unstyled">
+        <%# TODO: Disapble the control until the Javascript returns. %>
         <%= bootstrap_form_with(model: @outage,
-              local: true,
+              format: :js,
               class: "js-submit-on-change") do |f| %>
         <%= f.hidden_field :active %>
         <%# FIXME: These don't seem to work. %>
