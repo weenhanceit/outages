@@ -13,19 +13,18 @@
 
   <div class="field">
     <%#= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "off", id: :user_password %>
+    <%= f.password_field :password, autocomplete: "off", id: :user_password, label: password_label %>
   </div>
 
   <div class="field">
-    <%#= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off", id: :user_password_confirmation %>
+    <%= f.password_field :password_confirmation,
+          autocomplete: "off",
+          id: :user_password_confirmation,
+          label_class: "required" %>
   </div>
 
   <div class="actions">
-    <%= f.primary "Sign up", class: "btn btn-primary btn-block" %>
+    <%= f.primary "Sign up", class: "btn btn-primary btn-block" %><br/>
   </div>
 <% end %>
 

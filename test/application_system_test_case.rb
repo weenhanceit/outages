@@ -38,7 +38,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   def fill_in_registration_page(email = "a@example.com", name = nil) # rubocop:disable Metrics/MethodLength, Metrics/LineLength
     fill_in_new_user_page(email)
     fill_in "Name", with: name if name
-    fill_in "Password", with: "password"
+    fill_in "user_password", with: "password"
     fill_in "Password confirmation", with: "password"
     click_button "Sign up"
     # NOTE: There's a gem to look at e-mail from Capybara tests:

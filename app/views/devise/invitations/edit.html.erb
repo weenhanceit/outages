@@ -11,7 +11,7 @@
   <% if f.object.class.require_password_on_accepting %>
   <%= f.password_field :password %></p>
 
-  <%= f.password_field :password_confirmation %></p>
+  <%= f.password_field :password_confirmation, label_class: "required" %></p>
   <% end %>
 
   <p><%= f.submit t("devise.invitations.edit.submit_button") %></p>

@@ -17,28 +17,27 @@
   <% end %>
 
   <div class="field">
-    <%#= f.label :password %>
     <%= f.password_field :password,
-          label: "Password <i>(leave blank if you don't want to change it)</i>".html_safe,
+          label: password_label("Password <i>(leave blank if you don't want to change it)</i>".html_safe),
           autocomplete: "off", id: :user_password %>
-    <% if @minimum_password_length %>
-      <em><%= @minimum_password_length %> characters minimum</em>
-    <% end %>
   </div>
 
   <div class="field">
-    <%#= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off", id: :user_password_confirmation %>
+    <%= f.password_field :password_confirmation,
+          autocomplete: "off",
+          id: :user_password_confirmation,
+          label_class: "required" %>
   </div>
 
   <div class="field">
-    <%#= f.label :current_password %>
-    <%= f.password_field :current_password, autocomplete: "off", id: :user_current_password %>
-    <i>(we need your current password to confirm your changes)</i><br />
-  </div>
+    <%= f.password_field :current_password,
+          autocomplete: "off",
+          id: :user_current_password,
+          label: password_label("Current password <i>(we need your current password to confirm your changes)</i>".html_safe) %>
+  </div><br />
 
   <div class="actions">
-    <%= f.primary "Update", class: "btn btn-primary btn-block" %>
+    <%= f.primary "Update", class: "btn btn-primary btn-block" %><br/>
   </div>
 <% end %>
 
