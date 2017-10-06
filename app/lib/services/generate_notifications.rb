@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Services
   # Class with methods for background handling of events and notifications
   class GenerateNotifications
@@ -119,10 +120,11 @@ module Services
                             notification_type: notification_type)
                      .size.zero?
         # puts "#{__FILE__} Line #{__LINE__}: ---#{event.outage.name}"
-        Notification.create(watch: watch,
-                            event: event,
-                            notification_type: notification_type,
-                            notified: false)
+        news = Notification.create(watch: watch,
+                                   event: event,
+                                   notification_type: notification_type,
+                                   notified: false)
+        NotificationChannel.broadcast_to(watch.user, ApplicationController.render(partial: "notification", object: news))
       end
     end
 
@@ -130,7 +132,6 @@ module Services
       # puts "#{__FILE__} Line #{__LINE__}: ---"
       create_notification(event, watch, "online")
       create_notification(event, watch, "email") if watch.user.preference_notify_me_by_email
-      # TODO: And trigger the e-mail here if the user wants immediate e-mails.
       if watch.user.preference_individual_email_notifications
         Services::SendNotificationEmail.call(watch.user)
         # email = NotificationMailer.notification_email(watch.user)

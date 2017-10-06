@@ -1,0 +1,21 @@
+<li class="row notification-spacer">
+  <div class="col-sm-4">
+    <%= bootstrap_form_with model: notification, class: "js-submit-on-change" do |f| %>
+    <% f.check_box :notified, label: "Read" %>
+    <% end %>
+  </div>
+  <div class="col-sm-8">
+    <div class="notification-item">
+      <%= link_to notification.event.outage.name, outage_url(notification.event.outage_id) %>
+    </div>
+    <div class="notification-text">
+      <%= notification.event.text %>
+    </div>
+    <div class="notification-interval">
+      <%= distance_of_time_in_words(notification.event.created_at,
+                Time.zone.now,
+                options = {include_seconds: true }) %>
+      ago
+    </div>
+  </div>
+</li>
