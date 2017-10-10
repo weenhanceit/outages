@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   class OverdueJob < ApplicationJob
     class << self
@@ -13,13 +15,18 @@ module Jobs
         end
       end
 
+      ##
+      # Check that changes to the outage haven't made this job unnecessary.
+      #
+      # * Outage is active and not completed
+      # * Outage starts at the same time as when this job was scheduled
       def job_invalid?(outage, outage_now, user, user_now)
         Watch.unique_watch_for(user, outage).nil? ||
-        outage.start_time != outage_now.start_time ||
-        outage_now.completed ||
-        !outage_now.active ||
-        user.notify_me_on_overdue_outage !=
-        user_now.notify_me_on_overdue_outage
+          outage.start_time != outage_now.start_time ||
+          outage_now.completed ||
+          !outage_now.active ||
+          user.notify_me_on_overdue_outage !=
+            user_now.notify_me_on_overdue_outage
       end
     end
 
