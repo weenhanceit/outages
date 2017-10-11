@@ -368,10 +368,13 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
     #  Notification for a new note
     fill_in "New Note", with: note_text
-    click_button "Save Note"
+    assert_difference "Notification.count" do
+      click_button "Save Note"
+    end
     # Synchronize on the saved note.
     assert_field "New Note", text: ""
     visit outages_path
+    assert_current_path outages_path
     # save_screenshot "tmp/screenshots/x_debug_shot.png"
     #  Check that we have a notification
     expected = { outage: outage.name, text: "Note Added" }
