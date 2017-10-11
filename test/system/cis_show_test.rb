@@ -130,11 +130,9 @@ class CisShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
     assert_checked_field "Watched"
     assert_difference "Watch.count", -1 do
       uncheck "Watched"
-      sleep 2
     end
     assert_difference "Watch.count" do
       check "Watched"
-      sleep 2
     end
   end
 

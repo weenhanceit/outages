@@ -172,8 +172,6 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         assert_unchecked_field "Read"
         check "Read"
         assert_text "Outage A", count: 1
-        sleep 2
-        assert_checked_field "Read"
       end
     end
 
@@ -190,14 +188,10 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         assert_unchecked_field "Read"
         check "Read"
         assert_text "Outage A", count: 1
-        sleep 2
-        assert_checked_field "Read"
       end
       assert_difference "user.notifications.unread.size" do
         uncheck "Read"
         assert_text "Outage A", count: 1
-        sleep 2
-        assert_unchecked_field "Read"
       end
     end
   end

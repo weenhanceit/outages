@@ -12,11 +12,9 @@ class CisTest < ApplicationSystemTestCase
       assert_checked_field "watch[active]"
       assert_difference "Watch.count", -1 do
         uncheck "watch[active]"
-        sleep 2
       end
       assert_difference "Watch.count" do
         check "watch[active]"
-        sleep 2
       end
     end
   end
@@ -34,7 +32,6 @@ class CisTest < ApplicationSystemTestCase
         fill_in "Description",
           with: "This is the server in the seventh ring of you know where."
         click_on "Save"
-        sleep 2
       end
     end
 

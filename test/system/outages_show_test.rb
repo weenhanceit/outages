@@ -140,11 +140,9 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
 
     assert_difference "Outage.unscoped.where(completed: true).count" do
       check "Completed"
-      sleep 2
     end
     assert_difference "Outage.unscoped.where(completed: true).count", -1 do
       uncheck "Completed"
-      sleep 2
     end
   end
 
@@ -155,11 +153,9 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     assert_no_checked_field "Watch"
     assert_difference "Watch.count" do
       check "Watched"
-      sleep 2
     end
     assert_difference "Watch.count", -1 do
       uncheck "Watched"
-      sleep 2
     end
   end
 
