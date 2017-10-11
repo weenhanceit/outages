@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+# rubocop:disable Metrics/BlockLength
+
 require "application_system_test_case"
 require "test_helper"
 
@@ -161,7 +164,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
   end
 
   test "mark a notification read" do
-    user = sign_in_for_system_tests(users(:basic))
+    user = sign_in_for_system_tests(users(:basic)) # rubocop:disable Lint/UselessAssignment
 
     within ".notifications" do
       assert_difference "user.notifications.unread.size", -1 do
@@ -179,7 +182,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
   end
 
   test "mark a notification read then mark it unread" do
-    user = sign_in_for_system_tests(users(:basic))
+    user = sign_in_for_system_tests(users(:basic)) # rubocop:disable Lint/UselessAssignment
 
     within ".notifications" do
       assert_difference "user.notifications.unread.size", -1 do

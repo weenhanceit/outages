@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
 class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength
@@ -6,6 +8,8 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     visit outage_url(@outage)
     notes = all("li.note")
     assert_equal 2, notes.size
+    # There is an event in
+    # assert_synchronized("Note A", 1)
     within(notes[0]) do
       assert_text "Note A"
       assert_text "1 hour ago"
@@ -24,9 +28,8 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     sign_in_for_system_tests(users(:basic))
     visit outage_url(@outage)
     click_link "Oldest First"
-    # TODO: I see no other way than to wait for some time here.
-    sleep 2
 
+    assert_synchronized("Note B")
     notes = all("li.note")
     within(notes[0]) do
       assert_text "Note B"
@@ -41,9 +44,10 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       assert_text "Basic"
     end
 
+    # assert_synchronized("Note B")
     click_link "Newest First"
-    # TODO: I see no other way than to wait for some time here.
-    sleep 2
+    # Since Note A is in the middle, you can't use it to synchronize on order.
+    assert_synchronized("Note B", 2)
     assert_note_a(0)
     assert_note_b(1)
   end
@@ -58,6 +62,7 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       assert_text "Note C."
     end
 
+    assert_synchronized("Note C")
     assert_note_b(2)
     assert_note_a(1)
     assert_note_c(0)
@@ -69,8 +74,9 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     sign_in_for_system_tests(users(:basic))
     visit outage_url(@outage)
     click_link "Oldest First"
-    # TODO: I see no other way than to wait for some time here.
-    sleep 2
+    assert_synchronized("Note B")
+    assert_note_b(0)
+    assert_note_a(1)
 
     fill_in "New Note", with: "Note C."
     assert_difference "Note.count" do
@@ -78,6 +84,7 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       assert_text "Note C."
     end
 
+    assert_synchronized("Note B")
     assert_note_b(0)
     assert_note_a(1)
     assert_note_c(2)
@@ -94,6 +101,7 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     end
 
     assert_selector("li.note", count: 2)
+    assert_synchronized("Note B Prime", 2)
     assert_note_b_prime(1)
   end
 
@@ -108,6 +116,7 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     end
 
     assert_selector("li.note", count: 1)
+    assert_synchronized("Note B", 1)
     assert_note_b(0)
   end
 
@@ -218,5 +227,13 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
       assert_link "Delete"
       assert_text "Basic"
     end
+  end
+
+  ##
+  # Assert a waitable condition to make sure the page has been updated.
+  # Remember that the css ordinals are 1-based. And that it's literally on
+  # the type, so it doesn't select the nth note, only the nth <li>.
+  def assert_synchronized(text, ordinal = 0)
+    assert_selector "li.note:nth-of-type(#{ordinal + 1}) .note-body", text: text
   end
 end

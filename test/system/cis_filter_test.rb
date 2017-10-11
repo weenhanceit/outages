@@ -18,9 +18,7 @@ class CisFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassL
         click_link "Outages"
         assert_text "Outage"
         click_link "Services"
-        # YUCK: Once again, having to put in sleep because we do things that
-        # can't be seen on the front end.
-        sleep 1
+        assert_selector "h1", text: "Services"
         assert_no_text "Server AA"
         assert_field "Text", with: "B"
         assert_text "Server BB"
@@ -46,9 +44,7 @@ class CisFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassL
         click_link "Outages"
         assert_text "Outage"
         click_link "Services"
-        # YUCK: Once again, having to put in sleep because we do things that
-        # can't be seen on the front end.
-        sleep 1
+        assert_selector "h1", text: "Services"
         assert_checked_field "cis_watching_Of_interest_to_me"
         assert_no_text "Server BB"
         assert_text "Server AA"

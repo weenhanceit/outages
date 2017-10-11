@@ -27,9 +27,8 @@ class CisShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
     sign_in_for_system_tests(users(:basic))
     visit ci_url(@ci)
     click_link "Oldest First"
-    # TODO: I see no other way than to wait for some time here.
-    sleep 2
 
+    assert_synchronized("Note B")
     notes = all("li.note")
     within(notes[0]) do
       assert_text "Note B"
@@ -47,8 +46,7 @@ class CisShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
     end
 
     click_link "Newest First"
-    # TODO: I see no other way than to wait for some time here.
-    sleep 2
+    assert_synchronized("Note A")
     assert_note_a(0)
     assert_note_b(1)
   end
@@ -74,8 +72,7 @@ class CisShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
     sign_in_for_system_tests(users(:basic))
     visit ci_url(@ci)
     click_link "Oldest First"
-    # TODO: I see no other way than to wait for some time here.
-    sleep 2
+    assert_synchronized("Note B")
 
     fill_in "New Note", with: "Note C."
     assert_difference "Note.count" do
@@ -202,5 +199,13 @@ class CisShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
       # TODO: Make a link to user profile show.
       assert_text "Basic"
     end
+  end
+
+  ##
+  # Assert a waitable condition to make sure the page has been updated.
+  # Remember that the css ordinals are 1-based. And that it's literally on
+  # the type, so it doesn't select the nth note, only the nth <li>.
+  def assert_synchronized(text, ordinal = 0)
+    assert_selector "li.note:nth-of-type(#{ordinal + 1}) .note-body", text: text
   end
 end
