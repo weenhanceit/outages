@@ -375,6 +375,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     # save_screenshot "tmp/screenshots/x_debug_shot.png"
     #  Check that we have a notification
     expected = { outage: outage.name, text: "Note Added" }
+    # There is something very strange that this fails on occasion.
     assert_check_notifications expected
 
     mark_all_existing_notifications_notified
@@ -431,13 +432,14 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
   private
 
   def assert_check_notifications(expected = [])
-    expected = [expected] unless expected.is_a?(Array)
+    expected = [expected] unless expected.is_a? Array
     num = expected.size
+
+    content = "You have #{num} un-read #{'notification'.pluralize(num)}."
+    assert_selector ".notifications p:first-of-type", text: content, wait: 10
+
     within(".notifications") do
       assert_selector "h3", text: "Notifications"
-
-      content = "You have #{num} un-read #{'notification'.pluralize(num)}."
-      assert_text content
 
       expected.each do |e|
         assert e.is_a?(Hash), "Test Code Error, pass an array of hashes"
