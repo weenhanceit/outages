@@ -4,6 +4,18 @@ company_a_outage_a_event_a:
   event_type: outage
   text: A random change
 
+company_a_outage_b_outage:
+  handled: false
+  outage: company_a_outage_b
+  event_type: outage
+  text: Outage event
+
+company_a_outage_b_outage_note:
+  handled: false
+  outage: company_a_outage_b
+  event_type: outage_note
+  text: Outage event
+
 company_a_outage_watched_by_edit_event_a:
   handled: false
   outage: company_a_outage_watched_by_edit

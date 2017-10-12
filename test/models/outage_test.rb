@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class OutageTest < ActiveSupport::TestCase # rubocop:disable Metrics/ClassLength
@@ -196,5 +198,10 @@ class OutageTest < ActiveSupport::TestCase # rubocop:disable Metrics/ClassLength
     outage.watches.create!(user: editor = users(:edit_ci_outages))
 
     assert_equal [basic, editor, user_admin].sort, outage.users.sort
+  end
+
+  test "histories not including :outage_note." do
+    outage = outages(:company_a_outage_b)
+    assert_equal [events(:company_a_outage_b_outage)], outage.histories
   end
 end
