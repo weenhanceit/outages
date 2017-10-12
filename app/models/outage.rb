@@ -108,7 +108,7 @@ class Outage < ApplicationRecord
   # Some events are not relevant for histories.
   # Default is to return in reverse chronological order of creation.
   def histories(order = "desc")
-    (notes + events).sort do |a, b|
+    (notes + events.except_note_events).sort do |a, b|
       order != "asc" ?
                 b.created_at <=> a.created_at :
                 a.created_at <=> b.created_at
