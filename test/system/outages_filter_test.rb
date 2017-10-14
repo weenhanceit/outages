@@ -500,7 +500,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
   def assert_day_test(exp_day, exp_4day, exp_week, exp_month, the_day)
     fill_in "Outages After", with: the_day
-    sleep 2
+    assert_no_selector ".spinner"
 
     click_link "Day"
     assert_field "Outages After", with: the_day

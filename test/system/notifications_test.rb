@@ -393,13 +393,16 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     within(class_of_interest) do
       assert_text note_text
       click_link "Edit"
-      sleep sleep_period
+      # sleep sleep_period
       # save_screenshot "tmp/screenshots/x_debug_shot.png"
     end
     note_text = "#{note_text} -- changed"
     fill_in "Edit Note", with: note_text
-    click_button "Update Note"
-    sleep sleep_period
+    # This assert_difference is primarily to synchronize
+    assert_difference "Notification.count" do
+      click_button "Update Note"
+    end
+    # sleep sleep_period
 
     #  Check that we now have 1 notification for modified note
     visit outages_path
