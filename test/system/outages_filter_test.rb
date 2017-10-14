@@ -439,7 +439,13 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
         fill_in "Outages Before",
           with: Time.zone.local(2017, 8, 31).to_s(:to_browser_date)
-        sleep 2
+        # sleep 2
+        # puts "looking for spinner..."
+        # execute_script("console.log('spinner display before assert: ' + $('.spinner').css('display'));")
+        assert_no_selector ".spinner"
+        # execute_script("console.log('spinner display after assert: ' + $('.spinner').css('display'));")
+        # n = find(".spinner")
+        # puts "n: #{n.inspect}"
         click_link "4-Day"
         within(".outages-grid") do
           assert_text "Outage A", count: 1
