@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 require "helpers/set_config_01.rb"
 class SendNotificationEmailTest < ActionMailer::TestCase
@@ -50,14 +52,13 @@ class SendNotificationEmailTest < ActionMailer::TestCase
     assert email.is_a?(ActionMailer::MessageDelivery)
     assert_equal "Latest Notifications from Outages App", email.subject
     assert_equal user.email, email.to[0]
-    expected = user.name.gsub("(","\\(").gsub(")","\\)")
+    expected = user.name.gsub("(", "\\(").gsub(")", "\\)")
     expected = "Hello, #{expected}"
     assert_match(Regexp.new(expected), email.body.to_s)
     expected = notification.event.outage.name
     assert_match(Regexp.new(expected), email.body.to_s)
     expected = notification.event.text
     assert_match(Regexp.new(expected), email.body.to_s)
-
   end
   test "2 notifications 1 email" do
     #  User config01 out of the box, then add our notifications
@@ -95,7 +96,7 @@ class SendNotificationEmailTest < ActionMailer::TestCase
     assert email.is_a?(ActionMailer::MessageDelivery)
     assert_equal "Latest Notifications from Outages App", email.subject
     assert_equal user.email, email.to[0]
-    expected = user.name.gsub("(","\\(").gsub(")","\\)")
+    expected = user.name.gsub("(", "\\(").gsub(")", "\\)")
     expected = "Hello, #{expected}"
     assert_match(Regexp.new(expected), email.body.to_s)
     expected = notification1.event.outage.name
