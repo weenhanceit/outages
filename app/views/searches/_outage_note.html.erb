@@ -1,0 +1,11 @@
+<p>
+  Note for outage <%= link_to outage_note.notable.name, outage_path(outage_note.notable) %>
+  by <%= outage_note.name %>
+  <%= distance_of_time_in_words(outage_note.updated_at,
+            Time.zone.now,
+            options = {include_seconds: true }) %>
+  ago.
+</p>
+<p>
+  <%= outage_note.note %>
+</p>

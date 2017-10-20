@@ -1,7 +1,6 @@
 class SearchesController < ApplicationController
-  include TestSuite
   def index
-    @outages = outage_list
-    @frag = params["criteria"]
+    @search_criteria = params["criteria"]
+    @results = PgSearch::Extensions.multisearch(current_account, @search_criteria)
   end
 end

@@ -1,20 +1,18 @@
 <h1>Search Results</h1>
+<% if @results.empty? %>
 <p>
-  For the fragment <strong><%= @frag %></strong>:
+No results found for search criteria <strong><%= @search_criteria %></strong>.
 </p>
-<p class="content-note">
-  The following are not real searches, but an example of the kinds of results
-</p>
+<% else %>
 <p>
-  The following results were found:
+  Found <%= pluralize(@results.size, "result") %>
+  for the search criteria <strong><%= @search_criteria %></strong>.
 </p>
-<p>
-  <%= @frag %> matches a <strong>note</strong> within the outage
-  <%= link_to  @outages[1]["short_description"], outage_path(1) %>
-</p>
-<p>
-  <%= @frag %> matches the long description of the <strong>Configuration Item</strong>
-      <%= link_to @outages[3]["cis"][1]["ci"]["name"], ci_path(@outages[3]["cis"][1]["id"]) %>
-  </strong> that is included in the <strong>Outage</strong>
-  <%= link_to @outages[3]["short_description"], outage_path(3) %>
-</p>
+<ul class="list-unstyled">
+  <% @results.map(&:searchable).each do |result| %>
+  <li class="search-result">
+    <%= render partial: result.class.to_s.downcase, object: result %>
+  </li>
+  <% end %>
+</ul>
+<% end %>
