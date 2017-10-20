@@ -6,4 +6,4 @@ note_a_ci_b:
 note_b_outage_c:
   user: edit_ci_outages
   note: Note B on Outage C
-  notable: company_a_outage_c (outage)
+  notable: company_a_outage_c (Outage)

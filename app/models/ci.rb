@@ -1,8 +1,11 @@
 # frozen_string_literal: true
+
 ##
 # A configuration item, which can be hardware, software, service, etc.
 class Ci < ApplicationRecord
   include Watched
+  include PgSearch
+  multisearchable against: %i[name description]
 
   belongs_to :account
   # Putting `inverse_of: ...` on the next four lines causes the association
@@ -129,6 +132,12 @@ class Ci < ApplicationRecord
 
   def affected_by_outages
     (outages + descendants.flat_map(&:outages)).uniq
+  end
+
+  def pg_search_document_attrs
+    attrs = super
+    # puts "PgSearchDocument#pg_search_document_attrs: #{attrs.inspect}"
+    attrs.merge(account_id: account_id)
   end
 
   private

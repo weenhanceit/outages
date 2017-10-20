@@ -126,7 +126,7 @@ class Outage < ApplicationRecord
 
   def pg_search_document_attrs
     attrs = super
-    puts "PgSearchDocument#pg_search_document_attrs: #{attrs.inspect}"
+    # puts "PgSearchDocument#pg_search_document_attrs: #{attrs.inspect}"
     attrs.merge(account_id: account_id)
   end
 

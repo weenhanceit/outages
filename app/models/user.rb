@@ -1,6 +1,8 @@
 ##
 # Represents a user.
 class User < ApplicationRecord
+  after_save :update_notes_pg_search_document, if: -> { saved_change_to_name? }
+
   # Include default devise modules. Others available are:
   # :lockable and :omniauthable
   devise :invitable, :database_authenticatable, :registerable, :confirmable,
@@ -170,6 +172,13 @@ class User < ApplicationRecord
     self.privilege_edit_outages = true if privilege_edit_outages.nil?
     self.privilege_manage_users = true if privilege_manage_users.nil?
     # puts "self.inspect: #{inspect}"
+  end
+
+  ##
+  # The notes full-text search index uses the author's name, so we have to
+  # run the note callback to update the full text search index.
+  def update_notes_pg_search_document
+    notes.each { |x| x.run_callbacks :save }
   end
 
   private
