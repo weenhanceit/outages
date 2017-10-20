@@ -1,8 +1,11 @@
 # frozen_string_literal: true
+
 ##
 # A single outage.
 class Outage < ApplicationRecord
   include Watched
+  include PgSearch
+  multisearchable against: %i[name description]
 
   belongs_to :account
   has_many :cis_outages,
@@ -119,6 +122,12 @@ class Outage < ApplicationRecord
   # true complete has changed and is the only attribute changed
   def only_completed_changed?
     changed == ["completed"]
+  end
+
+  def pg_search_document_attrs
+    attrs = super
+    puts "PgSearchDocument#pg_search_document_attrs: #{attrs.inspect}"
+    attrs.merge(account_id: account_id)
   end
 
   ##

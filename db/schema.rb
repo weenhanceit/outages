@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171019182900) do
+ActiveRecord::Schema.define(version: 20171019212541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,6 +115,8 @@ ActiveRecord::Schema.define(version: 20171019182900) do
     t.bigint "searchable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_pg_search_documents_on_account_id"
     t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
   end
 
@@ -209,6 +211,7 @@ ActiveRecord::Schema.define(version: 20171019182900) do
   add_foreign_key "notifications", "events"
   add_foreign_key "notifications", "watches"
   add_foreign_key "outages", "accounts"
+  add_foreign_key "pg_search_documents", "accounts"
   add_foreign_key "users", "accounts"
   add_foreign_key "watches", "users"
 end
