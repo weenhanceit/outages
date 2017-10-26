@@ -134,6 +134,10 @@ class Ci < ApplicationRecord
     (outages + descendants.flat_map(&:outages)).uniq
   end
 
+  def self.rebuild_pg_search_documents
+    find_each(&:update_pg_search_document)
+  end
+
   def pg_search_document_attrs
     attrs = super
     # puts "PgSearchDocument#pg_search_document_attrs: #{attrs.inspect}"
