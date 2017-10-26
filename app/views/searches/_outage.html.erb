@@ -1,1 +1,6 @@
-<%= outage.name %>
+Found a match with an outage <%= link_to outage.name, outage_path(outage) %>
+  <div class="search-details">
+    This outage is associated with
+    <% num_cis = outage.cis.size %>
+    <%= pluralize(num_cis, 'service') %>.
+  </div>

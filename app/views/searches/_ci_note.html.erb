@@ -1,1 +1,12 @@
-Note for service <%= ci_note.notable.name %>
+Found a match with a note from service <%= link_to ci_note.notable.name, ci_path(ci_note.notable) %>
+  <div class="search-details">
+    Note was made by
+    <span style="font-style: italic">
+      <%= ci_note.name %>
+    </span>
+    <%= distance_of_time_in_words(ci_note.updated_at,
+                                  Time.zone.now,
+                                  options = {include_seconds: true }) %>
+    ago-
+    "<%= ci_note.note.truncate(80, separator: ' ') %>"
+  </div>

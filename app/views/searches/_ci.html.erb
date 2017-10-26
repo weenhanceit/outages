@@ -1,1 +1,9 @@
-<%= ci.name %>
+Found a match with a service <%= link_to ci.name, ci_path(ci) %>
+  <div class="search-details">
+    This service is directly impacted by
+    <% num_incomplete = ci.outages.where(completed: nil).size %>
+    <% num_last_year = ci.outages.where("start_time> ?",Time.zone.now - 1.year).size %>
+    <%= pluralize(num_incomplete, 'outage') %> that are not complete.
+    There has been <%= pluralize(num_last_year, 'outage') %> initiated over
+    the last year that impacted this service.
+  </div>
