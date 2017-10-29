@@ -15,7 +15,9 @@ class AccountsTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLe
     visit edit_account_path(account)
     # click_link "gear-dropdown"
     # click_link "Account Settings"
-    click_link "Delete"
+    accept_alert do
+      click_link "Delete"
+    end
     user.reload
     assert_nil user.account
     # Since delete is just deactivate, test that we can't navigate anywhere.

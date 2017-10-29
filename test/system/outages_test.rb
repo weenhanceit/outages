@@ -134,7 +134,9 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
         outage = outages(:company_a_outage_a)
         visit edit_outage_url(outage)
         assert_difference "Outage.where(account: user.account).size", -1 do
-          click_on "Delete"
+          accept_alert do
+            click_on "Delete"
+          end
         end
 
         assert Outage.where(name: outage.name, account: user.account).empty?
