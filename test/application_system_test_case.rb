@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "capybara/poltergeist"
+# require "capybara/poltergeist"
+require "selenium/webdriver"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # For capybara-email https://github.com/DockYard/capybara-email
@@ -13,8 +14,10 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # The docs said do the following, but it borks things big-time:
   # Capybara.app_host = "http://localhost:3000"
 
-  # driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
-  driven_by :poltergeist, screen_size: [1600, 1400]
+  driven_by :selenium, using: :chrome, screen_size: [1400, 1400], options: {
+    args: %w(headless disable-gpu)
+  }
+  # driven_by :poltergeist, screen_size: [1600, 1400]
 
   # Only show the path of the screenshot on failed test cases.
   ENV["RAILS_SYSTEM_TESTING_SCREENSHOT"] = "simple"
