@@ -84,8 +84,8 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
   test "start time only" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to test_now = Time.zone.local(2017, 8, 17, 10, 17, 21) do
-        user = sign_in_for_system_tests(users(:basic))
+      travel_to Time.zone.local(2017, 8, 17, 10, 17, 21) do
+        sign_in_for_system_tests(users(:basic))
 
         visit outages_url
         current_window.maximize
