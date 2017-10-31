@@ -422,9 +422,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     within(class_of_interest) do
       assert_text note_text
       accept_confirm("Are you sure you want to delete this note?") do
-        accept_alert do
-          click_link "Delete"
-        end
+        click_link "Delete"
       end
       # sleep sleep_period
       # save_screenshot "tmp/screenshots/x_debug_shot.png"

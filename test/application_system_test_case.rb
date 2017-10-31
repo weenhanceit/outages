@@ -14,9 +14,31 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # The docs said do the following, but it borks things big-time:
   # Capybara.app_host = "http://localhost:3000"
 
-  driven_by :selenium, using: :chrome, screen_size: [1400, 1400], options: {
-    args: %w(headless disable-gpu)
-  }
+  Capybara.register_driver(:headless_chrome) do |app|
+    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+      loggingPrefs: {
+        browser: "ALL",
+        client: "ALL",
+        driver: "ALL",
+        server: "ALL"
+      }
+    )
+
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument("window-size=1400,1200")
+    options.add_argument("headless")
+    options.add_argument("disable-gpu")
+
+    Capybara::Selenium::Driver.new(
+      app,
+      browser: :chrome,
+      desired_capabilities: capabilities,
+      options: options
+    )
+  end
+
+  driven_by :headless_chrome
+
   # driven_by :poltergeist, screen_size: [1600, 1400]
 
   # Only show the path of the screenshot on failed test cases.

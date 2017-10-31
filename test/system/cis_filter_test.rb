@@ -12,7 +12,7 @@ class CisFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassL
           assert_text ci.name
         end
 
-        fill_in "Text", with: "B"
+        fill_in "Text", with: "B\n"
         assert_no_text "Server AA"
 
         click_link "Outages"
