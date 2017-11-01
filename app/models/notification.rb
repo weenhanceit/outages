@@ -6,8 +6,8 @@
 class Notification < ApplicationRecord
   enum notification_type: [:online, :email]
 
-  belongs_to :event
-  belongs_to :watch
+  belongs_to :event, inverse_of: :notifications
+  belongs_to :watch, inverse_of: :notifications
 
   default_scope { where.not(watch: nil) }
 

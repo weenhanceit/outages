@@ -2,7 +2,7 @@
 # Represents a user watching for outages on a CI, or watching an outage
 # directly.
 class Watch < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, inverse_of: :watches
   belongs_to :watched, -> { unscope(where: :active) }, polymorphic: true
   # belongs_to :ci,
   #   -> { where(watches: { watched_type: "Ci" }).references(:watches) },
@@ -10,7 +10,7 @@ class Watch < ApplicationRecord
   # belongs_to :outage,
   #   -> { where(watches: { watched_type: "Outage" }).references(:watches) },
   #   foreign_key: :watched_id
-  has_many :notifications, inverse_of: :watches
+  has_many :notifications, inverse_of: :watch
 
   after_save :schedule_reminders
 
