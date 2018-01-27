@@ -10,7 +10,7 @@ end
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.0'
 # Use postgres as the database for Active Record
-gem 'pg'
+gem 'pg', "~> 0.18"
 gem 'pg_search'
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
@@ -37,7 +37,7 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
 end
 #gem 'popper_js'
-gem 'bootstrap_form', git: "https://github.com/lcreid/rails-bootstrap-forms.git", branch: "bootstrap-4-rails-5-1"
+gem 'bootstrap_form', git: "https://github.com/bootstrap-ruby/bootstrap_form.git", branch: "master"
 gem 'octicons_helper'
 
 gem 'jquery-ui-rails'
