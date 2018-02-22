@@ -1,7 +1,7 @@
 GIT
-  remote: https://github.com/bootstrap-ruby/bootstrap_form.git
-  revision: cdbd964ed05114090eb5c37180fae7afb9f16592
-  branch: master
+  remote: https://github.com/lcreid/rails-bootstrap-forms.git
+  revision: d75541ef7caaf5b3840b12060da7a0bd440a4914
+  branch: shadow
   specs:
     bootstrap_form (4.0.0.dev)
       rails (>= 5.0)
@@ -124,7 +124,7 @@ GEM
     mime-types-data (3.2016.0521)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
-    minitest (5.11.3)
+    minitest (5.10.3)
     multi_json (1.13.1)
     nio4r (2.2.0)
     nokogiri (1.8.1)
@@ -228,7 +228,7 @@ GEM
     turbolinks-source (5.1.0)
     tzinfo (1.2.4)
       thread_safe (~> 0.1)
-    uglifier (4.1.4)
+    uglifier (4.1.5)
       execjs (>= 0.3.0, < 3)
     warden (1.2.7)
       rack (>= 1.0)
@@ -259,6 +259,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   listen (>= 3.0.5, < 3.2)
+  minitest (~> 5.10.3)
   octicons_helper
   pg (~> 0.18)
   pg_search
