@@ -1,7 +1,8 @@
 <li class="row notification-spacer">
   <div class="col-sm-4">
     <%= bootstrap_form_with model: notification, class: "js-submit-on-change" do |f| %>
-    <% f.check_box :notified, label: "Read" %>
+    <%# FIXME: Make this work for multiple notifications. %>
+    <% f.check_box :notified, label: "Read", id: "notification_notified" %>
     <% end %>
   </div>
   <div class="col-sm-8">

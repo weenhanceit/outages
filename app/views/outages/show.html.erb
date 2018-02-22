@@ -35,7 +35,7 @@
     </div>
     <div class="col">
       <ul class="list-unstyled">
-        <%# TODO: Disapble the control until the Javascript returns. %>
+        <%# TODO: Disable the control until the Javascript returns. %>
         <%= bootstrap_form_with(model: @outage,
               format: :js,
               class: "js-submit-on-change") do |f| %>
@@ -43,7 +43,8 @@
         <%# FIXME: These don't seem to work. %>
         <li>
           <%= f.check_box :completed,
-                current_user.can_edit_outages? ? {} : { disabled: "disabled" } %>
+                (current_user.can_edit_outages? ? {} : { disabled: "disabled" })
+                .merge(id: "outage_completed") %>
         </li>
         <li>
           <%= f.check_box :causes_loss_of_service, disabled: "disabled" %>

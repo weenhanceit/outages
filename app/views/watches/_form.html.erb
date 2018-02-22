@@ -8,5 +8,5 @@
   <%= hidden_field_tag "row_index", row_index %>
   <%# UGH: A place to keep the label for when we go to the watches_controller. %>
   <%= hidden_field_tag "label", @label %>
-  <%= f.check_box(:active, label: @label || "", hide_label: @label.blank?) %>
+  <%= f.check_box(:active, label: @label || "", hide_label: @label.blank?, id: "ci_watches_attributes_0_active") %>
 <% end %>
