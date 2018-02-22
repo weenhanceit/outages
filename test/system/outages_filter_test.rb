@@ -3,12 +3,12 @@ require "application_system_test_case"
 class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength
   test "fragment filter" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to Time.zone.local(2017, 07, 28, 10, 17, 21) do
+      travel_to Time.zone.local(2017, 7, 28, 10, 17, 21) do
         sign_in_for_system_tests(users(:basic))
         current_window.maximize
 
         choose "watching_All"
-        fill_in "Fragment", with: "Outage B"
+        fill_in "Fragment", with: "Outage B\n"
 
         within(".outages-grid") do
           assert_text "Outage B", count: 1
@@ -28,8 +28,8 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
   test "of interest filter off and on" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to test_now = Time.zone.local(2017, 07, 28, 10, 17, 21) do
-        user = sign_in_for_system_tests(users(:basic))
+      travel_to Time.zone.local(2017, 7, 28, 10, 17, 21) do
+        sign_in_for_system_tests(users(:basic))
 
         visit outages_url
         current_window.maximize
@@ -57,48 +57,34 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
   test "start time and end time" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 7, 28, 10, 17, 21) do
-        user = sign_in_for_system_tests(users(:basic))
+        sign_in_for_system_tests(users(:basic))
 
         visit outages_url
         current_window.maximize
 
-        # within(".outages-grid") do
-        #   assert_text "Outage A", count: 1
-        #   assert_text "Outage B", count: 1
-        #   assert_selector "tbody tr", count: 2
-        # end
-
         choose "watching_All"
-        fill_in "Outages Before",
-          with: Time.zone.local(2017, 9, 01, 00, 00).to_s(:to_browser_date)
+        assert_no_selector ".spinner"
+        fill_in "Outages Before", with: "09012017"
+          # with: Time.zone.local(2017, 9, 1, 0, 0).to_s(:to_browser_date)
+        find("#latest").send_keys :return
+        assert_no_selector ".spinner"
         within(".outages-grid") do
           assert_text "Outage Watched by Edit", count: 1
           assert_selector "tbody tr", count: 4
         end
 
         assert_checked_field "watching_All"
-        assert_field "Outages Before", with: "01/09/2017"
+        assert_field "Outages Before", with: "2017-09-01"
       end
     end
   end
 
   test "start time only" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
-      travel_to test_now = Time.zone.local(2017, 8, 17, 10, 17, 21) do
-        user = sign_in_for_system_tests(users(:basic))
-
-        visit outages_url
-        current_window.maximize
-
-        # within(".outages-grid") do
-        #   assert_text "Outage A", count: 1
-        #   assert_text "Outage B", count: 1
-        #   assert_selector "tbody tr", count: 2
-        # end
-
+      travel_to Time.zone.local(2017, 8, 17, 10, 17, 21) do
+        sign_in_for_system_tests(users(:basic))
+        find_field("Outages Before").send_keys :delete
         choose "watching_All"
-        fill_in "Outages Before", with: ""
-        # fill_in "Outages After", with: (test_now + 2.weeks).to_s(:browser)
         within(".outages-grid") do
           assert_text "Outage Watched by Edit", count: 1
           assert_selector "tbody tr", count: 1
@@ -115,7 +101,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       # NOTE: Change 31 to 30 if we change filter to dates.
       travel_to Time.zone.local(2017, 7, 31) do
-        user = sign_in_for_system_tests(users(:basic))
+        sign_in_for_system_tests(users(:basic))
 
         visit outages_url
         current_window.maximize
@@ -130,8 +116,10 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
         # o = Outage.find_by(account: Account.find_by(name: "Company D"), name: "Outage A")
         # puts "o.start_time: #{o.start_time}"
-        fill_in "Outages After", with: ""
-        fill_in "Outages Before", with: "04/08/2017"
+        fill_in "Outages Before", with: "08042017"
+        assert_no_selector ".spinner"
+        find_field("Outages After").send_keys :delete
+        assert_no_selector ".spinner"
         within(".outages-grid") do
           assert_text "Outage A", count: 1
           assert_text "Outage B", count: 1
@@ -140,7 +128,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
         assert_checked_field "watching_Of_interest_to_me"
         assert_field "Outages After", with: "2017-07-31"
-        assert_field "Outages Before", with: "04/08/2017"
+        assert_field "Outages Before", with: "2017-08-04"
       end
     end
   end
@@ -158,13 +146,13 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 5, 31) do
-        user = sign_in_for_system_tests(users(:edit_ci_outages_d))
+        sign_in_for_system_tests(users(:edit_ci_outages_d))
 
         # puts Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
-        fill_in "Outages After",
-          with: Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
-        fill_in "Outages Before",
-          with: Time.zone.local(2017, 8, 6).to_s(:to_browser_date)
+        fill_in "Outages After", with: "08012017"
+          # with: Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
+        fill_in "Outages Before", with: "08062017"
+          # with: Time.zone.local(2017, 8, 6).to_s(:to_browser_date)
         # with: (Time.zone.local(2017, 8, 1) + 2.weeks).to_s(:to_browser_date)
         assert_field "Outages After", with: "2017-08-01"
 
@@ -189,7 +177,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           expected_4day,
           expected_week,
           expected_month,
-          the_date.strftime("%Y-%m-%d")
+          the_date
         #
         #--------------------------------------------------------
         the_date = Date.new(2017, 7, 1)
@@ -207,7 +195,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           expected_4day,
           expected_week,
           expected_month,
-          the_date.strftime("%Y-%m-%d")
+          the_date
         #--------------------------------------------------------
         the_date = Date.new(2017, 7, 27)
         expected_day = []
@@ -228,7 +216,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           expected_4day,
           expected_week,
           expected_month,
-          the_date.strftime("%Y-%m-%d")
+          the_date
         # #--------------------------------------------------------
         the_date = Date.new(2017, 7, 30)
         expected_day = ["Outage A"]
@@ -247,7 +235,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           expected_4day,
           expected_week,
           expected_month,
-          the_date.strftime("%Y-%m-%d")
+          the_date
         # #--------------------------------------------------------
         the_date = Date.new(2017, 7, 31)
         expected_day = ["Outage B"]
@@ -270,7 +258,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
           expected_4day,
           expected_week,
           expected_month,
-          the_date.strftime("%Y-%m-%d")
+          the_date
         # #--------------------------------------------------------
       end
     end
@@ -279,13 +267,16 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
   test "calendar views by earliest date" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 5, 31) do
-        user = sign_in_for_system_tests(users(:edit_ci_outages_d))
+        sign_in_for_system_tests(users(:edit_ci_outages_d))
 
         # puts Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
+        # FIXME: Get rid of these stinkin' U.S. date formats. WTF?
         fill_in "Outages After",
-          with: Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
+          with: "08012017" # Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
+        assert_no_selector ".spinner"
         fill_in "Outages Before",
-          with: (Time.zone.local(2017, 8, 1) + 2.weeks).to_s(:to_browser_date)
+          with: "08142017" # (Time.zone.local(2017, 8, 1) + 2.weeks).to_s(:to_browser_date)
+        assert_no_selector ".spinner"
         assert_field "Outages After", with: "2017-08-01"
         # assert_text "phil", count: 2
         within(".outages-grid") do
@@ -326,8 +317,10 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
         # The week is at the July/August boundary, so push a week into August
         # before we ask for the month view.
-        click_link "Next"
-        assert_field "Outages After", with: "2017-08-01"
+        # Above I think was hacking a broken test to work.
+        # click_link "Next"
+        # puts "After: #{find_field("Outages After").value}"
+        # assert_field "Outages After", with: "2017-08-01"
         click_link "Month"
         assert_field "Outages After", with: "2017-08-01"
         within(".test-outages-month") do
@@ -359,7 +352,8 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         sign_in_for_system_tests(users(:basic))
         current_window.maximize
 
-        fill_in "Fragment", with: "Outage B"
+        fill_in "Fragment", with: "Outage B\n"
+        assert_no_selector ".spinner"
 
         # Currently seems to default to month, so this gets one hit.
         within(".outages-grid") do
@@ -437,8 +431,8 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       travel_to Time.zone.local(2017, 7, 28, 10, 17, 21) do
         sign_in_for_system_tests(users(:basic))
 
-        fill_in "Outages Before",
-          with: Time.zone.local(2017, 8, 31).to_s(:to_browser_date)
+        fill_in "Outages Before", with: "08312017"
+          # with: Time.zone.local(2017, 8, 31).to_s(:to_browser_date)
         # sleep 2
         # puts "looking for spinner..."
         # execute_script("console.log('spinner display before assert: ' + $('.spinner').css('display'));")
@@ -499,24 +493,24 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
   private
 
   def assert_day_test(exp_day, exp_4day, exp_week, exp_month, the_day)
-    fill_in "Outages After", with: the_day
+    fill_in "Outages After", with: the_day.strftime("%m%d%Y")
     assert_no_selector ".spinner"
 
     click_link "Day"
-    assert_field "Outages After", with: the_day
+    assert_field "Outages After", with: the_day.strftime("%Y-%m-%d")
     assert_expected_outages exp_day, ".test-outages-day"
 
     click_link "4-Day"
-    assert_field "Outages After", with: the_day
+    assert_field "Outages After", with: the_day.strftime("%Y-%m-%d")
     assert_expected_outages exp_4day, ".test-outages-fourday"
 
     click_link "Week"
-    assert_field "Outages After", with: the_day
+    assert_field "Outages After", with: the_day.strftime("%Y-%m-%d")
     assert_expected_outages exp_week, ".test-outages-week"
 
     click_link "Month"
     # sleep 5
-    assert_field "Outages After", with: the_day
+    assert_field "Outages After", with: the_day.strftime("%Y-%m-%d")
     assert_expected_outages exp_month, ".test-outages-month"
     # assert_expected_outages ["Outage Overnight A"], ".test-outages-month"
     # puts body

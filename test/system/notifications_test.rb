@@ -46,7 +46,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
     # After save we should be on the Outage index page
     # There should be a single notification and the outage name show be listed
-    assert_selector ".test-home-page"
+    assert_selector ".test-home-page", visible: :any
 
     expected = { outage: outage_name, text: "New Outage" }
     assert_check_notifications expected

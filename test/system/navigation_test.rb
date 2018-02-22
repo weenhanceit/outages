@@ -9,7 +9,7 @@ class NavigationTest < ApplicationSystemTestCase
   test "sign in as editor" do
     user = sign_in_for_system_tests(users(:edit_ci_outages))
 
-    assert_selector ".test-home-page"
+    assert_selector ".test-home-page", visible: :any
     assert_selector "span", text: "Can Edit CIs/Outages", visible: :hidden
     click_link "Services"
     assert_selector "span", text: "Can Edit CIs/Outages", visible: :hidden
@@ -20,7 +20,7 @@ class NavigationTest < ApplicationSystemTestCase
       travel_to Time.zone.local(2017, 6, 28, 23, 17, 21) do
         user = sign_in_for_system_tests(users(:edit_ci_outages))
 
-        assert_selector ".test-home-page"
+        assert_selector ".test-home-page", visible: :any
         click_link "Month"
         assert_text "Previous June 2017 Next"
         click_link "Services"

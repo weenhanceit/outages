@@ -111,7 +111,9 @@ class OutagesShowTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
 
     assert_selector("li.note", count: 2)
     assert_difference "Note.count", -1 do
-      within(all("li.note")[0]) { click_link "Delete" }
+      accept_alert do
+        within(all("li.note")[0]) { click_link "Delete" }
+      end
       assert_selector("li.note", count: 1)
     end
 

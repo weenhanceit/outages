@@ -26,7 +26,9 @@ class UsersTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLengt
     visit account_admin_users_path(account)
     within("fieldset.user-#{user.id}") { click_link "Edit" }
     assert_difference "account.users.count", -1 do
-      click_link "Delete"
+      accept_alert do
+        click_link "Delete"
+      end
       assert_current_path edit_account_path(account)
     end
   end

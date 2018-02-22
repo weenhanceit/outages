@@ -109,7 +109,9 @@ class CisTest < ApplicationSystemTestCase
     visit edit_ci_url(ci)
 
     assert_difference "Ci.where(account: user.account).size", -1 do
-      click_on "Delete"
+      accept_alert do
+        click_on "Delete"
+      end
     end
 
     assert Ci.where(name: ci.name, account: user.account).empty?
