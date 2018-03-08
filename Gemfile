@@ -37,7 +37,7 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
 end
 #gem 'popper_js'
-gem 'bootstrap_form', git: "https://github.com/lcreid/rails-bootstrap-forms.git", branch: "shadow"
+gem 'bootstrap_form', git: "https://github.com/lcreid/rails-bootstrap-forms.git", branch: "419-check-radio-errors-d"
 gem 'octicons_helper'
 
 gem 'jquery-ui-rails'
