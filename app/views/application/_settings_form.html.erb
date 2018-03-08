@@ -109,14 +109,16 @@
       <%= f.radio_button :preference_individual_email_notifications,
             1,
             checked: f.object.preference_individual_email_notifications?,
-            label: " Individual e-mail for each outage "%>
+            label: " Individual e-mail for each outage ",
+            id: "preference_individual_email_notifications_1" %>
   </div>
   <div class="form-row">
     <span class="col-form-label">
       <%= f.radio_button :preference_individual_email_notifications,
             0,
             checked: !f.object.preference_individual_email_notifications?,
-            label: "One e-mail per day " %>
+            label: "One e-mail per day ",
+            id: "preference_individual_email_notifications_0" %>
     </span>
     <%= f.time_field :preference_email_time,
           label: "at".html_safe,

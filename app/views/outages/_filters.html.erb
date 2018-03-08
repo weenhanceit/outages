@@ -37,9 +37,10 @@
       </div>
     </div>
     <div class="form-check">
+      <%= hidden_field_tag :completed, "0", id: "hidden-completed" %>
       <%= label_tag :completed,
-            class: "col-form-label form-check-label" do %>
-        <%= hidden_field_tag :completed, "0" %>
+            class: "col-form-label form-check-label",
+            for: "completed" do %>
         <%= check_box_tag :completed,
               "1",
               get_completed_too? %>
