@@ -1,11 +1,11 @@
 <div class="notifications">
   <h3>Notifications</h3>
-  <p>
-    <%= "You have #{@online_notifications.size} un-read " \
-            "#{"notification".pluralize(@online_notifications.size)}." %>
-  </p>
 
   <ul class="list-unstyled js-notifications-list">
+    <li>
+      <%= "You have #{@online_notifications.size} un-read " \
+      "#{"notification".pluralize(@online_notifications.size)}." %>
+    </li>
     <%= render partial: "notification", collection: @online_notifications %>
   </ul>
 

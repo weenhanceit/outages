@@ -19,5 +19,6 @@
   border: 10px 2px 2px 2px;
 }
 .notification-spacer {
-  padding-top: 15px;
+  // padding-top: 15px;
+  @extend .pt-1;
 }

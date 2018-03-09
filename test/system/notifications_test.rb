@@ -442,7 +442,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
     num = expected.size
 
     content = "You have #{num} un-read #{'notification'.pluralize(num)}."
-    assert_selector ".notifications p:first-of-type", text: content, wait: 10
+    assert_selector ".notifications li:first-of-type", text: content, wait: 10
 
     within(".notifications") do
       assert_selector "h3", text: "Notifications"
