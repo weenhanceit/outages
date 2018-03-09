@@ -39,10 +39,7 @@
                     id: "user_notify_me_before_outage" do %>
                       Notify me
     <% end %>
-    <%= f.number_field :notification_periods_before_outage,
-        hide_label: true,
-        control_class: "form-control ml-2" %>
-        <%# FIXME: I had to add "form-control" above due to a bug in `bootstrap_form` %>
+    <%= f.number_field :notification_periods_before_outage, hide_label: true, class: "ml-2" %>
     <%= f.select :notification_period_interval,
         [ "hours", "days", "weeks", "months" ],
         hide_label: true %>
