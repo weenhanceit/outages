@@ -1,33 +1,31 @@
-<div class="mb-3">
-  <h3>Filters</h3>
-  <%= bootstrap_form_with url: "#",
-      method: :get,
-      html: { class: "js-submit-on-change" } do |f| %>
-  <div class="form-group">
-    <%= label_tag "text" do %>
-    Text
-    <%= text_field_tag "text",
-          cis_search_string,
-          class: "form-control" %>
-    <% end %>
-  </div>
-  <div class="form-group">
-    <div class="form-check">
-      <%= content_tag :label, class: "form-check-label" do %>
-      <%= radio_button_tag :cis_watching,
-            cis_of_interest,
-            cis_of_interest?,
-            class: "form-check-input" %>
-      Of interest to me<% end %>
-    </div>
-    <div class="form-check">
-      <%= content_tag :label, class: "form-check-label" do %>
-      <%= radio_button_tag :cis_watching,
-            "All",
-            !cis_of_interest?,
-            class: "form-check-input" %>
-      All<% end %>
-    </div>
-  </div>
+<h3>Filters</h3>
+<%= bootstrap_form_with url: "#",
+    method: :get,
+    html: { class: "js-submit-on-change" } do |f| %>
+<div class="form-group">
+  <%= label_tag "text" do %>
+  Text
+  <%= text_field_tag "text",
+        cis_search_string,
+        class: "form-control" %>
   <% end %>
 </div>
+<div class="form-group">
+  <div class="form-check">
+    <%= content_tag :label, class: "form-check-label" do %>
+    <%= radio_button_tag :cis_watching,
+          cis_of_interest,
+          cis_of_interest?,
+          class: "form-check-input" %>
+    Of interest to me<% end %>
+  </div>
+  <div class="form-check">
+    <%= content_tag :label, class: "form-check-label" do %>
+    <%= radio_button_tag :cis_watching,
+          "All",
+          !cis_of_interest?,
+          class: "form-check-input" %>
+    All<% end %>
+  </div>
+</div>
+<% end %>

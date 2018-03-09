@@ -9,12 +9,14 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-9 border-right">
           <%= yield %>
         </div>
         <div class="col-md-3">
-          <div class="row">
-            <%= yield :filter %>
+          <div class="row<%= ' border-bottom mb-3' if content_for?(:filter) -%>">
+            <div class="col">
+              <%= yield :filter %>
+            </div>
           </div>
           <div class="row no-gutters">
             <div class="col-md-12">

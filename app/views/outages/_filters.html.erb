@@ -1,72 +1,73 @@
-<div class="mb-3">
-  <h3>Filters</h3>
+<h3>Filters</h3>
 <%= bootstrap_form_with url: "#",
-      local: true,
-      method: :get,
-      html: { class: "js-submit-on-change" }  do |f| %>
+    local: true,
+    method: :get,
+    html: { class: "js-submit-on-change" }  do |f| %>
+<div class="form-group">
+  <%= label_tag "frag", class: "col-form-label" do %>
+    Fragment
+    <%= text_field_tag "frag",
+          search_string,
+          class: "form-control" %>
+  <% end %>
+  <%= label_tag "earliest", class: "col-form-label" do %>
+    Outages After
+    <%= date_field_tag "earliest",
+      session[:earliest] || default_earliest.to_s(:browser),
+      class: "form-control" %>
+  <% end %>
+  <%= yield :latest %>
   <div class="form-group">
-    <%= label_tag "frag", class: "col col-form-label" do %>
-      Fragment
-      <%= text_field_tag "frag",
-            search_string,
-            class: "form-control" %>
-    <% end %>
-    <%= label_tag "earliest", class: "col col-form-label" do %>
-      Outages After
-      <%= date_field_tag "earliest",
-        session[:earliest] || default_earliest.to_s(:browser),
-        class: "form-control" %>
-    <% end %>
-    <%= yield :latest %>
-    <div class="col form-group">
-      <div class="form-check">
-        <%= content_tag :label, class: "col-form-label form-check-label" do %>
-          <%= radio_button_tag :watching,
-                of_interest,
-                of_interest?,
-                class: "form-check-input" %> Of interest to me
-        <% end %>
-      </div>
-      <div class="form-check">
-        <%= content_tag :label, class: "col-form-label form-check-label" do %>
-          <%= radio_button_tag :watching,
-                "All",
-                !of_interest?,
-                class: "form-check-input" %> All
-        <% end %>
-      </div>
+    <div class="form-check">
+      <%= content_tag :label, class: "form-check-label" do %>
+        <%= radio_button_tag :watching,
+              of_interest,
+              of_interest?,
+              class: "form-check-input" %> Of interest to me
+      <% end %>
     </div>
     <div class="form-check">
-      <%= hidden_field_tag :completed, "0", id: "hidden-completed" %>
-      <%= label_tag :completed,
-            class: "col-form-label form-check-label",
-            for: "completed" do %>
-        <%= check_box_tag :completed,
-              "1",
-              get_completed_too? %>
-        Show Completed Outages
+      <%= content_tag :label, class: "form-check-label" do %>
+        <%= radio_button_tag :watching,
+              "All",
+              !of_interest?,
+              class: "form-check-input" %> All
       <% end %>
     </div>
   </div>
-
-  <div class="content-note">
-    Still not sure that this would be "logically" clear to users (because it is a bit of an "AND/OR". Wondering if this should simply be 'all' or 'watched/edited by me' radio button)
+  <div class="form-group">
+    <div class="form-check">
+      <%= hidden_field_tag :completed, "0", id: "hidden-completed" %>
+      <%= label_tag :completed,
+      class: "form-check-label",
+        for: "completed" do %>
+        <%= check_box_tag :completed,
+        "1",
+        get_completed_too?,
+        class: "form-check-input" %>
+        Show Completed Outages
+        <% end %>
+      </div>
   </div>
+</div>
 
-  <div class="content-note">
-    <p>
-      If an earliest time is provided, show outages that don't end before the earliest time. If the earliest time is blank, outage end time is a don't care.
-    </p>
-    <p>
-      If a latest time is provided, show outages that don't start after the end_time. If the latest time is blank, the outage start time is a don't care.
-    </p>
-    <p>
-      If both times are provided, show the intersection of the above, or actually, do both of the above tests in the same query.
-    </p>
-    <p>
-      Or to put it another way, show all outages that overlap the filter's start and end times.
-    </p>
-  </div>
+<div class="content-note">
+  Still not sure that this would be "logically" clear to users (because it is a bit of an "AND/OR". Wondering if this should simply be 'all' or 'watched/edited by me' radio button)
+</div>
+
+<div class="content-note">
+  <p>
+    If an earliest time is provided, show outages that don't end before the earliest time. If the earliest time is blank, outage end time is a don't care.
+  </p>
+  <p>
+    If a latest time is provided, show outages that don't start after the end_time. If the latest time is blank, the outage start time is a don't care.
+  </p>
+  <p>
+    If both times are provided, show the intersection of the above, or actually, do both of the above tests in the same query.
+  </p>
+  <p>
+    Or to put it another way, show all outages that overlap the filter's start and end times.
+  </p>
+</div>
 
 <% end %>
-</div>
