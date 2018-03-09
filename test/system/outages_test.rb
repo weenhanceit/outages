@@ -18,6 +18,7 @@ class OutagesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLen
           assert_difference "Watch.count", -1 do
             uncheck "watch[active]"
             assert_unchecked_field "watch[active]"
+            assert_no_selector ".spinner"
           end
         end
       end
