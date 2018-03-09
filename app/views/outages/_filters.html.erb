@@ -3,53 +3,40 @@
     local: true,
     method: :get,
     html: { class: "js-submit-on-change" }  do |f| %>
-<div class="form-group">
-  <%= label_tag "frag", class: "col-form-label" do %>
-    Fragment
-    <%= text_field_tag "frag",
-          search_string,
-          class: "form-control" %>
+<%= f.form_group do %>
+  <%= f.text_field "frag",
+                   id: :frag,
+                   label: "Fragment",
+                   value: search_string %>
+  <%= f.date_field "earliest",
+                   id: :earliest,
+                   label: "Outages After",
+                   value: session[:earliest] || default_earliest.to_s(:browser) %>
+  <% if action_name == "index" %>
+    <%= f.date_field "latest",
+                     id: :latest,
+                     label: "Outages Before",
+                     value: outages_before %>
   <% end %>
-  <%= label_tag "earliest", class: "col-form-label" do %>
-    Outages After
-    <%= date_field_tag "earliest",
-      session[:earliest] || default_earliest.to_s(:browser),
-      class: "form-control" %>
+  <%= f.form_group :watching do %>
+    <%= f.radio_button :watching,
+                       of_interest,
+                       checked: of_interest?,
+                       id: :watching_Of_interest_to_me,
+                       label: "Of interest to me" %>
+    <%= f.radio_button :watching,
+                       "All",
+                       checked: !of_interest?,
+                       id: :watching_All,
+                       label: "All" %>
   <% end %>
-  <%= yield :latest %>
-  <div class="form-group">
-    <div class="form-check">
-      <%= content_tag :label, class: "form-check-label" do %>
-        <%= radio_button_tag :watching,
-              of_interest,
-              of_interest?,
-              class: "form-check-input" %> Of interest to me
-      <% end %>
-    </div>
-    <div class="form-check">
-      <%= content_tag :label, class: "form-check-label" do %>
-        <%= radio_button_tag :watching,
-              "All",
-              !of_interest?,
-              class: "form-check-input" %> All
-      <% end %>
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="form-check">
-      <%= hidden_field_tag :completed, "0", id: "hidden-completed" %>
-      <%= label_tag :completed,
-      class: "form-check-label",
-        for: "completed" do %>
-        <%= check_box_tag :completed,
-        "1",
-        get_completed_too?,
-        class: "form-check-input" %>
-        Show Completed Outages
-        <% end %>
-      </div>
-  </div>
-</div>
+  <%= f.form_group :completed do %>
+    <%= f.check_box :completed,
+                    checked: get_completed_too?,
+                    id: :completed,
+                    label: "Show Completed Outages" %>
+  <% end %>
+<% end %>
 
 <div class="content-note">
   Still not sure that this would be "logically" clear to users (because it is a bit of an "AND/OR". Wondering if this should simply be 'all' or 'watched/edited by me' radio button)
