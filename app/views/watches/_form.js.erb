@@ -3,6 +3,6 @@
 var id = '#js-watch-row-<%= row_index %>';
 $(id).replaceWith('<%= j(render(partial: "form",
     formats: [:html],
-    locals: { watch: @watch, row_index: row_index }).html_safe) %>');
+    locals: { watch: @watch, row_index: row_index })) %>');
 $(id).change(function() { $(this).submit();});
 // console.log($('#js-watch-row-<%= row_index %>').html());
