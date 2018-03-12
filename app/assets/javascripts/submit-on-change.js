@@ -5,13 +5,10 @@ $(document).on('turbolinks:load', function(e) {
     // console.log('Form auto-submitting');
     $("body").prepend('<div class="spinner"></div>');
     // console.log('Spinner shown');
+    $(document).ajaxComplete(function(e){
+      // console.log('Complete');
+      $(".spinner").remove();
+    });
     $(this).submit();
-  }).on("ajax:success", function(e) {
-    // console.log('Success');
-  }).on("ajax:error", function(e) {
-    // console.log('Failure');
-  }).on("ajax:complete", function(e) {
-    // console.log('Complete');
-    $(".spinner").remove();
   });
 });
