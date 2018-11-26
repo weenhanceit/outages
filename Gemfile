@@ -32,6 +32,8 @@ gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+gem 'bootsnap'
+
 gem 'bootstrap', '~> 4.0.0.beta'
 source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
