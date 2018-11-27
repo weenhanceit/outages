@@ -59,13 +59,16 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  # Use an evented file watcher to asynchronously detect changes in source code,
-  # routes, locales, etc. This feature depends on the listen gem.
-  # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
-  config.file_watcher = ActiveSupport::FileUpdateChecker
-
   # Devise
   # This is complicated with the Vagrant boxes, because you never know
   # what port the host is mapping.
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+  # Don't use Sidekiq for development.
+  config.active_job.queue_adapter = :async
+
+  # Use an evented file watcher to asynchronously detect changes in source code,
+  # routes, locales, etc. This feature depends on the listen gem.
+  # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+  config.file_watcher = ActiveSupport::FileUpdateChecker
 end

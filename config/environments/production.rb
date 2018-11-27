@@ -111,4 +111,7 @@ config.action_mailer.smtp_settings = {
 
   # Devise
   # FIXME: Add Devise configuration (see development or test).
+
+  # TODO: Use Sidekiq.
+  config.active_job.queue_adapter = :async
 end
