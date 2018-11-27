@@ -31,3 +31,6 @@ pip*
 # Don't check in the documentation. Generate it as needed.
 doc/
 erd.pdf
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
