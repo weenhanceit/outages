@@ -34,12 +34,12 @@ gem 'redis', '~> 3.0'
 
 gem 'bootsnap'
 
-gem 'bootstrap', '~> 4.0.0.beta'
+gem 'bootstrap', '~> 4.0'
 source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
 end
 #gem 'popper_js'
-gem 'bootstrap_form', git: "https://github.com/bootstrap-ruby/bootstrap_form.git", branch: "master"
+gem 'bootstrap_form'
 gem 'octicons_helper'
 
 gem 'jquery-ui-rails'
