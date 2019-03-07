@@ -61,8 +61,9 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara'
-  # gem 'selenium-webdriver' We can't use this with vagrant boxes.
-  gem 'poltergeist'
+  gem 'chromedriver-helper'
+  gem 'selenium-webdriver'
+  # gem 'poltergeist'
   gem 'capybara-email'
 end
 
