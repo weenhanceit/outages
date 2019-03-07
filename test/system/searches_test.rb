@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
-class SearchesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
+class SearchesTest < ApplicationSystemTestCase
   test "fake" do
     Outage.all.each { |x| x.run_callbacks :save }
     Ci.all.each { |x| x.run_callbacks :save }
@@ -22,6 +24,5 @@ class SearchesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLe
     assert_text "Search Results"
     assert_text unique_string
     assert_selector "li.search-result", count: 4
-    take_screenshot
   end
 end

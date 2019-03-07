@@ -21,7 +21,7 @@ test:
 
 production:
   <<: *default
-  username: <%= ENV['DATABASE_USERNAME'] %>
-  password: <%= ENV['DATABASE_PASSWORD'] %>
+  username: <%= Rails.application.credentials.database_username! %>
+  password: <%= Rails.application.credentials.database_password! %>
   host: weit-rds-a.cwfow80ezu1x.ca-central-1.rds.amazonaws.com
-  database: outages_prod
+  database: <%= Rails.application.credentials.database! %>

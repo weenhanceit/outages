@@ -63,11 +63,11 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         current_window.maximize
 
         choose "watching_All"
-        assert_no_selector ".spinner"
+        assert_no_selector ".spinner", visible: :any
         fill_in "Outages Before", with: "09012017"
           # with: Time.zone.local(2017, 9, 1, 0, 0).to_s(:to_browser_date)
         find("#latest").send_keys :return
-        assert_no_selector ".spinner"
+        assert_no_selector ".spinner", visible: :any
         within(".outages-grid") do
           assert_text "Outage Watched by Edit", count: 1
           assert_selector "tbody tr", count: 4
@@ -117,9 +117,9 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         # o = Outage.find_by(account: Account.find_by(name: "Company D"), name: "Outage A")
         # puts "o.start_time: #{o.start_time}"
         fill_in "Outages Before", with: "08042017"
-        assert_no_selector ".spinner"
+        assert_no_selector ".spinner", visible: :any
         find_field("Outages After").send_keys :delete
-        assert_no_selector ".spinner"
+        assert_no_selector ".spinner", visible: :any
         within(".outages-grid") do
           assert_text "Outage A", count: 1
           assert_text "Outage B", count: 1
@@ -273,10 +273,10 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         # FIXME: Get rid of these stinkin' U.S. date formats. WTF?
         fill_in "Outages After",
           with: "08012017" # Time.zone.local(2017, 8, 1).to_s(:to_browser_date)
-        assert_no_selector ".spinner"
+        assert_no_selector ".spinner", visible: :any
         fill_in "Outages Before",
           with: "08142017" # (Time.zone.local(2017, 8, 1) + 2.weeks).to_s(:to_browser_date)
-        assert_no_selector ".spinner"
+        assert_no_selector ".spinner", visible: :any
         assert_field "Outages After", with: "2017-08-01"
         # assert_text "phil", count: 2
         within(".outages-grid") do
@@ -353,7 +353,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         current_window.maximize
 
         fill_in "Fragment", with: "Outage B\n"
-        assert_no_selector ".spinner"
+        assert_no_selector ".spinner", visible: :any
 
         # Currently seems to default to month, so this gets one hit.
         within(".outages-grid") do
@@ -436,7 +436,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
         # sleep 2
         # puts "looking for spinner..."
         # execute_script("console.log('spinner display before assert: ' + $('.spinner').css('display'));")
-        assert_no_selector ".spinner"
+        assert_no_selector ".spinner", visible: :any
         # execute_script("console.log('spinner display after assert: ' + $('.spinner').css('display'));")
         # n = find(".spinner")
         # puts "n: #{n.inspect}"
@@ -494,7 +494,7 @@ class OutagesFilterTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
   def assert_day_test(exp_day, exp_4day, exp_week, exp_month, the_day)
     fill_in "Outages After", with: the_day.strftime("%m%d%Y")
-    assert_no_selector ".spinner"
+    assert_no_selector ".spinner", visible: :any
 
     click_link "Day"
     assert_field "Outages After", with: the_day.strftime("%Y-%m-%d")

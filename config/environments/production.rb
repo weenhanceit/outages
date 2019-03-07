@@ -14,10 +14,9 @@ Rails.application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
-  # Attempt to read encrypted secrets from `config/secrets.yml.enc`.
-  # Requires an encryption key in `ENV["RAILS_MASTER_KEY"]` or
-  # `config/secrets.yml.key`.
-  config.read_encrypted_secrets = true
+  # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
+  # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
+  config.require_master_key = true
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
@@ -38,6 +37,9 @@ Rails.application.configure do
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
+
+  # Store uploaded files on the local file system (see config/storage.yml for options)
+  config.active_storage.service = :local
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
@@ -71,7 +73,7 @@ config.action_mailer.smtp_settings = {
   port:                   465,
   # domain:               ENV["EMAIL_DOMAIN"],
   user_name:              ENV['EMAIL_USERNAME'] || 'outages@weenhanceit.com',
-  password:               ENV['EMAIL_PASSWORD'],
+  password:               Rails.application.credentials.email_password!,
   authentication:         :plain,
   default_mailer_options: { from: 'outages@weenhanceit.com' },
   enable_starttls_auto:   false,
@@ -80,7 +82,7 @@ config.action_mailer.smtp_settings = {
 }
 ##############################################################################
 
-# Ignore bad email addresses and do not raise email delivery errors.
+  # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
@@ -91,6 +93,10 @@ config.action_mailer.smtp_settings = {
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
+   # Rotate logs, keeping 100 files of 1 MB each
+   logger           = ActiveSupport::Logger.new("log/#{Rails.env}.log", 100)
+   config.logger    = ActiveSupport::TaggedLogging.new(logger)
+ 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
@@ -109,4 +115,7 @@ config.action_mailer.smtp_settings = {
 
   # Devise
   # FIXME: Add Devise configuration (see development or test).
+
+  # TODO: Use Sidekiq.
+  config.active_job.queue_adapter = :async
 end

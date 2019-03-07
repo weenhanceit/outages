@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-# require "capybara/poltergeist"
-require "selenium/webdriver"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # For capybara-email https://github.com/DockYard/capybara-email
@@ -11,34 +9,12 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # The next one is ours, in app/lib
   # Capybara::Session.include CapybaraExtensions::SessionMatchers
 
-  # The docs said do the following, but it borks things big-time:
-  # Capybara.app_host = "http://localhost:3000"
+  # Force a specific address, and put it in the mailer config (`config/environments/test.rb`)
+  # so system tests on the e-mail will work.
+  Capybara.server_port = 3001
+  Capybara.app_host = "http://localhost:3001"
 
-  Capybara.register_driver(:headless_chrome) do |app|
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      loggingPrefs: {
-        browser: "ALL",
-        client: "ALL",
-        driver: "ALL",
-        server: "ALL"
-      }
-    )
-
-    options = Selenium::WebDriver::Chrome::Options.new
-    options.add_argument("window-size=1400,1200")
-    options.add_argument("headless")
-    options.add_argument("disable-gpu")
-
-    Capybara::Selenium::Driver.new(
-      app,
-      browser: :chrome,
-      desired_capabilities: capabilities,
-      options: options
-    )
-  end
-
-  driven_by :headless_chrome
-
+  driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
   # driven_by :poltergeist, screen_size: [1600, 1400]
 
   # Only show the path of the screenshot on failed test cases.
@@ -66,6 +42,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
                start_time + 2 < Capybara::Helpers.monotonic_time
       sleep 0.1
     end
+
 
     expressions.zip(after).each_with_index do |(code, a), i|
       error  = "#{code.inspect} didn't change by #{difference}"

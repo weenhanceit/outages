@@ -35,10 +35,9 @@ class PreferencesTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     element = find_field("Email")
     assert_equal present_email, element.value
 
-    fill_in "Email", with: changed_email
-
-    element = find_field("Email")
-    assert_equal present_email, element.value
+    assert_raises Capybara::ReadOnlyElementError do
+      fill_in "Email", with: changed_email
+    end
   end
 
   test "user manager  can't change user email" do
@@ -57,9 +56,8 @@ class PreferencesTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     element = find_field("Email")
     assert_equal present_email, element.value
 
-    fill_in "Email", with: changed_email
-
-    element = find_field("Email")
-    assert_equal present_email, element.value
+    assert_raises Capybara::ReadOnlyElementError do
+      fill_in "Email", with: changed_email
+    end
   end
 end

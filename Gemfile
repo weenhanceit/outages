@@ -8,7 +8,7 @@ end
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.0'
+gem 'rails', '~> 5.2.0'
 # Use postgres as the database for Active Record
 gem 'pg', "~> 0.18"
 gem 'pg_search'
@@ -32,12 +32,14 @@ gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
-gem 'bootstrap', '~> 4.0.0'
+gem 'bootsnap'
+
+gem 'bootstrap', '~> 4.0'
 source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
 end
 #gem 'popper_js'
-gem 'bootstrap_form', git: "https://github.com/bootstrap-ruby/bootstrap_form.git", branch: "master"
+gem 'bootstrap_form'
 gem 'octicons_helper'
 
 gem 'jquery-ui-rails'
@@ -58,15 +60,16 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '~> 2.15.0'
+  gem 'capybara'
+  gem 'chromedriver-helper'
+  gem 'selenium-webdriver'
   gem 'capybara-email'
   gem 'capybara-selenium'
-  # gem 'selenium-webdriver' We can't use this with vagrant boxes.
-  gem "chromedriver-helper"
-  # gem 'poltergeist'
 end
 
 group :development do
+  gem "capistrano", "~> 3.10", require: false
+  gem "capistrano-rails", "~> 1.4", require: false
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'

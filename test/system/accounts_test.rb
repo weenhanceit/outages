@@ -18,6 +18,7 @@ class AccountsTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLe
     accept_alert do
       click_link "Delete"
     end
+    assert_content "You must create an account"
     user.reload
     assert_nil user.account
     # Since delete is just deactivate, test that we can't navigate anywhere.

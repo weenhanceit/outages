@@ -46,13 +46,13 @@ class UsersTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLengt
   test "only user admin users can access user pages" do
     account, _user = add_non_user_admin_user
     visit account_admin_users_path(account)
-    assert_text "Routing Error Not Found"
+    assert_text "Routing Error\nNot Found"
   end
 
   test "only allow user admins to invite users" do
     add_non_user_admin_user
     visit new_user_invitation_path
-    assert_text "Routing Error Not Found"
+    assert_text "Routing Error\nNot Found"
   end
 
   test "resend invitation" do

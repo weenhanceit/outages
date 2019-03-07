@@ -2,4 +2,5 @@
 
 <%= render partial: 'ci-form', locals: { ci: @ci }  %>
 <br />
-<%= button_to "Delete", ci_path(@ci), method: :delete %>
+<%= button_to "Delete", ci_path(@ci), method: :delete, class: "btn btn-secondary",
+        data: { confirm: "Really delete the outage? This can't be undone." } %>

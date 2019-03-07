@@ -1,4 +1,5 @@
 <h1>Edit an Outage</h1>
 
 <%= render partial: "outage-form", locals: { outage: @outage } %>
-<%= button_to "Delete", outage_path(@outage), method: :delete, class: "btn" %>
+<%= button_to "Delete", outage_path(@outage), method: :delete, class: "btn btn-secondary",
+        data: { confirm: "Really delete the outage? This can't be undone." } %>
