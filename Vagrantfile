@@ -11,10 +11,8 @@ Vagrant.configure("2") do |config|
   # https://docs.vagrantup.com.
 
   # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "jadesystems/rails-5-2"
-  # Stay in the v4 series to stay on Ubuntu 16.04.
-  config.vm.box_version = "~> 4.0"
+  # boxes at https://app.vagrantup.com/search.
+  config.vm.box = "jadesystems/rails-jade-16-04-pg"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
