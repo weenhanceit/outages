@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "application_system_test_case"
 
-class PreferencesTest < ApplicationSystemTestCase # rubocop:disable Metrics/ClassLength, Metrics/LineLength
+class PreferencesTest < ApplicationSystemTestCase
   test "save causes error" do
     sign_in_for_system_tests(users(:basic))
     visit edit_user_path
@@ -35,9 +37,10 @@ class PreferencesTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     element = find_field("Email")
     assert_equal present_email, element.value
 
-    assert_raises Capybara::ReadOnlyElementError do
-      fill_in "Email", with: changed_email
-    end
+    fill_in "Email", with: changed_email
+
+    element = find_field("Email")
+    assert_equal present_email, element.value
   end
 
   test "user manager  can't change user email" do
@@ -53,11 +56,13 @@ class PreferencesTest < ApplicationSystemTestCase # rubocop:disable Metrics/Clas
     within(".user-#{user.id}") do
       click_link "Edit"
     end
+
     element = find_field("Email")
     assert_equal present_email, element.value
 
-    assert_raises Capybara::ReadOnlyElementError do
-      fill_in "Email", with: changed_email
-    end
+    fill_in "Email", with: changed_email
+
+    element = find_field("Email")
+    assert_equal present_email, element.value
   end
 end
