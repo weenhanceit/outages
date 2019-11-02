@@ -43,7 +43,7 @@ class PreferencesTest < ApplicationSystemTestCase
     assert_equal present_email, element.value
   end
 
-  test "user manager  can't change user email" do
+  test "user manager can't change user email" do
     admin = users(:user_admin)
     user = users(:basic)
     sign_in_for_system_tests(admin)
