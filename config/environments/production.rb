@@ -24,7 +24,7 @@ Rails.application.configure do
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
-  # config.assets.css_compressor = :sass
+  config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
@@ -96,7 +96,7 @@ config.action_mailer.smtp_settings = {
    # Rotate logs, keeping 100 files of 1 MB each
    logger           = ActiveSupport::Logger.new("log/#{Rails.env}.log", 100)
    config.logger    = ActiveSupport::TaggedLogging.new(logger)
- 
+
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
