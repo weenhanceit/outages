@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :account_exists!, if: :current_user
   skip_before_action :account_exists!, if: :devise_controller?
   around_action :use_user_time_zone, if: :current_user
+  around_action :profiler
   before_action :online_notifications,
     if: :current_user,
     except: [:create, :destroy, :update]
@@ -59,6 +60,12 @@ class ApplicationController < ActionController::Base
   # the controller, so it's available to the notification partial.
   def online_notifications
     @online_notifications ||= current_user.outstanding_notifications(:online)
+  end
+
+  def profiler
+    StackProf.run(mode: :cpu, out: '/tmp/stackprof-cpu-outages.dump') do
+      yield
+    end
   end
 
   ##
