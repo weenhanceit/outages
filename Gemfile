@@ -1,4 +1,4 @@
-# rubocop:disable Style/StringLiterals, Metrics/LineLength, Style/EmptyLines
+# rubocop:disable Style/StringLiterals, Layout/EmptyLines
 source 'https://rubygems.org'
 
 git_source(:github) do |repo_name|
@@ -38,47 +38,42 @@ gem 'bootstrap', '~> 4.0'
 source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
 end
-#gem 'popper_js'
+# gem 'popper_js'
 gem 'bootstrap_form'
 gem 'octicons_helper'
 
-gem 'jquery-ui-rails'
-
-gem "simple_calendar", "~> 2.0", git: "https://github.com/lcreid/simple_calendar.git"
 gem 'detect_timezone_rails'
 gem "devise"
 gem 'devise_invitable'
+gem 'jquery-ui-rails'
+
 # Markdown processor:
 gem 'redcarpet'
 # There is this for rendering Markdown, but I choose to roll my own: gem 'emd'
 gem 'sidekiq'
+gem "simple_calendar", "~> 2.0", git: "https://github.com/lcreid/simple_calendar.git"
 gem 'stackprof'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara'
-  gem 'chromedriver-helper'
-  gem 'selenium-webdriver'
   gem 'capybara-email'
   gem 'capybara-selenium'
+  gem 'webdrivers', '~> 4.0'
 end
 
 group :development do
   gem "capistrano", "~> 3.10", require: false
   gem "capistrano-rails", "~> 1.4", require: false
+  gem 'listen', '>= 3.0.5', '< 3.2'
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console', '>= 3.3.0'
-  gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem "rails-erd"
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
-
-  gem "rails-erd"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -86,3 +81,5 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Remove when Rails 5.2
 gem "minitest", "~> 5.10.3"
+
+# rubocop:enable Style/StringLiterals, Layout/EmptyLines
