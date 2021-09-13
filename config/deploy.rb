@@ -1,5 +1,5 @@
 # config valid for current version and patch releases of Capistrano
-lock "~> 3.14.0"
+lock "~> 3.16.0"
 
 set :application, "outages.weenhanceit.com"
 set :repo_url, "git@github.com:weenhanceit/outages.git"
@@ -9,7 +9,6 @@ set :repo_url, "git@github.com:weenhanceit/outages.git"
 
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name"
-
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
 
