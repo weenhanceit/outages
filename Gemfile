@@ -1,6 +1,8 @@
 # rubocop:disable Style/StringLiterals, Layout/EmptyLines
 source 'https://rubygems.org'
 
+ruby '~> 2.7.0'
+
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
   "https://github.com/#{repo_name}.git"
@@ -28,7 +30,7 @@ gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
-gem 'redis', '~> 3.0'
+gem 'redis', '~> 4.1'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -39,7 +41,7 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
 end
 # gem 'popper_js'
-gem 'bootstrap_form'
+gem 'bootstrap_form', '~> 4.0'
 gem 'octicons_helper'
 
 gem 'detect_timezone_rails'
@@ -50,7 +52,7 @@ gem 'jquery-ui-rails'
 # Markdown processor:
 gem 'redcarpet'
 # There is this for rendering Markdown, but I choose to roll my own: gem 'emd'
-gem 'sidekiq'
+gem 'sidekiq', '~> 6.0'
 gem "simple_calendar", "~> 2.0", git: "https://github.com/lcreid/simple_calendar.git"
 gem 'stackprof'
 
