@@ -171,7 +171,8 @@ GEM
       activesupport (>= 5.2)
     popper_js (1.16.1)
     public_suffix (5.0.0)
-    puma (3.12.6)
+    puma (6.0.0)
+      nio4r (~> 2.0)
     racc (1.6.0)
     rack (2.2.4)
     rack-test (2.0.2)
@@ -307,7 +308,7 @@ DEPENDENCIES
   pg (~> 0.18)
   pg_search
   popper_js
-  puma (~> 3.12)
+  puma (~> 6.0)
   rails (~> 6.0.0)
   rails-erd
   redcarpet
