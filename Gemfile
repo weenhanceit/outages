@@ -37,10 +37,10 @@ gem 'redis', '~> 4.1'
 gem 'bootsnap'
 
 gem 'bootstrap', '~> 4.0'
-source 'https://rails-assets.org' do
-  gem 'rails-assets-tether', '>= 1.3.3'
-end
-# gem 'popper_js'
+# source 'https://rails-assets.org' do
+#   gem 'rails-assets-tether', '>= 1.3.3'
+# end
+gem 'popper_js'
 gem 'bootstrap_form', '~> 4.0'
 gem 'octicons_helper'
 
