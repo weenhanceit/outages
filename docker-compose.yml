@@ -6,7 +6,7 @@ version: '3.3'
 # https://medium.com/@retrorubies/chrome-as-a-service-for-rails-testing-b1a45e70fec1
 services:
   web: &web
-    image: jade:rails-app-2.7-postgres-13-bullseye
+    image: jade:rails-app-3.0-postgres-13-bullseye
     tmpfs:
       - /tmp
     stdin_open: true
