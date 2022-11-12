@@ -1,0 +1,98 @@
+version: '3.3'
+
+# Set up the Selenium container based on the Selenium official:
+# https://github.com/SeleniumHQ/docker-selenium/blob/trunk/docker-compose-v3.yml
+# And:
+# https://medium.com/@retrorubies/chrome-as-a-service-for-rails-testing-b1a45e70fec1
+services:
+  web: &web
+    image: jade:rails-app-2.7-postgres-13-bullseye
+    tmpfs:
+      - /tmp
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app:cached
+      - rails_cache:/app/tmp/cache
+      - bundle:/app/vendor/bundle
+      - node_modules:/app/node_modules
+      - packs:/app/public/packs
+    environment:
+      - NODE_ENV=development
+      # You can use DATABASE_URL in non-development situation, but it messes
+      # up the `rails db:*` tasks in a development situation.
+      # - DATABASE_URL=postgres://pg:pg@postgres:5432
+      - DATABASE_HOST=postgres
+      - BOOTSNAP_CACHE_DIR=/usr/local/bundle/_bootsnap
+      - WEBPACKER_DEV_SERVER_HOST=webpacker
+      - WEB_CONCURRENCY=1
+      - EDITOR=vi
+      # SELENIUM_HUB_URL was a suggestion from the Internet when you use
+      # Selenium Hub, which is good for testing a range of browsers.
+      # - SELENIUM_HUB_URL=http://selenium-hub:4444/wd/hub
+      # Going to use a generic name for where Selenium is
+      - SELENIUM_SERVER=http://chrome:4444/wd/hub
+      - TEST_APP_HOST=server
+      - TEST_APP_PORT=3001
+    # Running dev here is a little tricky. You have to remember that Ctrl-C
+    # only stops the container, it doesn't destroy it. So next time you up, it
+    # will complain that the server is already running.
+
+    # It might be okay as long as you remember to start or run the container,
+    # instead of trying up, but I haven't had a chance to test it yet.
+    command: /bin/bash
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+
+  shell:
+    <<: *web
+  postgres:
+    image: postgres:13
+    volumes:
+      - .psqlrc:/root/.psqlrc:ro
+      - postgres:/var/lib/postgresql/data
+      - ./log:/root/log:cached
+    environment:
+      - PSQL_HISTFILE=/root/log/.psql_history
+      - POSTGRES_USER=pg
+      - POSTGRES_PASSWORD=pg
+    ports:
+      - 5432
+    healthcheck:
+      test: pg_isready -U pg -h 127.0.0.1
+      interval: 5s
+
+  # webpacker:
+  #   <<: *app
+  #   command: ./bin/webpack-dev-server
+  #   ports:
+  #     - '3035:3035'
+  #   volumes:
+  #     - .:/app:cached
+  #     - bundle:/usr/local/bundle
+  #     - node_modules:/app/node_modules
+  #     - packs:/app/public/packs
+  #   environment:
+  #     - NODE_ENV=${NODE_ENV:-development}
+  #     - RAILS_ENV=${RAILS_ENV:-development}
+  #     - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+
+  # chrome:
+  #   image: selenium/standalone-chrome:${CHROME_VERSION}
+  #   volumes:
+  #     - /dev/shm:/dev/shm
+  #   ports:
+  #     - "4444:4444"
+
+# The volumes are storage that docker-compose manages and maintains across rebuilds
+# of the images and containers. If you need to change the default postgres user or
+# password, you need to `docker volume rm <project_volume>`.
+volumes:
+  postgres:
+  bundle:
+  node_modules:
+  rails_cache:
+  packs:
