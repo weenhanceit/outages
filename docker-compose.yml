@@ -5,7 +5,7 @@ version: '3.3'
 # And:
 # https://medium.com/@retrorubies/chrome-as-a-service-for-rails-testing-b1a45e70fec1
 services:
-  web: &web
+  shell: &shell
     image: jade:rails-app-3.0-postgres-13-bullseye
     tmpfs:
       - /tmp
@@ -43,12 +43,14 @@ services:
     command: /bin/bash
     depends_on:
       - postgres
+
+  web: &web
+    <<: *shell
     ports:
       - "3000:3000"
       - "3001:3001"
+    command: bin/rails s -b 0.0.0.0
 
-  shell:
-    <<: *web
   postgres:
     image: postgres:13
     volumes:
