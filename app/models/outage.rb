@@ -4,7 +4,7 @@
 # A single outage.
 class Outage < ApplicationRecord
   include Watched
-  include PgSearch
+  include PgSearch::Model
   multisearchable against: %i[name description]
 
   belongs_to :account

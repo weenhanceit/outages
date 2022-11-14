@@ -4,7 +4,7 @@
 # A configuration item, which can be hardware, software, service, etc.
 class Ci < ApplicationRecord
   include Watched
-  include PgSearch
+  include PgSearch::Model
   multisearchable against: %i[name description]
 
   belongs_to :account
