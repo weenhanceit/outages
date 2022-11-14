@@ -41,14 +41,14 @@ services:
     # It might be okay as long as you remember to start or run the container,
     # instead of trying up, but I haven't had a chance to test it yet.
     command: /bin/bash
+    ports:
+      - "3000:3000"
+      - "3001:3001"
     depends_on:
       - postgres
 
   web: &web
     <<: *shell
-    ports:
-      - "3000:3000"
-      - "3001:3001"
     command: bin/rails s -b 0.0.0.0
 
   postgres:
