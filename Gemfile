@@ -57,8 +57,8 @@ gem "simple_calendar", "~> 2.0", git: "https://github.com/lcreid/simple_calendar
 gem 'stackprof'
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  # Call `byebug` or `binding.pry` anywhere in the code to stop execution and get a debugger console
+  gem 'pry-byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara'
   gem 'capybara-email'
@@ -80,8 +80,5 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-# Remove when Rails 5.2
-gem "minitest", "~> 5.10.3"
 
 # rubocop:enable Style/StringLiterals, Layout/EmptyLines
