@@ -74,7 +74,7 @@ module Services
 
     def self.create_unique_reminder_event(_user, outage)
       outage.events.create(event_type: "reminder",
-                           text: "Outaged Scheduled to Begin at " \
+                           text: "Outage Scheduled to Begin at " \
                            "#{outage.start_time.to_s(:iso8601)}",
                            handled: true)
     end
