@@ -42,6 +42,6 @@ module ApplicationHelper
   end
 
   def object_error_messages?(resource, *attrs)
-    (resource.errors.keys & attrs).present?
+    (resource.errors.attribute_names & attrs).present?
   end
 end
