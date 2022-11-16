@@ -22,10 +22,10 @@ class PgSearchDocumentTest < ActiveSupport::TestCase
     unique_string = " " + SecureRandom.uuid
     account = accounts(:company_a)
     outage = account.outages.first
-    outage.update_attributes!(description: outage.description + unique_string)
+    outage.update!(description: outage.description + unique_string)
     outage_note = outage.notes.create(user: users(:basic), note: unique_string)
     ci = account.cis.first
-    ci.update_attributes!(description: ci.description + unique_string)
+    ci.update!(description: ci.description + unique_string)
     ci_note = ci.notes.create(user: users(:basic), note: unique_string)
 
     assert_not_empty result = PgSearch::Extensions.multisearch(accounts(:company_a), unique_string)
@@ -39,7 +39,7 @@ class PgSearchDocumentTest < ActiveSupport::TestCase
     unique_string = " " + SecureRandom.uuid
 
     note = Note.all.first
-    note.user.update_attributes!(name: unique_string)
+    note.user.update!(name: unique_string)
 
     assert_not_empty result = PgSearch::Extensions.multisearch(note.user.account, unique_string)
     assert_equal [note].to_set, result.map(&:searchable).to_set

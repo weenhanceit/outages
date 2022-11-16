@@ -187,7 +187,7 @@ class User < ApplicationRecord
     if removing_account_admin &&
        account &&
        account.users.where(privilege_account: true).where.not(id: id).empty?
-      errors[:base] << "This is the last account manager."
+      errors.add(:base, "This is the last account manager.")
     end
   end
 
@@ -195,7 +195,7 @@ class User < ApplicationRecord
     if removing_user_admin &&
        account &&
        account.users.where(privilege_manage_users: true).where.not(id: id).empty?
-      errors[:base] << "This is the last user manager."
+      errors.add(:base, "This is the last user manager.")
     end
   end
 

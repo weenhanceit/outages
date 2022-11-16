@@ -180,20 +180,20 @@ class CiTest < ActiveSupport::TestCase
 
   test "add watch to unwatched" do
     assert_difference "Watch.count" do
-      @ci.update_attributes!(watch_parameters)
+      @ci.update!(watch_parameters)
     end
   end
 
   test "add inactive watch to unwatched" do
     assert_no_difference "Watch.count" do
-      @ci.update_attributes!(watch_parameters("active" => false))
+      @ci.update!(watch_parameters("active" => false))
     end
   end
 
   test "disable active watch" do
     watch = @ci.watches.create!(user: user, active: true)
     assert_difference "Watch.count", -1 do
-      @ci.update_attributes!(watch_parameters(watch.attributes.merge("active" => false)))
+      @ci.update!(watch_parameters(watch.attributes.merge("active" => false)))
     end
   end
 
@@ -202,7 +202,7 @@ class CiTest < ActiveSupport::TestCase
     assert_difference "Watch.count" do
       # https://stackoverflow.com/questions/37353039/temporarily-unscope-model-associations
       Watch.unscoped do
-        @ci.update_attributes!(watch_parameters(watch.attributes.merge("active" => true)))
+        @ci.update!(watch_parameters(watch.attributes.merge("active" => true)))
       end
     end
   end

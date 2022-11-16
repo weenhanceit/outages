@@ -11,10 +11,10 @@ class SearchesTest < ApplicationSystemTestCase
     unique_string = " " + SecureRandom.uuid
     account = accounts(:company_a)
     outage = account.outages.first
-    outage.update_attributes!(description: outage.description + unique_string)
+    outage.update!(description: outage.description + unique_string)
     outage_note = outage.notes.create(user: users(:basic), note: unique_string)
     ci = account.cis.first
-    ci.update_attributes!(description: ci.description + unique_string)
+    ci.update!(description: ci.description + unique_string)
     ci_note = ci.notes.create(user: users(:basic), note: unique_string)
 
     sign_in_for_system_tests(users(:basic))
