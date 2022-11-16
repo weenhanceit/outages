@@ -23,9 +23,9 @@ module OutagesHelper
   # can show more detail, e.g. the day, four-day, and week views.
   def detailed_calendar_outage(outage, date)
     "".html_safe +
-      outage.start_time_on_date(date).to_s(:hms) +
+      outage.start_time_on_date(date).to_fs(:hms) +
       " to " +
-      outage.end_time_on_date(date).to_s(:hms) +
+      outage.end_time_on_date(date).to_fs(:hms) +
       " " +
       link_to(outage.name, edit_or_show_outage_path(outage))
   end
@@ -40,11 +40,11 @@ module OutagesHelper
   ##
   # For grid view when it's by itself, default to showing only two weeks.
   def outages_before
-    # puts "outages_before: #{params.fetch(:latest, session.fetch(:latest, default_latest.to_s(:browser)))}"
+    # puts "outages_before: #{params.fetch(:latest, session.fetch(:latest, default_latest.to_fs(:browser)))}"
     # puts "params[:latest]: #{params[:latest]}" if params[:latest].present?
     # puts "session[:latest]: #{session[:latest]}" if session[:latest].present?
-    # puts "default_latest.to_s(:browser): #{default_latest.to_s(:browser)}"
-    params.fetch(:latest, session.fetch(:latest, default_latest.to_s(:browser)))
+    # puts "default_latest.to_fs(:browser): #{default_latest.to_fs(:browser)}"
+    params.fetch(:latest, session.fetch(:latest, default_latest.to_fs(:browser)))
   end
 
   ##

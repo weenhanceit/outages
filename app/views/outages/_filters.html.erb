@@ -11,7 +11,7 @@
   <%= f.date_field "earliest",
                    id: :earliest,
                    label: "Outages After",
-                   value: session[:earliest] || default_earliest.to_s(:browser) %>
+                   value: session[:earliest] || default_earliest.to_fs(:browser) %>
   <% if action_name == "index" %>
     <%= f.date_field "latest",
                      id: :latest,

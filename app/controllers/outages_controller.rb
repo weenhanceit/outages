@@ -26,9 +26,9 @@ class OutagesController < ApplicationController
   def day
     # puts "DAY PARAMS: #{params.inspect}"
     start_date = normalize_params
-    params[:earliest] = start_date.to_date.to_s(:browser)
-    params[:latest] = start_date.to_date.to_s(:browser)
-    params[:start_date] = start_date.to_s(:ymd)
+    params[:earliest] = start_date.to_date.to_fs(:browser)
+    params[:latest] = start_date.to_date.to_fs(:browser)
+    params[:start_date] = start_date.to_fs(:ymd)
     # Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
     outages
     # Rails.logger.debug " ==> Phil's Debug within #{__FILE__} at line #{__LINE__} ----------------------------"
@@ -58,9 +58,9 @@ class OutagesController < ApplicationController
   def fourday
     # puts "FOURDAY PARAMS: #{params.inspect}"
     start_date = normalize_params
-    params[:earliest] = start_date.to_date.to_s(:browser)
-    params[:latest] = (start_date + 3.days).to_date.to_s(:browser)
-    params[:start_date] = start_date.to_s(:ymd)
+    params[:earliest] = start_date.to_date.to_fs(:browser)
+    params[:latest] = (start_date + 3.days).to_date.to_fs(:browser)
+    params[:start_date] = start_date.to_fs(:ymd)
     outages
   end
 
@@ -75,18 +75,18 @@ class OutagesController < ApplicationController
 
     if params[:earliest].blank? && params[:latest].blank?
       params[:earliest] = session[:earliest] ||
-                          helpers.default_earliest.to_s(:browser)
+                          helpers.default_earliest.to_fs(:browser)
     end
 
     if params[:latest].blank?
       params[:latest] = helpers.default_latest(Time
       .zone
       .parse(params[:earliest]))
-                               .to_s(:browser)
+                               .to_fs(:browser)
       # puts "SET latest TO #{params[:latest]}"
     end
 
-    params[:start_date] = start_date.to_s(:ymd)
+    params[:start_date] = start_date.to_fs(:ymd)
     outages
   end
 
@@ -96,12 +96,12 @@ class OutagesController < ApplicationController
     params[:earliest] = start_date
                         .beginning_of_month
                         .beginning_of_week
-                        .to_s(:browser)
+                        .to_fs(:browser)
     params[:latest] = start_date
                       .end_of_month
                       .end_of_week
-                      .to_s(:browser)
-    params[:start_date] = start_date.to_s(:ymd)
+                      .to_fs(:browser)
+    params[:start_date] = start_date.to_fs(:ymd)
     outages
   end
 
@@ -164,9 +164,9 @@ class OutagesController < ApplicationController
   def week
     # puts "WEEK PARAMS: #{params.inspect}"
     start_date = normalize_params
-    params[:earliest] = start_date.beginning_of_week.to_date.to_s(:browser)
-    params[:latest] = start_date.end_of_week.to_date.to_s(:browser)
-    params[:start_date] = start_date.to_s(:ymd)
+    params[:earliest] = start_date.beginning_of_week.to_date.to_fs(:browser)
+    params[:latest] = start_date.end_of_week.to_date.to_fs(:browser)
+    params[:start_date] = start_date.to_fs(:ymd)
     outages
   end
 
@@ -194,7 +194,7 @@ class OutagesController < ApplicationController
                      params[:start_date] = helpers.default_earliest
                    end
 
-    session[:earliest] = start_date.to_s(:browser)
+    session[:earliest] = start_date.to_fs(:browser)
     # puts "Set session to #{session[:earliest]}"
 
     # puts "start_date: #{start_date}"
@@ -282,12 +282,12 @@ class OutagesController < ApplicationController
     #   watching: session.fetch(:watching, 'Of interest to me'),
     #   frag: session[:frag],
     #   completed: session[:completed],
-    #   earliest: helpers.default_earliest.to_s(:browser)).inspect}"
+    #   earliest: helpers.default_earliest.to_fs(:browser)).inspect}"
     @outages = current_user.filter_outages(
       params.reverse_merge(
         watching: session.fetch(:watching, "Of interest to me"),
         frag: session[:frag],
         completed: session[:completed],
-        earliest: helpers.default_earliest.to_s(:browser)))
+        earliest: helpers.default_earliest.to_fs(:browser)))
   end
 end
