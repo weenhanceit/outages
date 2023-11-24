@@ -63,7 +63,7 @@ group :development, :test do
   gem 'capybara'
   gem 'capybara-email'
   gem 'capybara-selenium'
-  gem 'webdrivers', '~> 4.0'
+  gem 'selenium-webdriver'
 end
 
 group :development do

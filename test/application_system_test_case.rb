@@ -11,11 +11,23 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   # Force a specific address, and put it in the mailer config (`config/environments/test.rb`)
   # so system tests on the e-mail will work.
-  Capybara.server_port = 3001
-  Capybara.app_host = "http://localhost:3001"
+  class << self
+    def remote_selenium? = @remote_selenium ||= ENV["SELENIUM_HOST"].present? || ENV["SELENIUM_PORT"].present?
+  end
 
-  driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
-  # driven_by :poltergeist, screen_size: [1600, 1400]
+  options = if remote_selenium?
+              {
+                browser: :remote,
+                url: "http://#{ENV.fetch('SELENIUM_HOST', 'selenium')}:#{ENV.fetch('SELENIUM_PORT', '4444')}"
+              }
+            else
+              {}
+            end
+  Capybara.server_host = "0.0.0.0"
+  Capybara.server_port = ENV.fetch("TEST_APP_PORT", 3001)
+  Capybara.app_host = "http://#{ENV.fetch("TEST_APP_HOST", "localhost")}:#{Capybara.server_port}"
+
+  driven_by(:selenium, using: :headless_chrome, screen_size: [1400, 1400], options: options)
 
   # Only show the path of the screenshot on failed test cases.
   ENV["RAILS_SYSTEM_TESTING_SCREENSHOT"] = "simple"
