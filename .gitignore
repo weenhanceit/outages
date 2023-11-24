@@ -32,16 +32,24 @@ erd.pdf
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
+# For stuff that gets created if using the Dockerfile image
+.bundle/
+.cache/
+vendor/bundle
+.gem
+
 # If you're using Docker, you might want to ignore some or all of these.
 # or .local/share/pry/pry_history if you need to be more exact
 .local/
 .irb_history
+.rdbg_history
 .byebug_history
 # For Debian images with Bash
 .bash_history
 # For Alpine images
 .ash_history
+.sqlite_history
 
-vendor/bundle
-.gem
+docker-compose.override.yml
+
 # End of the stuff ignored for Docker
