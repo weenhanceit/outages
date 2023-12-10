@@ -221,7 +221,7 @@ namespace :demo do
         code_deploy_start = demo_start_time - 23.hours
         code_deploy = account.outages.create!({
           name: "Code deploy",
-          description: "Code deploy of performance tweaks from master branch.",
+          description: "Code deploy of performance tweaks from main branch.",
           start_time: code_deploy_start,
           end_time: code_deploy_start + 30.minutes,
           completed: true
