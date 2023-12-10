@@ -1,5 +1,6 @@
 <%= bootstrap_form_with(model: watch,
       format: :js,
+      local: false,
       id: "js-watch-row-#{row_index}",
       class: "js-submit-on-change") do |f| %>
   <%= f.hidden_field :watched_type %>

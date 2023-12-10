@@ -28,7 +28,7 @@ module Admin
     def update
       # puts "IN ADMIN UPDATE"
       @user = current_account.users.find(params[:id])
-      @user.update_attributes(user_params)
+      @user.update(user_params)
       if Services::SaveUser.call(@user)
         flash.notice = "Preferences saved."
         # Redirect because of this: https://stackoverflow.com/questions/4475380/why-does-the-render-method-change-the-path-for-a-singular-resource-after-an-edit?rq=1

@@ -292,7 +292,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
 
             expected = { outage: outage.name,
                          text: "Outage Scheduled to Begin at " \
-                         "#{outage.start_time.to_s(:iso8601)}" }
+                         "#{outage.start_time.to_fs(:iso8601)}" }
             assert_check_notifications expected
           end
         end

@@ -1,6 +1,7 @@
 <h3>Filters</h3>
 <%= bootstrap_form_with url: "#",
     method: :get,
+    local: false,
     html: { class: "js-submit-on-change" } do |f| %>
   <%= f.form_group do %>
     <%= f.text_field "text",

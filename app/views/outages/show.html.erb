@@ -21,7 +21,7 @@
           Start Time:
         </div>
         <div class="col">
-          <%= @outage.start_time&.to_s(:wall) %>
+          <%= @outage.start_time&.to_fs(:wall) %>
         </div>
       </div>
       <div class="row">
@@ -29,7 +29,7 @@
           End Time:
         </div>
         <div class="col">
-          <%= @outage.end_time&.to_s(:wall) %>
+          <%= @outage.end_time&.to_fs(:wall) %>
         </div>
       </div>
     </div>
@@ -38,6 +38,7 @@
         <%# TODO: Disable the control until the Javascript returns. %>
         <%= bootstrap_form_with(model: @outage,
               format: :js,
+              local: false,
               class: "js-submit-on-change") do |f| %>
         <%= f.hidden_field :active %>
         <%# FIXME: These don't seem to work. %>

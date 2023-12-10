@@ -1,5 +1,6 @@
 <%= bootstrap_form_with(model: [@notable, @note],
       format: :js,
+      local: false,
       class: "note " + css_note_id(@note)) do |f| %>
   <%= f.text_area :note,
         rows: "6",
