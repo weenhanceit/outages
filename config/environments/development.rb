@@ -76,9 +76,6 @@ Rails.application.configure do
   # what port the host is mapping.
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
-  # Don't use Sidekiq for development.
-  config.active_job.queue_adapter = :async
-
   # Annotate rendered view with file names.
   config.action_view.annotate_rendered_view_with_filenames = true
 

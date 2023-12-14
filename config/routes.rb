@@ -1,6 +1,3 @@
-# From: https://github.com/mperham/sidekiq/wiki/Monitoring
-require 'sidekiq/web'
-
 Rails.application.routes.draw do
   devise_for :users, controllers: {
     invitations: :invitations,
@@ -58,8 +55,4 @@ Rails.application.routes.draw do
   get "features", to: "welcome#features", as: :features
   get "pricing", to: "welcome#pricing", as: :pricing
   get "welcome", to: "welcome#index", as: :welcome
-
-  authenticate :user, lambda { |u| u.application_admin? } do
-    mount Sidekiq::Web => '/sidekiq'
-  end
 end

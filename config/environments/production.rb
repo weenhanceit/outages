@@ -123,8 +123,12 @@ config.action_mailer.smtp_settings = {
   # Devise
   # FIXME: Add Devise configuration (see development or test).
 
-  # TODO: Use Sidekiq.
-  config.active_job.queue_adapter = :async
+  # Run good_job in-process so we don't have to screw around with systemd or anything.
+  config.good_job = {
+    execution_mode: :async,
+    max_threads: 4,
+    poll_interval: 30
+  }
 
   # Inserts middleware to perform automatic connection switching.
   # The `database_selector` hash is used to pass options to the DatabaseSelector

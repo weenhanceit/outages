@@ -29,8 +29,6 @@ gem 'jquery-rails'
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
-# Use Redis adapter to run Action Cable in production
-gem 'redis', '~> 4.1'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -52,9 +50,9 @@ gem 'jquery-ui-rails'
 # Markdown processor:
 gem 'redcarpet'
 # There is this for rendering Markdown, but I choose to roll my own: gem 'emd'
-gem 'sidekiq', '~> 6.0'
 gem "simple_calendar", "~> 2.0", git: "https://github.com/lcreid/simple_calendar.git"
 gem 'stackprof'
+gem "good_job", "~> 3.21"
 
 group :development, :test do
   # Call `byebug` or `binding.pry` anywhere in the code to stop execution and get a debugger console
