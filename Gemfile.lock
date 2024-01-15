@@ -211,7 +211,7 @@ GEM
       byebug (~> 11.0)
       pry (>= 0.13, < 0.15)
     public_suffix (5.0.4)
-    puma (6.4.0)
+    puma (6.4.2)
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.7.3)
@@ -337,7 +337,7 @@ DEPENDENCIES
   pg_search
   popper_js
   pry-byebug
-  puma (~> 6.0)
+  puma (~> 6.4)
   rails (~> 7.0.0)
   rails-erd
   redcarpet
