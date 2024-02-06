@@ -191,7 +191,7 @@ GEM
       net-protocol
     net-ssh (7.2.0)
     nio4r (2.7.0)
-    nokogiri (1.15.5-x86_64-linux)
+    nokogiri (1.16.2-x86_64-linux)
       racc (~> 1.4)
     octicons (19.8.0)
     octicons_helper (19.8.0)
