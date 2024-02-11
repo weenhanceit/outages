@@ -52,4 +52,10 @@ vendor/bundle
 
 docker-compose.override.yml
 
+# Ignored for Docker and VScode dev container
+.cache/
+.vscode-server/
+.gnupg/
+# The following is here because using SSH in the container sets `known_hosts`.
+.ssh/
 # End of the stuff ignored for Docker
