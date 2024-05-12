@@ -50,7 +50,7 @@ vendor/bundle
 .ash_history
 .sqlite_history
 
-docker-compose.override.yml
+compose.override.yml
 
 # Ignored for Docker and VScode dev container
 .cache/
