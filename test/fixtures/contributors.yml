@@ -1,11 +1,11 @@
 user_admin_outage_a:
   user: user_admin
-  outage: outage_a
+  outage: company_a_outage_a
 
 edit_ci_outages_outage_a:
   user: edit_ci_outages
-  outage: outage_a
+  outage: company_a_outage_a
 
 edit_ci_outages_outage_b:
   user: edit_ci_outages
-  outage: outage_b
+  outage: company_a_outage_b
