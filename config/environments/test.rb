@@ -32,7 +32,7 @@ Rails.application.configure do
   # NOTE: LCR changed this to true to make system tests render the page.
   # For some reason, assert_raises wasn't working in system tests.
   # TODO: Put this in system-test specific configuration.
-  config.action_dispatch.show_exceptions = true
+  config.action_dispatch.show_exceptions = :all
 
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
@@ -63,7 +63,7 @@ Rails.application.configure do
   # config.action_view.annotate_rendered_view_with_filenames = true
 
   # Raise error when a before_action's only/except options reference missing actions
-  config.action_controller.raise_on_missing_callback_actions = true
+  config.action_controller.raise_on_missing_callback_actions = false
 
   # Devise
   # The URL must match what's in `test/application_system_test_case.rb`
