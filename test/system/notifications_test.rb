@@ -372,7 +372,7 @@ class NotificationsTest < ApplicationSystemTestCase # rubocop:disable Metrics/Cl
       click_button "Save Note"
     end
     # Synchronize on the saved note.
-    assert_field "New Note", text: ""
+    assert_field "New Note", with: ""
     visit outages_path
     assert_current_path outages_path
     # save_screenshot "tmp/screenshots/x_debug_shot.png"
