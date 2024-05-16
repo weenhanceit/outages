@@ -43,7 +43,7 @@ services:
       interval: 5s
 
   selenium:
-    image: selenium/standalone-chrome:118.0
+    image: selenium/standalone-chrome:124.0
     logging:
       driver: none
     stdin_open: true
