@@ -1,8 +1,6 @@
 # rubocop:disable Style/StringLiterals, Layout/EmptyLines
 source 'https://rubygems.org'
 
-ruby '~> 3.0.0'
-
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
   "https://github.com/#{repo_name}.git"
@@ -52,7 +50,6 @@ gem 'redcarpet'
 # There is this for rendering Markdown, but I choose to roll my own: gem 'emd'
 gem "simple_calendar", "~> 2.0", git: "https://github.com/lcreid/simple_calendar.git"
 gem 'stackprof'
-gem "good_job", "~> 3.21"
 
 group :development, :test do
   # Call `byebug` or `binding.pry` anywhere in the code to stop execution and get a debugger console
@@ -77,3 +74,5 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # rubocop:enable Style/StringLiterals, Layout/EmptyLines
+
+gem "solid_queue", "~> 0.2.2"

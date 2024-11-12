@@ -4,7 +4,7 @@
 # https://medium.com/@retrorubies/chrome-as-a-service-for-rails-testing-b1a45e70fec1
 services:
   shell:
-    image: lenchoreyes/jade:rails-app-3.0-postgres-bullseye
+    image: lenchoreyes/jade:rails-app-3.3-postgres-bookworm
     stdin_open: true
     tty: true
     volumes:
@@ -28,7 +28,7 @@ services:
       - postgres
 
   postgres:
-    image: postgres:13-alpine
+    image: postgres:16-alpine
     volumes:
       - postgres:/var/lib/postgresql/data
     environment:
@@ -43,7 +43,7 @@ services:
       interval: 5s
 
   selenium:
-    image: selenium/standalone-chrome:124.0
+    image: selenium/standalone-chrome:118.0
     logging:
       driver: none
     stdin_open: true
@@ -51,8 +51,8 @@ services:
     environment:
       - LANG=en_CA.UTF-8
     ports:
-      - '4444:4444'
-      - '5900:5900'
+      - "4444:4444"
+      - "5900:5900"
 
 volumes:
   postgres:

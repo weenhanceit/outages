@@ -51,6 +51,7 @@ vendor/bundle
 .sqlite_history
 
 compose.override.yml
+.gitconfig
 
 # Ignored for Docker and VScode dev container
 .cache/

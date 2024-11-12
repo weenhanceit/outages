@@ -15,7 +15,7 @@ class NavigationTest < ApplicationSystemTestCase
     assert_selector "span", text: "Can Edit CIs/Outages", visible: :hidden
   end
 
-  test "outages view defaulst to last one used" do
+  test "outages view defaults to last one used" do
     Time.use_zone(ActiveSupport::TimeZone["Samoa"]) do
       travel_to Time.zone.local(2017, 6, 28, 23, 17, 21) do
         user = sign_in_for_system_tests(users(:edit_ci_outages))

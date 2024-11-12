@@ -65,7 +65,7 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
-  # config.active_job.queue_adapter = :resque
+  config.active_job.queue_adapter = :solid_queue
   # config.active_job.queue_name_prefix = "vagrant_production"
 
   config.action_mailer.perform_caching = false
@@ -109,12 +109,4 @@ config.action_mailer.smtp_settings = {
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
-
-  # Run good_job in-process so we don't have to screw around with systemd or anything.
-  config.good_job = {
-    execution_mode: :async,
-    max_threads: 4,
-    poll_interval: 30
-  }
-
 end

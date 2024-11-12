@@ -34,6 +34,10 @@ Rails.application.configure do
   # TODO: Put this in system-test specific configuration.
   config.action_dispatch.show_exceptions = :all
 
+  # from https://github.com/rails/rails/issues/48468
+  # After switching to solid_queue
+  config.active_job.queue_adapter = :test
+
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
 
