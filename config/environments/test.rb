@@ -63,7 +63,8 @@ Rails.application.configure do
   # config.action_view.annotate_rendered_view_with_filenames = true
 
   # Raise error when a before_action's only/except options reference missing actions
-  config.action_controller.raise_on_missing_callback_actions = true
+  # Devise needs this to be false.
+  config.action_controller.raise_on_missing_callback_actions = false
 
   # Devise
   # The URL must match what's in `test/application_system_test_case.rb`
