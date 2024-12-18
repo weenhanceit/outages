@@ -3,7 +3,7 @@
 ##
 # A creation, change, or deletion of an outage, or its attached notes.
 class Event < ApplicationRecord
-  enum event_type: %i[outage outage_note completed overdue reminder]
+  enum :event_type, %i[outage outage_note completed overdue reminder]
 
   validates :handled,
     inclusion: { in: [true, false], message: "can't be blank" }

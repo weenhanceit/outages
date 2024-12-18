@@ -4,7 +4,7 @@
 # be a notification for e-mail and a notification for on-line presentation,
 # for a single event.
 class Notification < ApplicationRecord
-  enum notification_type: [:online, :email]
+  enum :notification_type, [:online, :email]
 
   belongs_to :event, inverse_of: :notifications
   belongs_to :watch, inverse_of: :notifications
