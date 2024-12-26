@@ -8,7 +8,7 @@ end
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.2.0'
+gem 'rails', '~> 8.0.0'
 # Use postgres as the database for Active Record
 gem 'pg', "~> 1.1"
 gem 'pg_search'
@@ -74,5 +74,3 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # rubocop:enable Style/StringLiterals, Layout/EmptyLines
-
-gem "solid_queue", "~> 0.2.2"
