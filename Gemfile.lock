@@ -145,16 +145,7 @@ GEM
     drb (2.2.1)
     erubi (1.13.1)
     execjs (2.10.0)
-    ffi (1.17.0-aarch64-linux-gnu)
-    ffi (1.17.0-aarch64-linux-musl)
-    ffi (1.17.0-arm-linux-gnu)
-    ffi (1.17.0-arm-linux-musl)
-    ffi (1.17.0-arm64-darwin)
-    ffi (1.17.0-x86-linux-gnu)
-    ffi (1.17.0-x86-linux-musl)
-    ffi (1.17.0-x86_64-darwin)
     ffi (1.17.0-x86_64-linux-gnu)
-    ffi (1.17.0-x86_64-linux-musl)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.6)
@@ -188,7 +179,6 @@ GEM
     matrix (0.4.2)
     method_source (1.1.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.8)
     minitest (5.25.4)
     msgpack (1.7.5)
     net-imap (0.5.4)
@@ -206,24 +196,7 @@ GEM
       net-protocol
     net-ssh (7.3.0)
     nio4r (2.7.4)
-    nokogiri (1.18.0)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
-    nokogiri (1.18.0-aarch64-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.18.0-aarch64-linux-musl)
-      racc (~> 1.4)
-    nokogiri (1.18.0-arm-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.18.0-arm-linux-musl)
-      racc (~> 1.4)
-    nokogiri (1.18.0-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.18.0-x86_64-darwin)
-      racc (~> 1.4)
     nokogiri (1.18.0-x86_64-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.18.0-x86_64-linux-musl)
       racc (~> 1.4)
     octicons (19.14.0)
     octicons_helper (19.14.0)
@@ -366,19 +339,7 @@ GEM
     zeitwerk (2.7.1)
 
 PLATFORMS
-  aarch64-linux
-  aarch64-linux-gnu
-  aarch64-linux-musl
-  arm-linux
-  arm-linux-gnu
-  arm-linux-musl
-  arm64-darwin
-  x86-linux
-  x86-linux-gnu
-  x86-linux-musl
-  x86_64-darwin
-  x86_64-linux-gnu
-  x86_64-linux-musl
+  x86_64-linux
 
 DEPENDENCIES
   bootsnap
@@ -415,4 +376,4 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 BUNDLED WITH
-   2.5.9
+   2.4.19

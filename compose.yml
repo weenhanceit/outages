@@ -4,7 +4,7 @@
 # https://medium.com/@retrorubies/chrome-as-a-service-for-rails-testing-b1a45e70fec1
 services:
   shell:
-    image: lenchoreyes/jade:rails-app-3.3-postgres-bookworm
+    image: lenchoreyes/jade:rails-app-3.2-postgres-bookworm
     stdin_open: true
     tty: true
     volumes:
