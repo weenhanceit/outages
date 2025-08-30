@@ -1,0 +1,7 @@
+proxy:
+  host: test.outages.weenhanceit.com
+  ssl: false
+accessories:
+  db:
+    directories:
+      - .:/imports

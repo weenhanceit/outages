@@ -1,0 +1,45 @@
+service: outages
+
+image: lenchoreyes/outages
+
+servers:
+  web:
+    - kamal-a
+
+proxy:
+  ssl: true
+  host: outages.weenhanceit.com
+  app_port: 3000
+
+registry:
+  username: lenchoreyes
+
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+builder:
+  arch: amd64
+  context: . # TODO: Remove this line when we're confident we want to always get from git.
+
+env:
+  clear:
+    DATABASE_HOST: outages-db
+  secret:
+    - RAILS_MASTER_KEY
+    - POSTGRES_USER
+    - POSTGRES_PASSWORD
+
+ssh:
+  user: outages
+
+accessories:
+  db:
+    image: postgres:16-alpine
+    host: kamal-a
+    port: 5432
+    env:
+      secret:
+        - POSTGRES_USER
+        - POSTGRES_PASSWORD
+    directories:
+      - postgres:/var/lib/postgresql/data

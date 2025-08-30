@@ -7,9 +7,11 @@
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 
-server "outages.weenhanceit.com",
+server "a-22-04",
        user: "outages",
        roles: %w[app db web]
+
+set :keep_releases, 2
 
 # role-based syntax
 # ==================

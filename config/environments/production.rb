@@ -87,7 +87,7 @@ config.action_mailer.smtp_settings = {
   port:                   465,
   # domain:               ENV["EMAIL_DOMAIN"],
   user_name:              ENV['EMAIL_USERNAME'] || 'outages@weenhanceit.com',
-  password:               Rails.application.credentials.email_password!,
+  password:               Rails.application.credentials.email_password,
   authentication:         :plain,
   default_mailer_options: { from: 'outages@weenhanceit.com' },
   enable_starttls_auto:   false,
