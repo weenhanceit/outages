@@ -23,5 +23,5 @@ production:
   <<: *default
   username: <%= Rails.application.credentials.database_username! %>
   password: <%= Rails.application.credentials.database_password! %>
-  host: postgres-a
+  host: postgres-b
   database: <%= Rails.application.credentials.database! %>
