@@ -12,29 +12,30 @@ proxy:
   app_port: 3000
 
 registry:
-  username: lenchoreyes
+  username: lcreid@jadesystems.ca
 
   password:
     - KAMAL_REGISTRY_PASSWORD
 
 builder:
   arch: amd64
-  context: . # TODO: Remove this line when we're confident we want to always get from git.
 
 env:
-  clear:
-    DATABASE_HOST: outages-db
   secret:
-    - RAILS_MASTER_KEY
     - POSTGRES_USER
     - POSTGRES_PASSWORD
+    - RAILS_MASTER_KEY
+  clear:
+    DATABASE_HOST: outages-db
 
 ssh:
-  user: outages
+  user: deploy
+
+asset_path: /rails/public/assets
 
 accessories:
   db:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     host: kamal-a
     port: 5432
     env:
