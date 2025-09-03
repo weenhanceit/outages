@@ -44,7 +44,12 @@
 /.kamal
 
 # Ignore development files
-/.devcontainer
+/.devcontainer/
+/.devcontainer.json
+/.dotnet/
+/.ruby-lsp/
+/.vscode/
+/.vscode-server/
 
 # Ignore Docker-related files
 /.dockerignore
@@ -54,24 +59,26 @@
 /.bash_history
 /.bundle
 /.byebug_history
-/.cache
-/Capfile
-/compose.laptop.yml
-/compose.override.yml
-/compose.yml
+/.cache/
 /.gem
-/.gnupg
+/.gitattributes
+/.gitconfig
+/.gk/
+/.gnupg/
 /.irb_history
-/.local
-/package.json
+/.local/
+/.npm/
 /.psqlrc
+/.rdbg_history
 /.rdoc_options
-/README.md
-/scripts
-/.ssh
+/.ssh/
 /.vagrant
-/Vagrantfile
-/vendor
 /.viminfo
 /.vscode
 /.vscode-server
+/Capfile
+/compose*.yml
+/README.md
+/scripts
+/Vagrantfile
+/vendor
