@@ -3,7 +3,7 @@
 # And:
 # https://medium.com/@retrorubies/chrome-as-a-service-for-rails-testing-b1a45e70fec1
 services:
-  shell:
+  web:
     image: lenchoreyes/jade:rails-app-3.4-postgres-bookworm
     stdin_open: true
     tty: true
@@ -18,7 +18,7 @@ services:
       - DATABASE_HOST=postgres
       - SELENIUM_HOST=selenium
       - SELENIUM_PORT=4444
-      - TEST_APP_HOST=shell
+      - TEST_APP_HOST=web
       - TEST_APP_PORT=3001
     ports:
       - "3000:3000"
