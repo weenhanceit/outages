@@ -37,7 +37,6 @@ accessories:
   db:
     image: postgres:17-alpine
     host: kamal-a
-    port: 5432
     env:
       secret:
         - POSTGRES_USER
