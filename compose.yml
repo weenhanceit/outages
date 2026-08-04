@@ -1,28 +1,23 @@
-# Set up the Selenium container based on the Selenium official:
-# https://github.com/SeleniumHQ/docker-selenium/blob/trunk/docker-compose-v3.yml
-# And:
-# https://medium.com/@retrorubies/chrome-as-a-service-for-rails-testing-b1a45e70fec1
 services:
   web:
-    image: lenchoreyes/jade:rails-app-3.4-postgres-bookworm
+    image: lenchoreyes/jade:rails-app-4.0-postgres-bookworm
     stdin_open: true
     tty: true
+    user: "dev:dev"
     volumes:
-      - .:/app:cached
+      - .:/home/dev/app
+      - dev_home:/home/dev
     environment:
-      - SSH_AUTH_SOCK=/ssh-agent
-      - NODE_ENV=development
+      - DATABASE_HOST=postgres
       - BOOTSNAP_CACHE_DIR=/usr/local/bundle/_bootsnap
       - WEB_CONCURRENCY=1
-      - HISTFILE=/app/.bash_history
-      - DATABASE_HOST=postgres
-      - SELENIUM_HOST=selenium
-      - SELENIUM_PORT=4444
+      - PLAYWRIGHT_HOST=playwright
       - TEST_APP_HOST=web
       - TEST_APP_PORT=3001
     ports:
-      - "3000:3000"
-      - "3001:3001"
+      - "3000"
+      - "3001"
+      - "5990"
     command: /bin/bash
     depends_on:
       - postgres
@@ -42,17 +37,13 @@ services:
       test: pg_isready -U pg -h 127.0.0.1
       interval: 5s
 
-  selenium:
-    image: selenium/standalone-chrome:118.0
-    logging:
-      driver: none
-    stdin_open: true
-    tty: true
-    environment:
-      - LANG=en_CA.UTF-8
-    ports:
-      - "4444:4444"
-      - "5900:5900"
+  playwright: # this is our PLAYWRIGHT_HOST value
+    image: mcr.microsoft.com/playwright:v1.61.0-noble
+    command: >
+      /bin/sh -c "npx -y playwright@1.61.0 run-server --port 3000 --host 0.0.0.0 --path /ws"
+    init: true
+    restart: unless-stopped
 
 volumes:
+  dev_home:
   postgres:
