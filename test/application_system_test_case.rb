@@ -5,29 +5,39 @@ require "test_helper"
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # For capybara-email https://github.com/DockYard/capybara-email
   include Capybara::Email::DSL
+  include Capybara::Minitest::Assertions
 
-  # The next one is ours, in app/lib
-  # Capybara::Session.include CapybaraExtensions::SessionMatchers
+  Capybara.disable_animation = true
+  Capybara.default_max_wait_time = 15
 
-  # Force a specific address, and put it in the mailer config (`config/environments/test.rb`)
-  # so system tests on the e-mail will work.
-  class << self
-    def remote_selenium? = @remote_selenium ||= ENV["SELENIUM_HOST"].present? || ENV["SELENIUM_PORT"].present?
+  Capybara.register_driver :playwright_remote_chrome_headless do |app|
+    Capybara::Playwright::Driver.new(app,
+      browser_type: ENV["PLAYWRIGHT_BROWSER"]&.to_sym || :chromium,
+      channel: :chrome,
+      headless: true,
+      viewport: { width: 1400, height: 1261 },
+      browser_server_endpoint_url: "ws://#{ENV.fetch('PLAYWRIGHT_HOST')}:3000/ws",
+    )
   end
 
-  options = if remote_selenium?
-              {
-                browser: :remote,
-                url: "http://#{ENV.fetch('SELENIUM_HOST', 'selenium')}:#{ENV.fetch('SELENIUM_PORT', '4444')}"
-              }
-            else
-              {}
-            end
-  Capybara.server_host = "0.0.0.0"
-  Capybara.server_port = ENV.fetch("TEST_APP_PORT", 3001)
-  Capybara.app_host = "http://#{ENV.fetch("TEST_APP_HOST", "localhost")}:#{Capybara.server_port}"
+  Capybara.register_driver :playwright_remote_chrome do |app|
+    Capybara::Playwright::Driver.new(app,
+      browser_type: ENV["PLAYWRIGHT_BROWSER"]&.to_sym || :chromium,
+      channel: :chrome,
+      headless: false,
+      viewport: { width: 1400, height: 1261 },
+      browser_server_endpoint_url: "ws://#{ENV.fetch('PLAYWRIGHT_HOST')}:3000/ws",
+    )
+  end
 
-  driven_by(:selenium, using: :headless_chrome, screen_size: [1400, 1400], options: options)
+  # Debugging tip: Change to `playwright_remote_chrome` (not headless) and then browse to:
+  # http://localhost:7900/?autoconnect=1&resize=scale&password=secret. You can watch the fun there.
+  driven_by(ENV.fetch("PLAYWRIGHT_DRIVER", :playwright_remote_chrome_headless).to_sym)
+
+  Capybara.server_host = "0.0.0.0"
+  Capybara.server_port = ENV.fetch("TEST_APP_PORT", 3000)
+  Capybara.app_host = "http://#{ENV.fetch("TEST_APP_HOST", "localhost")}:#{Capybara.server_port}"
+  Capybara.server = :puma, { Silent: true }
 
   # Only show the path of the screenshot on failed test cases.
   ENV["RAILS_SYSTEM_TESTING_SCREENSHOT"] = "simple"

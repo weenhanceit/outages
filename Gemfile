@@ -6,7 +6,6 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 8.1.0'
 # Use postgres as the database for Active Record
@@ -57,13 +56,12 @@ group :development, :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara'
   gem 'capybara-email'
-  gem 'capybara-selenium'
-  gem 'selenium-webdriver'
+  gem "capybara-playwright-driver"
+  # The following must match the Playwright image version in compose.yml
+  gem "playwright-ruby-client", "1.62.0"
 end
 
 group :development do
-  gem "capistrano", "~> 3.10", require: false
-  gem "capistrano-rails", "~> 1.4", require: false
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console', '>= 3.3.0'
