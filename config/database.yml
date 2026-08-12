@@ -21,7 +21,7 @@ test:
 
 production:
   <<: *default
-  username: <%= ENV.fetch("POSTGRES_USER", Rails.application.credentials.database_username || "outages") %>
-  password: <%= ENV.fetch("POSTGRES_PASSWORD", Rails.application.credentials.database_password) %>
+  username: <%= ENV["POSTGRES_USER"] || Rails.application.credentials.database_username || "outages" %>
+  password: <%= ENV["POSTGRES_PASSWORD"] || Rails.application.credentials.database_password %>
   host: <%= ENV.fetch("DATABASE_HOST", "postgres-a") %>
-  database: <%= Rails.application.credentials.database %>
+  database: outages_prod

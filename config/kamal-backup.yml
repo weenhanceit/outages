@@ -1,0 +1,17 @@
+app: your-app
+accessory: backup
+databases:
+  - name: app
+    adapter: postgres
+    url: postgres://outages@outages-db:5432/outages_prod
+    password:
+      secret: POSTGRES_PASSWORD
+paths:
+  - /data/storage
+restic:
+  repository: sftp:backup@fs-2:/NetBackup/restic
+  password:
+    secret: RESTIC_PASSWORD
+  init_if_missing: true
+backup:
+  schedule: 1d

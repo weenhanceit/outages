@@ -43,3 +43,19 @@ accessories:
         - POSTGRES_PASSWORD
     directories:
       - postgres:/var/lib/postgresql/data
+
+  backup:
+    image: ghcr.io/crmne/kamal-backup:0.5.2
+    host: kamal-a
+    files:
+      - config/kamal-backup.yml:/app/config/kamal-backup.yml:ro
+    env:
+      secret:
+        - POSTGRES_USER
+        - POSTGRES_PASSWORD
+        - RESTIC_PASSWORD
+    volumes:
+      # - outages_storage:/storage
+      - outages_backup_state:/var/lib/kamal-backup
+      - /home/deploy/.ssh/id_ed25519:/root/.ssh/id_ed25519:ro
+      - /home/deploy/.ssh/known_hosts:/root/.ssh/known_hosts:ro
