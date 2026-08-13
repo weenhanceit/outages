@@ -1,4 +1,4 @@
-app: your-app
+app: outages
 accessory: backup
 databases:
   - name: app
