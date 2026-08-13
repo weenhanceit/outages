@@ -7,7 +7,7 @@ databases:
     password:
       secret: POSTGRES_PASSWORD
 paths:
-  - /data/storage
+  # - /data/storage
 restic:
   repository: sftp:backup@fs-2:/NetBackup/restic
   password:
